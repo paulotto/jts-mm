@@ -25,8 +25,13 @@ identifiers:
     value: 10.5281/zenodo.24275718
     description: "All versions (resolves to the latest)"
   - type: doi
+    value: 10.5281/zenodo.24281877
+    description: "Version 1.0.1"
+  - type: doi
     value: 10.5281/zenodo.24275719
     description: "Version 1.0.0"
+version: "1.0.1"
+date-released: "2026-11-16"
 repository-code: "https://github.com/paulotto/jts-mm"
 keywords:
   - jaw tracking
