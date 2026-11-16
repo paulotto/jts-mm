@@ -27,5 +27,19 @@
   ],
   "license": "mit",
   "notes": "Licences by part: MIT (software, firmware, scripts, tests, configuration), CERN-OHL-P-2.0 (hardware design files), CC-BY-4.0 (documentation, figures, result tables). The included first-generation jaw-tracking package keeps CC-BY-NC-SA-4.0. Every file states its licence in an SPDX header or in REUSE.toml.",
-  "access_right": "open"
+  "access_right": "open",
+  "related_identifiers": [
+    {
+      "identifier": "10.1109/SENSORS59705.2025.11330651",
+      "relation": "references",
+      "scheme": "doi",
+      "resource_type": "publication-conferencepaper"
+    },
+    {
+      "identifier": "https://github.com/paulotto/jaw_tracking_system",
+      "relation": "isDerivedFrom",
+      "scheme": "url",
+      "resource_type": "software"
+    }
+  ]
 }

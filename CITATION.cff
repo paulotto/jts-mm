@@ -40,3 +40,34 @@ license:
   - CERN-OHL-P-2.0
   - CC-BY-4.0
   - CC-BY-NC-SA-4.0
+references:
+  - type: conference-paper
+    title: "An Optical Measurement System for Open-Source Tracking of Jaw Motions"
+    authors:
+      - family-names: Müller
+        given-names: Paul-Otto
+      - family-names: Suppelt
+        given-names: Sven
+      - family-names: Kupnik
+        given-names: Mario
+      - family-names: Stryk
+        name-particle: von
+        given-names: Oskar
+    collection-title: "2025 IEEE SENSORS"
+    year: 2025
+    doi: 10.1109/SENSORS59705.2025.11330651
+  - type: software
+    title: "JawTrackingSystem (JTS): A customizable, low-cost, optical jaw tracking system"
+    authors:
+      - family-names: Müller
+        given-names: Paul-Otto
+      - family-names: Suppelt
+        given-names: Sven
+      - family-names: Kupnik
+        given-names: Mario
+      - family-names: Stryk
+        name-particle: von
+        given-names: Oskar
+    version: 1.0.3
+    year: 2025
+    repository-code: "https://github.com/paulotto/jaw_tracking_system"

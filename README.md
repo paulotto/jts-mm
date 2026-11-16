@@ -18,7 +18,8 @@ This repository holds the hardware, the firmware, the recording software, and th
 code of the studies that use the system. It extends the optical jaw tracking system of
 
 > P.-O. Müller, S. Suppelt, M. Kupnik, O. von Stryk, "An Optical Measurement System for
-> Open-Source Tracking of Jaw Motions", IEEE SENSORS 2025
+> Open-Source Tracking of Jaw Motions", 2025 IEEE SENSORS,
+> doi: [10.1109/SENSORS59705.2025.11330651](https://doi.org/10.1109/SENSORS59705.2025.11330651)
 > ([paulotto/jaw_tracking_system](https://github.com/paulotto/jaw_tracking_system)).
 
 ## What you can do with it
@@ -59,10 +60,10 @@ data with its checksum.
 **Versions.** This repository has one commit per release and no development history. The
 papers and the items in `supplementary_results/` name the commit of the working repository
 from which they were exported: `6960d36b`. This release was built from commit
-`2a64e8f8` of the working repository, and the build checks that the analysis code
+`a21ad165` of the working repository, and the build checks that the analysis code
 is identical in both.
 
-**Hash of the analysis code:** `555904d8898fc557`. Every result carries the hash of the analysis
+**Hash of the analysis code:** `not computed`. Every result carries the hash of the analysis
 source that computed it. The frozen snapshots of the papers (dataset `r17a`, analysis of record `r17`, validation `v15`) carry this hash,
 and this repository computes the same one:
 

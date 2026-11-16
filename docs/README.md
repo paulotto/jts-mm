@@ -9,7 +9,7 @@ SPDX-License-Identifier: CC-BY-4.0
 
 This directory contains the complete specification for the **second-generation, multimodal extension** of the open-source jaw tracking system originally published as:
 
-> P.-O. Müller, S. Suppelt, M. Kupnik, O. von Stryk — *"An Optical Measurement System for Open-Source Tracking of Jaw Motions"*, IEEE SENSORS 2025.
+> P.-O. Müller, S. Suppelt, M. Kupnik, O. von Stryk — *"An Optical Measurement System for Open-Source Tracking of Jaw Motions"*, 2025 IEEE SENSORS, doi: [10.1109/SENSORS59705.2025.11330651](https://doi.org/10.1109/SENSORS59705.2025.11330651).
 > Original repository: [paulotto/jaw_tracking_system](https://github.com/paulotto/jaw_tracking_system).
 
 The first-generation system uses a commercial Qualisys Oqus motion-capture rig (3 cameras, ~200 µm precision, 200 Hz). The **JTS-MM** extension keeps the spirit of the original (open-source, low-cost, biocompatible, modular) but replaces the commercial back-end with consumer hardware and adds two new sensing modalities for jaw exoskeleton research and TMD rehabilitation:
