@@ -30,7 +30,7 @@ identifiers:
   - type: doi
     value: 10.5281/zenodo.24275719
     description: "Version 1.0.0"
-version: "1.0.1"
+version: "1.0.2"
 date-released: "2026-11-16"
 repository-code: "https://github.com/paulotto/jts-mm"
 keywords:

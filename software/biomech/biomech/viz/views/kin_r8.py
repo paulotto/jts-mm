@@ -885,11 +885,11 @@ def _outcome_rows(ctx: Any) -> list[tuple[str, str, dict[str, str]]]:
             st[pid] = ("used" if (fin & ~nl[q.index]).any() else
                        "flagged" if fin.any() else "none")
         rows.append(("dynamics", "movement bandwidth", st))
-    rows.append(("joint", "condyle-point excursion", from_values(cond, cond_flag)))
+    rows.append(("joint", "condyle-point translation", from_values(cond, cond_flag)))
     hn = _t(ctx, "uncertainty", "hinge_noise")
     hn = hn.drop_duplicates("pid").set_index("pid") if not hn.empty else hn
-    for col, lab, flag in (("obs_hinge_fit_mm", "best-fit hinge misalignment", None),
-                           ("obs_hinge_tmj_mm", "condyle hinge misalignment", cond_flag)):
+    for col, lab, flag in (("obs_hinge_fit_mm", "misalignment, compromise axis", None),
+                           ("obs_hinge_tmj_mm", "misalignment, hinge at the joint", cond_flag)):
         rows.append(("joint", lab, from_values(_col(hn, col, pids), flag)))
     ts = _t(ctx, "stats_timing", "timing_spec")
     if not ts.empty:

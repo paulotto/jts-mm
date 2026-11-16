@@ -804,7 +804,7 @@ REQ_NOTE_SHORT = {
                          "participant's cycles",
     "posterior_excursion_mm": "99th percentile of the incisal displacement behind the rest "
                               "position over the five movement tasks",
-    "translation_mm": "Condyle-point excursion in opening, larger side, median over the "
+    "translation_mm": "Condyle-point translation in opening, larger side, median over the "
                       "participant's cycles",
     "peak_vel_dps": "Largest cycle peak in self-paced opening",
     "close_vel_dps": "Largest cycle peak in self-paced closing",

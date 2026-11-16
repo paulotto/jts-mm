@@ -78,8 +78,8 @@ hinge:
     rotation in the two-phase description \cite{Wen2015, Mueller2025b}. (c)~\acs{RMS} misalignment $m$ at the incisor
     (\autoref{eq:hinge}) of the hinge at the joint (vermilion squares) and of the compromise
     axis (blue dots) per participant, with $95\,\%$ \acs{CI}. Ticks mark the noise
-    threshold of each structure (P99, \autoref{eq:noise-ratio}). (d)~Excursion
-    of the condyle points (larger side, median over the open--close cycles) per participant, with the design value
+    threshold of each structure (P99, \autoref{eq:noise-ratio}). (d)~Condyle-point
+    translation (larger side, median over the open--close cycles) per participant, with the design value
     (dashed line) and the range from its lower bound (band). $n=\numCohortN$, ordered in (c)
     and (d) by the misalignment of the hinge at the joint. (c)~Confirmatory for the
     compromise axis, exploratory (post hoc) for the hinge at the joint. (a, b, d)~Descriptive.
@@ -139,8 +139,9 @@ tabReferenceLiterature: >-
   method, and source. Descriptive.
 
 tabActivation: >-
-  Per muscle the task activity in \% of the largest recorded activity (participants active),
-  the SNR of the reference contraction, and its ratio to the task activity. Descriptive.
+  Per muscle: task activity in \% of the largest recorded activity (participants active),
+  SNR of the reference contraction, and median ratio of reference to largest task activity
+  (participants whose task activity exceeded the reference). Descriptive.
 
 tabGeometry: >-
   Jaw geometry from the digitized landmarks and the recorded openings; median, IQR, and range
@@ -161,7 +162,7 @@ envelope:
 suppAxisLocation:
   panels: 1
   text: >-
-    Where each participant's best-fit opening axis pierces the sagittal plane, relative to the
+    Where each participant's compromise axis of opening pierces the sagittal plane, relative to the
     palpated condyle midpoint (cross); squares: implausible condyle points. $n=\numCohortN$.
     Descriptive (post hoc).
 
@@ -197,14 +198,14 @@ timing:
   text: >-
     Open--close: (a)~EMG envelopes around the opening onset, (b)~digastric lead per participant
     under both onset rules, and (c)~the lead under every detector, mechanical onset, and rule.
-    $n=\numCohortN$. (b)~Pre-specified, otherwise exploratory.
+    $n=\numCohortN$. (b)~Pre-specified for the first onset, post hoc for the driving burst; otherwise exploratory.
 
 suppWindowNull:
   panels: 2
   text: >-
     Digastric lead per participant, (a)~observed and under the shift null (EMG shifted against
-    the motion in the same window) and (b)~their difference, with Holm $p$. Pre-specified
-    (first onset), otherwise post hoc.
+    the motion in the same window) and (b)~their difference, with Holm $p$. Shift null exploratory (planned);
+    first onset pre-specified, driving burst post hoc.
 
 decoding:
   panels: 4

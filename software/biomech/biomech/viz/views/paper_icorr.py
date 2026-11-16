@@ -726,7 +726,7 @@ def icorr_hinge(req: ViewRequest) -> FigureSpec:
     subj = ctx.table("stats_kinematics", "subjects")
     rq = ctx.table("requirements", "requirements") if "requirements" in ctx.store.stages() \
         else pd.DataFrame()
-    pd_ = Panel("(d) Translation to allow", Axis("Condyle-point excursion", MM), Axis(""),
+    pd_ = Panel("(d) Translation to allow", Axis("Condyle-point translation", MM), Axis(""),
                 legend="none")
     design = ""
     if not subj.empty:

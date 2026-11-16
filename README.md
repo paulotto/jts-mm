@@ -59,8 +59,8 @@ data with its checksum.
 
 **Versions.** This repository has one commit per release and no development history. The
 papers and the items in `supplementary_results/` name the commit of the working repository
-from which they were exported: `49768276`. This release was built from commit
-`8658ffa8` of the working repository, and the build checks that the analysis code
+from which they were exported: `865fa319`. This release was built from commit
+`b5960244` of the working repository, and the build checks that the analysis code
 is identical in both.
 
 **Hash of the analysis code:** `555904d8898fc557`. Every result carries the hash of the analysis
@@ -159,7 +159,7 @@ IMUs alone.
 Please cite the article that describes what you use, and this repository for the system and
 the code (see [`CITATION.cff`](CITATION.cff)). Every release is archived on Zenodo:
 [10.5281/zenodo.24275718](https://doi.org/10.5281/zenodo.24275718) resolves to the latest
-version, and each version has its own DOI (version 1.0.1, cited by the papers:
+version, and each version has its own DOI (version 1.0.1:
 [10.5281/zenodo.24281877](https://doi.org/10.5281/zenodo.24281877); version 1.0.0:
 [10.5281/zenodo.24275719](https://doi.org/10.5281/zenodo.24275719)). Cite the version you used.
 
