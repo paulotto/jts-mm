@@ -1,0 +1,19 @@
+# This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+# SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+# SPDX-FileCopyrightText: 2026 David Stebich
+# SPDX-License-Identifier: MIT
+
+numpy
+pandas
+scipy
+scikit-learn
+torch
+matplotlib
+seaborn
+pyyaml
+tensorboard
+h5py
+umap-learn
+dash
+opencv-python
+flask

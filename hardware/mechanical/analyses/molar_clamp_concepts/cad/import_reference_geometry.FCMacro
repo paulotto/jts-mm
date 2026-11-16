@@ -1,0 +1,83 @@
+# This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+# SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+# SPDX-License-Identifier: CC-BY-4.0
+
+# -*- coding: utf-8 -*-
+"""import_reference_geometry.FCMacro
+Creates, in the active document (open the FreeCAD file with the teeth model first, e.g. parts/teeth_attachment/teeth_attachment.FCStd):
+  * group REF_curves    - B-spline sweep paths and wire centrelines from the *.csv files
+  * group REF_sections  - one sketch per station, placed in the section plane with
+                          sketch x = n (+ buccal) and sketch y = h (from the lowest cusp tip,
+                          positive toward the gum), i.e. exactly the coordinates of the
+                          section drawings; the tooth outline is included as construction
+                          geometry.  Draw the part profile in it and use Part > Sweep (or
+                          PartDesign AdditivePipe) along the matching REF curve.
+Run from this folder: Macro > Macros... > select this file > Execute.
+"""
+import os, csv
+import FreeCAD as App, Part
+try:
+    import Sketcher
+except ImportError:
+    Sketcher = None
+HERE = os.path.dirname(os.path.abspath(__file__))
+doc = App.ActiveDocument or App.newDocument('clamp_reference')
+Z0 = None
+with open(os.path.join(HERE, 'stations.csv')) as f:
+    head = f.readline(); Z0 = float(head.split('plane:')[1].strip(' )\n'))
+    stations = [r for r in csv.reader(f)]
+
+def group(name):
+    g = doc.getObject(name)
+    return g if g else doc.addObject('App::DocumentObjectGroup', name)
+gc, gs = group('REF_curves'), group('REF_sections')
+
+def read_xyz(fn):
+    with open(fn) as f:
+        next(f); pts = [App.Vector(*map(float, r[:3])) for r in csv.reader(f) if r]
+    return pts
+for fn in sorted(os.listdir(HERE)):
+    if not fn.endswith('.csv') or fn.startswith(('stations', 'section_', 'path_starts')): continue
+    pts = read_xyz(os.path.join(HERE, fn)); name = 'REF_' + fn[:-4].replace('.', 'p')
+    if fn.startswith('c3_adams'):
+        shape = Part.makePolygon(pts)
+    else:
+        bs = Part.BSplineCurve(); step = max(1, len(pts) // 60); sub = pts[::step]
+        if sub[-1] != pts[-1]: sub.append(pts[-1])
+        bs.interpolate(sub); shape = bs.toShape()
+    o = doc.addObject('Part::Feature', name); o.Shape = shape; gc.addObject(o)
+
+for r in stations:
+    lab, s = r[0], float(r[1]); x, y, tx, ty, nx, ny = map(float, r[2:8])
+    X = App.Vector(nx, ny, 0); Y = App.Vector(0, 0, 1); Zv = X.cross(Y)
+    rot = App.Rotation(X, Y, Zv, 'ZXY')
+    pl = App.Placement(App.Vector(x, y, Z0), rot)
+    safe = lab.replace('/', '-').replace(' ', '_')
+    if Sketcher is None:
+        continue
+    sk = doc.addObject('Sketcher::SketchObject', 'SEC_' + safe); sk.Placement = pl; sk.Label = 'SEC %s (s=%.1f)' % (lab, s)
+    fn = os.path.join(HERE, 'section_%s.csv' % safe)
+    if os.path.exists(fn):
+        loops = {}
+        with open(fn) as f:
+            next(f)
+            for k, n, h in csv.reader(f): loops.setdefault(k, []).append(App.Vector(float(n), float(h), 0))
+        for P in loops.values():
+            for a, b in zip(P[:-1], P[1:]):
+                if (a - b).Length > 1e-3: sk.addGeometry(Part.LineSegment(a, b), True)   # construction
+    gs.addObject(sk)
+# a sketch at the start of every sweep path: origin on the path, x = +n (buccal), y = +z (toward the gum)
+gp = group('REF_path_starts')
+fn = os.path.join(HERE, 'path_starts.csv')
+if Sketcher is not None and os.path.exists(fn):
+    with open(fn) as f:
+        next(f)
+        for r in csv.reader(f):
+            name = r[0]; x, y, z, nx, ny = map(float, r[1:6])
+            X = App.Vector(nx, ny, 0); Y = App.Vector(0, 0, 1)
+            sk = doc.addObject('Sketcher::SketchObject', 'START_' + name.replace('.', 'p'))
+            sk.Placement = App.Placement(App.Vector(x, y, z), App.Rotation(X, Y, X.cross(Y), 'ZXY'))
+            sk.Label = 'START %s (profile goes here)' % name
+            gp.addObject(sk)
+doc.recompute()
+App.Console.PrintMessage('reference geometry: %d curves, %d section sketches\n' % (len(gc.Group), len(gs.Group)))

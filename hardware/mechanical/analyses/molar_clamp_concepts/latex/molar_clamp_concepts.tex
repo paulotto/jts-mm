@@ -1,0 +1,66 @@
+% This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+% SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+% SPDX-License-Identifier: CC-BY-4.0
+
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\IfFileExists{lmodern.sty}{\usepackage{lmodern}}{}
+\usepackage[a4paper,margin=22mm]{geometry}
+\usepackage{graphicx}
+\usepackage[table]{xcolor}
+\usepackage{booktabs,tabularx,multirow}
+\usepackage{siunitx}
+\usepackage{subcaption}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage[most]{tcolorbox}
+\usepackage{amsmath}
+\usepackage[hidelinks]{hyperref}
+\usepackage[capitalise,noabbrev]{cleveref}
+
+\graphicspath{{figures/pdf/}{figures/png/}}
+\sisetup{group-minimum-digits=4, detect-weight=true}
+\setlist{itemsep=2pt,topsep=3pt}
+\setlength{\parskip}{4pt}
+\setlength{\parindent}{0pt}
+
+% colours used in the renders and sections (keep in sync with scripts/common.py)
+\definecolor{cprinted}{HTML}{3F7CC9}
+\definecolor{crigid}{HTML}{35507A}
+\definecolor{cspring}{HTML}{E8742A}
+\definecolor{ctpu}{HTML}{4CAF50}
+\definecolor{cwire}{HTML}{8A96A3}
+\definecolor{warn}{HTML}{C0392B}
+\definecolor{good}{HTML}{17724A}
+% \input is not expandable inside tabular; use the TeX primitive for generated rows
+\makeatletter\newcommand{\inputrows}[1]{\@@input #1 }\makeatother
+\newcommand{\swatch}[1]{\textcolor{#1}{\rule{0.8em}{0.8em}}}
+\newcommand{\good}[1]{\textcolor{good}{#1}}
+\newcommand{\bad}[1]{\textcolor{warn}{#1}}
+
+\newtcolorbox{keybox}[1][]{colback=gray!6,colframe=gray!45,boxrule=0.5pt,arc=1mm,left=2mm,right=2mm,top=1mm,bottom=1mm,#1}
+\newtcolorbox{cautionbox}[1][]{colback=warn!5,colframe=warn!60,boxrule=0.5pt,arc=1mm,left=2mm,right=2mm,top=1mm,bottom=1mm,#1}
+
+\title{Molar clamps for the JTS-MM teeth attachment\\[4pt]
+\large Design concepts, spring sizing and build instructions}
+\author{P.-O.~Müller, SIM, TU Darmstadt\\ \small concept study, not validated on participants}
+\date{29 October 2026}
+
+\begin{document}
+\maketitle
+\input{content/00_summary}
+\tableofcontents
+\clearpage
+\input{content/01_mechanics}
+\input{content/02_principles}
+\input{content/03_overview}
+\input{content/04_concepts}
+\input{content/045_parts}
+\input{content/055_drawings}
+\input{content/05_springs}
+\input{content/06_workflow}
+\input{content/07_procurement}
+\appendix
+\input{content/08_reproduce}
+\end{document}

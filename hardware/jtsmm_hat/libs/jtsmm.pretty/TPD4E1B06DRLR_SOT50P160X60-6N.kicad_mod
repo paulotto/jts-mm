@@ -1,0 +1,214 @@
+(footprint "TPD4E1B06DRLR_SOT50P160X60-6N"
+	(version 20260206)
+	(generator "pcbnew")
+	(generator_version "10.0")
+	(layer "F.Cu")
+	(property "Reference" "REF**"
+		(at 1.86 -2.685 0)
+		(layer "F.SilkS")
+		(uuid "70633e1f-d195-433b-bc8b-ce75bd2cf108")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "TPD4E1B06DRLR_SOT50P160X60-6N"
+		(at 8.21 2.685 0)
+		(layer "F.Fab")
+		(uuid "1c29b209-754b-43f3-956a-d7c20234ec4a")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" "https://www.snapeda.com/parts/TPD4E1B06DRLR/Texas%20Instruments/datasheet/"
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "fb5d7417-5f5c-4b4d-9606-4d308ae4664a")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "f059399d-19ea-4e44-abf7-f9d35dce3f95")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(attr smd)
+	(duplicate_pad_numbers_are_jumpers no)
+	(fp_circle
+		(center -1.6 -0.5)
+		(end -1.5 -0.5)
+		(stroke
+			(width 0.2)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.SilkS")
+		(uuid "cb08c202-8f75-4639-be3d-ce062c7c3715")
+	)
+	(fp_line
+		(start -1.315 -1.05)
+		(end -1.315 1.05)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "8909a3d8-afcb-46e9-9331-1a842ff967b3")
+	)
+	(fp_line
+		(start -1.315 1.05)
+		(end 1.315 1.05)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "6c214b9e-bb88-436a-9b97-d520d5a9651c")
+	)
+	(fp_line
+		(start 1.315 -1.05)
+		(end -1.315 -1.05)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "c877f5b8-b8e3-4fb9-a57f-0be8763d4cdc")
+	)
+	(fp_line
+		(start 1.315 1.05)
+		(end 1.315 -1.05)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "7fca3c44-7c2e-4da1-aaab-7f25ffe0da39")
+	)
+	(fp_line
+		(start -0.6 -0.8)
+		(end 0.6 -0.8)
+		(stroke
+			(width 0.127)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "fec63c6f-6782-4564-aad4-a853e0d753c4")
+	)
+	(fp_line
+		(start -0.6 0.8)
+		(end -0.6 -0.8)
+		(stroke
+			(width 0.127)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "6cf0fc39-b31d-4c7d-822c-deca7ea76127")
+	)
+	(fp_line
+		(start 0.6 -0.8)
+		(end 0.6 0.8)
+		(stroke
+			(width 0.127)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "0707743a-c741-4b7e-a8bb-6f6f22b9387c")
+	)
+	(fp_line
+		(start 0.6 0.8)
+		(end -0.6 0.8)
+		(stroke
+			(width 0.127)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "3f24f467-44f0-4577-bd01-918de2c81e1e")
+	)
+	(fp_circle
+		(center -1.6 -0.5)
+		(end -1.5 -0.5)
+		(stroke
+			(width 0.2)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.Fab")
+		(uuid "b5a76fde-7c9e-43d0-ab26-f3273845cde1")
+	)
+	(pad "1" smd rect
+		(at -0.735 -0.5)
+		(size 0.66 0.31)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(solder_mask_margin 0.04)
+		(clearance 0.19)
+		(uuid "1dbc5489-4a81-45e0-b472-099548868a29")
+	)
+	(pad "2" smd rect
+		(at -0.735 0)
+		(size 0.66 0.31)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(solder_mask_margin 0.04)
+		(clearance 0.19)
+		(uuid "d2f41fb1-c633-4740-95e6-488a320389fc")
+	)
+	(pad "3" smd rect
+		(at -0.735 0.5)
+		(size 0.66 0.31)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(solder_mask_margin 0.04)
+		(clearance 0.19)
+		(uuid "06d5ffc6-e668-45bc-b205-5cc9e1ce6f73")
+	)
+	(pad "4" smd rect
+		(at 0.735 0.5)
+		(size 0.66 0.31)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(solder_mask_margin 0.04)
+		(clearance 0.19)
+		(uuid "2fdfea0a-1197-4844-8cb4-8498c8b8b368")
+	)
+	(pad "5" smd rect
+		(at 0.735 0)
+		(size 0.66 0.31)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(solder_mask_margin 0.04)
+		(clearance 0.19)
+		(uuid "eab110c5-48ae-40df-952c-bb9ce1231d46")
+	)
+	(pad "6" smd rect
+		(at 0.735 -0.5)
+		(size 0.66 0.31)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(solder_mask_margin 0.04)
+		(clearance 0.19)
+		(uuid "53db90dd-d80a-4a69-b6ea-c2ff55cf1e36")
+	)
+	(embedded_fonts no)
+	(model "${KIPRJMOD}/libs/jtsmm.pretty/TPD4E1B06DRLR.step"
+		(offset
+			(xyz 0 0 0)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz -90 -0 -0)
+		)
+	)
+)

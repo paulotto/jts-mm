@@ -1,0 +1,34 @@
+########################################################################
+# JTS-MM custom HAT — HAT+ ID EEPROM image (source for eepmake)
+#
+# Edit vendor/product strings as needed, then build:
+#   eepmake jtsmm_hat_eeprom_vert.txt jtsmm_hat_eeprom_vert.eep
+#
+# Flashing procedure: docs/hardware/h02_hat_plus_eeprom_flashing.md
+########################################################################
+
+# Leave all-zero to let eepmake mint an RFC 4122 UUID on first build.
+# Copy the printed UUID back here so rebuilds stay stable.
+product_uuid 63846de3-9766-49e3-9b56-643a4ebdc25f
+
+# 16-bit vendor-assigned product ID (change if you register a formal ID)
+product_id 0x4A54
+
+# Board revision in BCD-ish form (rev 0.0.1 → 0x0001)
+product_ver 0x0001
+
+vendor "TU Darmstadt ExoFusion"
+
+product "JTS-MM — Multimodal Jaw Tracking System HAT+"
+
+# Peak 5 V current the HAT may draw from the Pi header (mA).
+# Tune after power budget is measured; 0 = unspecified.
+current_supply 2500
+
+# No Pi device-tree overlay is required: EMG/IMU/trigger run on the
+# on-board RP2350A and reach the host over USB. Omit dt_blob.
+
+# Optional metadata block (shown by eepdump for debug)
+custom_data "
+ExoFusion JTS-MM — Multimodal Jaw Tracking System HAT+ (6 channel EMG + 2 (+1) IMU + 2 camera sync)
+\"

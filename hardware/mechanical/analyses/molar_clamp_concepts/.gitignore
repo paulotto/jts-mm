@@ -1,0 +1,14 @@
+# This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+# SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+# SPDX-License-Identifier: CC-BY-4.0
+
+build/
+stl/
+latex/*.aux
+latex/*.log
+latex/*.out
+latex/*.toc
+latex/*.fdb_latexmk
+latex/*.fls
+latex/*.synctex.gz
+__pycache__/

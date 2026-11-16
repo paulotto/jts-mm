@@ -1,0 +1,39 @@
+# This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+# SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+# SPDX-License-Identifier: MIT
+
+# Abbreviations in captions: every caption spells an abbreviation out at its
+# first use ("SPM" -> "statistical parametric mapping (SPM)") unless the caption already
+# does. Order does not matter; matching is case-sensitive on whole words.
+abbreviations:
+  BA: balanced accuracy
+  BCa: bias-corrected and accelerated
+  CCC: concordance correlation coefficient
+  CCI: co-contraction index
+  CI: confidence interval
+  CMC: coefficient of multiple correlation
+  CT: calibration tool
+  CV: coefficient of variation
+  ECDF: empirical cumulative distribution function
+  EMG: electromyography
+  FHA: finite helical axis
+  ICC: intraclass correlation coefficient
+  IMU: inertial measurement unit
+  IQR: interquartile range
+  LoA: limits of agreement
+  LOSO: leave-one-subject-out
+  LOTO: leave-one-task-out
+  MAD: median absolute deviation
+  MDC: minimal detectable change
+  MDF: median frequency
+  MNF: mean frequency
+  MVC: maximal voluntary contraction
+  RMS: root mean square
+  RMSE: root-mean-square error
+  RVC: reference voluntary contraction
+  SD: standard deviation
+  SEM: standard error of measurement
+  SNR: signal-to-noise ratio
+  SPM: statistical parametric mapping
+  TKEO: Teager–Kaiser energy operator
+  TMJ: temporomandibular joint

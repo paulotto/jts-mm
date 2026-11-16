@@ -1,0 +1,104 @@
+# This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+# SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+# SPDX-License-Identifier: MIT
+
+# Related-work table of jaw-motion trackers for the systems paper (J7 -> a table view).
+# BibTeX: docs/analysis/references.bib.
+#
+# Every row is quoted from the abstract or open full text of the cited source (named in
+# `note`); null = not reported there (never filled in from manufacturer brochures or memory).
+# Fields:
+#   system            name or short description
+#   principle         optical | optoelectronic | ultrasonic | electromagnetic | magnetic | inertial | mixed
+#   dof               degrees of freedom tracked (6 = rigid-body pose), null if the source does not state it
+#   rate_hz           sampling rate as stated in the source; null if not stated
+#   accuracy          the reported figure, as text (units inside)
+#   accuracy_kind     trueness | precision | rmse | loa | agreement | event_timing | none
+#   reference_system  what it was compared with
+#   wearable          true when the whole system is worn (no external camera, emitter or field source)
+#   in_vivo           true when the accuracy figure comes from people, false from a bench or phantom
+#   key, note
+# The JTS-MM row is not here: it comes from numbers_systems.yaml (macros), never typed by hand.
+# Accuracy kinds differ (static trueness on a phantom vs in-vivo agreement), so the view should
+# print accuracy_kind and in_vivo next to every figure and never rank the rows by the number.
+
+rows:
+  - {system: "Open-source optical jaw tracker (predecessor of JTS-MM)", principle: optical, dof: 6, rate_hz: null,
+     accuracy: "precision 182 +- 47 um and 0.126 +- 0.034 deg", accuracy_kind: precision, reference_system: "none (repeatability)",
+     wearable: false, in_vivo: true, key: muller2025optical, note: "abstract; 4 participants; dof 6 because the abstract gives translation and rotation precision"}
+  - {system: "Modjaw", principle: optical, dof: null, rate_hz: null,
+     accuracy: "trueness 10.8 +- 1.40 um, precision 9.7 +- 1.76 um (mean absolute surface distance)", accuracy_kind: trueness,
+     reference_system: "industrial optical scanner (ATOS Q), phantom head, static jaw relations 1-5 mm",
+     wearable: false, in_vivo: false, key: nagy2023invitro, note: "abstract; static in vitro, not motion"}
+  - {system: "KaVo ARCUSdigma; SDiMatriX; Modjaw", principle: mixed, dof: null, rate_hz: null,
+     accuracy: "sagittal condylar inclination not different from CBCT for ARCUSdigma and Modjaw; different for SDiMatriX", accuracy_kind: agreement,
+     reference_system: "CBCT-derived condylar inclination (25 participants)",
+     wearable: false, in_vivo: true, key: zhao2025comparative, note: "abstract; ARCUSdigma ultrasonic, SDiMatriX and Modjaw optical; angle agreement only"}
+  - {system: "zebris JMA", principle: ultrasonic, dof: null, rate_hz: null,
+     accuracy: "condylar displacement and inclination not different from CADIAX 4; Bennett angle higher", accuracy_kind: agreement,
+     reference_system: "CADIAX 4 electronic axiograph (26 participants)",
+     wearable: false, in_vivo: true, key: gu2025comparison, note: "abstract; also rated more comfortable"}
+  - {system: "Cyclops (Itaka)", principle: optical, dof: null, rate_hz: null,
+     accuracy: "best condition 0.010 +- 0.023 mm; deviations below 1 % of the movement", accuracy_kind: trueness,
+     reference_system: "laser Doppler vibrometer, plaster cast on a 2-axis simulator, 20-40 mm vertical movements",
+     wearable: false, in_vivo: false, key: valenti2024accuracy, note: "abstract; frontal plane, in vitro"}
+  - {system: "Carstens AG501 (electromagnetic articulograph)", principle: electromagnetic, dof: null, rate_hz: null,
+     accuracy: "limits of agreement -0.9 to 0.5 mm", accuracy_kind: loa,
+     reference_system: "millimetre ruler between sensors on a rotating rig and a mouth model",
+     wearable: false, in_vivo: false, key: lezcano2020accuracy, note: "abstract; full text quotes a manufacturer dynamic accuracy of 0.3 mm RMS (secondary)"}
+  - {system: "Binocular stereo tracker with BP-network calibration", principle: optical, dof: null, rate_hz: null,
+     accuracy: "RMS 0.0773 mm", accuracy_kind: rmse,
+     reference_system: "electric positioning platform and clinical trials",
+     wearable: false, in_vivo: false, key: tian2020threedimensional, note: "abstract; the RMS figure is from the platform evaluation"}
+  - {system: "Three infrared cameras, nine facial markers", principle: optical, dof: null, rate_hz: 100,
+     accuracy: "RMS accuracy 0.259 mm, precision 0.208 mm in the calibrated volume", accuracy_kind: rmse,
+     reference_system: "calibration objects (system validation)",
+     wearable: false, in_vivo: false, key: furtado2013specialized, note: "open full text (PMC3636046); rate_hz = camera capability (up to 100 frames/s); 22 participants recorded"}
+  - {system: "Planar-fiducial-marker system (one or two webcams)", principle: optical, dof: null, rate_hz: null,
+     accuracy: "same order of precision as the commercial system (least products regression, normalized RMSE)", accuracy_kind: agreement,
+     reference_system: "commercial research optical motion capture, simultaneous, one participant",
+     wearable: false, in_vivo: true, key: mostashiri2018novel, note: "abstract; closest prior low-cost fiducial-marker tracker (IEEE Sensors J.)"}
+  - {system: "OKAS-3D", principle: optoelectronic, dof: 6, rate_hz: 300,
+     accuracy: "accuracy better than 0.13 mm (incisal) and 0.27 mm (condylar region); noise below 0.08 mm", accuracy_kind: trueness,
+     reference_system: "system characterisation (noise, linearity, accuracy)",
+     wearable: false, in_vivo: false, key: naeije1995okas, note: "abstract; at least 300 Hz per photocell coordinate; frames clutched to the teeth"}
+  - {system: "Mandibular kinesiograph K5-R (Myotronics)", principle: magnetic, dof: null, rate_hz: null,
+     accuracy: "worst error below 0.5 mm within the clinical space; 0.1 mm after computer correction", accuracy_kind: trueness,
+     reference_system: "computer-controlled electronic measuring system",
+     wearable: false, in_vivo: false, key: jankelson1980measurement, note: "abstract; incisor point only. principle = the kinesiograph's magnet-based sensing, not stated in the abstract itself"}
+  - {system: "Intraoral mouthpiece: magnet + Hall sensor + MEMS orientation", principle: magnetic, dof: 6, rate_hz: null,
+     accuracy: "approximately 3 mm", accuracy_kind: agreement,
+     reference_system: "WinJMA (zebris) ultrasonic tracker in participants",
+     wearable: true, in_vivo: true, key: morikawa2022new, note: "abstract + open full text (PMC9693492): the reference is the zebris system, whose manufacturer error is quoted there as about 1.0 mm"}
+  - {system: "Intraoral magnet + 3-axis magnetometer + accelerometer", principle: magnetic, dof: 3, rate_hz: 250,
+     accuracy: "RMSE 0.328 +- 0.005 mm (10-mm cube trajectory)", accuracy_kind: rmse,
+     reference_system: "3-D positioning system; hexapod jaw simulator",
+     wearable: true, in_vivo: false, key: jucevicius2021accelerometry, note: "abstract + open full text (PMC7923025): 250 Hz during the moving test; position only, tooth impacts from the accelerometer"}
+  - {system: "Intraoral magnet, two magnetometers (background-field compensation)", principle: magnetic, dof: 5, rate_hz: null,
+     accuracy: "average RMSE 0.17 mm", accuracy_kind: rmse,
+     reference_system: "6-DoF robot arm (0.01 mm, 0.01 deg) and FE model",
+     wearable: true, in_vivo: false, key: jucevicius2022permanent, note: "abstract; 3-DoF position plus rotation from a jaw model for the 5-DoF masticatory system"}
+  - {system: "Single 9-axis IMU (WB-3) on the mandible", principle: inertial, dof: null, rate_hz: null,
+     accuracy: null, accuracy_kind: none,
+     reference_system: "none in the abstract (15 participants, free chewing)",
+     wearable: true, in_vivo: true, key: lin2010development, note: "abstract; opening angle from one IMU with magnetometer; head motion not separated"}
+  - {system: "Two 6-axis IMUs (MPU-6050), jaw and forehead", principle: inertial, dof: null, rate_hz: 100,
+     accuracy: null, accuracy_kind: none,
+     reference_system: "clinical analysis of chewing (no kinematic reference)",
+     wearable: true, in_vivo: true, key: lucena2018mastication, note: "open full text (PMC5886753): 100 samples/s; head-referenced angles, unsupervised clustering"}
+  - {system: "Chin-mounted 3-axis gyroscope", principle: inertial, dof: null, rate_hz: null,
+     accuracy: "open-close turning point matched; mean timing difference 0.008 s", accuracy_kind: event_timing,
+     reference_system: "Polhemus 6-DoF electromagnetic tracker (120 Hz), 14 participants chewing gum",
+     wearable: true, in_vivo: true, key: minami2018threeaxial, note: "abstract + open full text (PMC6305915); events only, no pose"}
+  - {system: "Optical jaw-tracking system (edentulous jaw relations)", principle: optical, dof: null, rate_hz: null,
+     accuracy: "3-D deviation 112-133 um (mean per jaw relation)", accuracy_kind: trueness,
+     reference_system: "articulator-mounted models with positioning cylinders (in vitro)",
+     wearable: false, in_vivo: false, key: li2022accuracy, note: "abstract; static jaw relations"}
+  - {system: "3D-printed wearable headgear (piezoresistive + accelerometer, open source)", principle: mixed, dof: null, rate_hz: null,
+     accuracy: "relative RMSE between sides only (no absolute accuracy)", accuracy_kind: none,
+     reference_system: "in vitro mean deviation; two participants",
+     wearable: true, in_vivo: true, key: farook2023printed, note: "abstract; concept implementation"}
+  - {system: "Polhemus electromagnetic 6-DoF with CBCT and intraoral-scan registration", principle: electromagnetic, dof: null, rate_hz: 240,
+     accuracy: null, accuracy_kind: none,
+     reference_system: "none (application study)",
+     wearable: false, in_vivo: true, key: li2025integrated, note: "open full text (PMC12484160): 240 Hz; trajectories registered from maximal intercuspation"}

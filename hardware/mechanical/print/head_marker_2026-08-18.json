@@ -1,0 +1,16 @@
+{
+ "copies_on_plate": 1,
+ "date": "2026-08-18",
+ "enable_support": false,
+ "filament": "Bambu PLA Basic @BBL X1C",
+ "filament_type": "PLA",
+ "layer_height": "0.2",
+ "nozzle_diameter": "0.4",
+ "print_settings_id": "0.20mm Standard @BBL X1C",
+ "printer_model": "Bambu Lab X1 Carbon",
+ "slicer": "BambuStudio-02.07.01.62",
+ "sparse_infill_density": "15%",
+ "sparse_infill_pattern": "grid",
+ "support_type": "tree(auto)",
+ "wall_loops": "2"
+}

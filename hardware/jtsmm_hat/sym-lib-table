@@ -1,0 +1,4 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "jtsmm")(type "KiCad")(uri "${KIPRJMOD}/libs/jtsmm.kicad_sym")(options "")(descr "Project-specific symbols (DIN 42802 touch-proof jack, etc.)"))
+)

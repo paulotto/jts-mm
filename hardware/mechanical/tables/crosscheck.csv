@@ -1,0 +1,11 @@
+body,quantity,config,cad,diff
+HP,tag spacing / mm,81.0,81.0,0.0
+MP,tag spacing / mm,40.0,40.0,0.0
+CT,tag spacing / mm,84.23,84.23,0.0
+CT,tag rotation in plane / deg,66.8,66.8,
+CT,tip beyond printed rod end / mm,,22.0,
+CT,"tip off the rod axis, in plane / mm",,0.58,
+CT,rod axis below tag plane / mm,5.5,5.01,
+eval_array,tag spacing / mm,59.9,60.0,0.1
+HP,IMU seat centre from tag midpoint / mm,,5.0,
+MP,IMU seat centre from tag midpoint / mm,,31.9,

@@ -1,0 +1,16 @@
+# This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+# SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+# SPDX-License-Identifier: MIT
+
+# hardware/mechanical tools (renders, analyses, viewer export, concept study); `make venv`
+numpy
+scipy
+trimesh
+shapely
+scikit-image
+matplotlib
+pyvista            # 3D renders (VTK, off-screen)
+pillow
+rtree              # spatial index for trimesh proximity queries
+pyyaml
+fast-simplification  # decimating meshes for the web viewer

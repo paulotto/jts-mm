@@ -1,0 +1,154 @@
+# This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+# SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+# SPDX-FileCopyrightText: 2026 David Stebich
+# SPDX-License-Identifier: MIT
+
+# JTS-MM configuration schema v1 — human-readable field reference
+# Machine validation: jtsmm.schema.json
+# Operator file: software/jtsmm/etc/jtsmm.yaml (monolithic — all keys explicit)
+# Full key tables: docs/software/s08_runtime_configuration.md
+
+schema_version: 1  # required; must match jtsmm.schema.json
+
+hat:
+  serial_port: /dev/jtsmm_hat
+  firmware_version: ">=1.0.0,<2.0.0"
+
+mcu:
+  platform:
+    profile: default
+    system: { cpu_mhz: 150 }
+    spi0: { hz: 4000000 }
+    i2c: { hz: 400000 }
+    pio: { trigger: { clock_hz: 1000000 } }
+    buffers: { emg_ring: 98304, imu_ring: 16384, event_ring: 8192 }
+    irq: { emg: 0, imu: 1, trigger: 2 }
+  emg:
+    profile: acquisition
+    sample_rate_sps: 4000
+    default_gain: 6
+    stream_channels: 6
+    # active_channels: [1, 2, 3, 4, 5, 6]   # optional; see etc/jtsmm.yaml
+    bias: { enabled: true }   # optional channels: [..], ch7_readback
+    leadoff: { enabled: true, during_recording: true, ac_tone: false, current_na: 6 }
+    test_signal: { enabled: false }
+  imu_mta:
+    profile: kinematics_accel
+    enabled: true
+    fusion: { primary: game_rotation_vector, rate_hz: 390 }
+    sync: { mode: int_driven }
+    dynamic_calibration: { accel: true, gyro: true, mag: true }  # BNO085 ME calibration; default on (cv02 §7.1)
+    reports: {}  # see etc/jtsmm.yaml for full map
+  imu_cra:
+    profile: kinematics_accel
+    enabled: true
+  trigger:
+    profile: imx296_dual_csi
+    enabled: true
+    rate_hz: 40   # operator template (Oct 2026 pilot); profile/firmware preset is 30
+    pulse: { width_us: 12000, polarity: imx296_fast }   # width < 1e6 / rate_hz
+    start_on: stream_start
+
+host:
+  cameras:
+    track: B
+    marker_detector: apriltag
+    # Per-camera keys (see software/jtsmm/etc/jtsmm.yaml and jtsmm.schema.json
+    # $defs/host_camera_entry): resolution, format, buffer_count, exposure_us,
+    # gain, ae_enable, awb_enable, awb_gains, sharpness, brightness, contrast,
+    # saturation, noise_reduction_mode, trigger.{source,expect_rate_hz}
+    list: []
+  paths:
+    data_dir: ~/jtsmm_data   # host.storage.base_dir: deprecated alias
+  capture:
+    settle_ms: 500
+    stream_restart: true
+    native_prefer: true
+    trigger_after_cameras: true
+    pps_samples: 8
+    camera_pps_anchor: true
+    camera_delta_tracking: true
+  record:
+    abort_on_error: true
+    emg_check: { enabled: true, block_on_contact_failure: true }
+    preflight: { enabled: true }
+    integrity: { enabled: true }
+    mcu_apply: { enabled: true }
+  integrity:
+    errors_as_warnings: false
+    thresholds:
+      emg_gap_warn_periods: 2.5
+      emg_gap_err_periods: 4.0
+      emg_loss_warn_frac: 0.0005
+      emg_loss_err_frac: 0.005
+      emg_missed_drdy_warn_frac: 0.001
+      emg_missed_drdy_err_frac: 0.02
+      imu_ring_drop_err_frac: 0.005
+      imu_gap_warn_periods: 4.0
+      stream_end_gap_err_s: 0.5
+      stream_start_lag_warn_s: 2.0
+      stream_start_lag_err_s: 10.0
+      camera_coverage_min_frac: 0.95
+      camera_trailing_gap_warn_s: 0.25
+      camera_trailing_gap_err_s: 0.5
+      sync_residual_warn_us: 1000.0
+      sync_residual_err_us: 50000.0
+      assign_frames_warn: 1.5
+      assign_frames_err: 3.0
+      assign_spread_frames_warn: 1.0
+      assign_spread_frames_err: 3.0
+      assign_drift_warn_us_per_s: 50.0
+      assign_drift_err_us_per_s: 500.0
+      assign_offset_dev_frames_warn: 0.25
+      assign_offset_dev_frames_err: 0.5
+      anchor_refined_frames_err: 300
+  emg_check:
+    line_hz: 50.0
+    settle_ms: 400
+    leadoff: { duration_s: 5.0 }
+    noise: { duration_s: 5.0 }
+    impedance: { enabled: true, duration_s: 2.0 }
+    drl_isolation: { duration_s: 2.0 }
+  emg_filter:
+    mains_mode: track   # enabled/notch_hz/highpass_hz/lowpass_hz: deprecated, no effect
+  viewer:
+    enabled: true
+    bind_host: 0.0.0.0
+    port: 8770
+  schema:
+    relaxed_unknown_keys: false
+
+session:
+  mode: acquisition
+  duration_s: null
+  default_duration_s: 10.0
+  subject_id: null
+  protocol: null
+  meta: {}
+  # Removable CT tip: seat in cone, SPACE×N while pivoting → OLS tip offset.
+  ct_calibration: false
+  ct_calibration_n_poses: 20
+  # Stable tip JSON: updated when ct_calibration=true; loaded when false.
+  ct_tip_calibration: null
+  persist_ct_calibration: false
+  ct_calibration_recordings_dir: ~/experiments/5_2_1_pivot_calibration_repeatability/recordings
+  persist_imu_calibration: true
+  imu_mounting_calibration: null
+  imu_calibration_recordings_dir: ~/experiments/5_2_2_imu_optical_handeye/recordings
+  # Multimodal optical + experiment phases (CLI flags still override).
+  optical_track: false
+  # null = every stereo pair. 10 or 20 Hz detects every 4th or 2nd pair at 40 Hz.
+  optical_track_hz: null
+  optical_config: software/optical/etc/optical.yaml
+  use_experiment_plan: false   # true → SPACE-walk session.experiment (or experiment_plan path)
+  experiment:
+    name: subject01_session1
+    description: Jaw motion analysis experiment
+    phases:
+      - open_close
+      - left_right
+      - protrusion_retrusion
+      - chewing
+  experiment_plan: null        # optional path override (JSON / optical.yaml)
+  mvc: false                   # true → jtsmm record --mvc (EMG-only; not part of experiment.phases)
+  write_jts_config: true

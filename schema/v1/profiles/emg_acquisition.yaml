@@ -1,0 +1,35 @@
+# This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+# SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+# SPDX-License-Identifier: MIT
+
+# EMG acquisition profile — 2 kHz, gain 6, bias/DRL on
+# Resolved into mcu.emg when profile: acquisition
+
+profile: acquisition
+sample_rate_sps: 4000
+default_gain: 6
+bias:
+  enabled: true
+  # channels: [1, 2, 3, 4, 5, 6]  # 1-based CH1–CH6 that drive the DRL average.
+  #                                # Default: all six (or active_channels if set).
+  #                                # Restrict this to the *connected* electrodes so
+  #                                # floating inputs never pollute the DRL loop.
+# active_channels: [4]            # Only these CH1–CH6 stay powered; the rest are
+#                                 # powered down (and, if bias.channels is unset,
+#                                 # they also become the DRL contributors).
+leadoff:
+  enabled: true
+  # DC comparator lead-off stays on during recording by default: its constant
+  # current only puts a DC offset on connected inputs (removed by the 20 Hz
+  # high-pass) and rails disconnected ones, so it gives live contact feedback
+  # without touching the EMG band. Use `--no-leadoff` (record/view) to turn it
+  # off entirely, e.g. for a session that must be bit-for-bit free of any
+  # injected current.
+  during_recording: true
+  # The AC tone (fixed 31.2 Hz, s08) is a quantitative *impedance* probe and
+  # sits inside the EMG band -- it stays off here and is only turned on by
+  # `jtsmm emg impedance` / `jtsmm emg check`, never during real recording.
+  ac_tone: false
+  current_na: 6
+test_signal:
+  enabled: false

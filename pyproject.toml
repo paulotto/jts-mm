@@ -1,0 +1,11 @@
+# This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+# SPDX-FileCopyrightText: 2026 David Stebich
+# SPDX-License-Identifier: MIT
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "exosim_fusion"
+version = "0.1.0"

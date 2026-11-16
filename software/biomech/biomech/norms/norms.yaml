@@ -1,0 +1,20 @@
+# This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+# SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+# SPDX-License-Identifier: MIT
+
+# Literature reference values for healthy adults (analysis_plan §2.1 item 5).
+# Only values verified in the cited source belong here. `sd: null` = no z-score,
+# only a difference to the literature mean. Sex-specific entries (sex: f|m) take
+# precedence over pooled ones (sex: all) for that sex.
+# Not yet included: sex-specific means/SDs from the full texts, e.g.
+#   Lewis, Buschang & Throckmorton 2001 (Am J Orthod Dentofacial Orthop), and the
+#   Mosul adult reference study (Al-Rafidain Dent J 2013).
+laterotrusion_left_mm:
+  - {sex: all, mean: 7.54, sd: null, n: 40, population: "young adults, ideal occlusion",
+     source: "Medicina Oral Patol Oral Cir Bucal 22(3) (lateral excursion, pooled sides)"}
+laterotrusion_right_mm:
+  - {sex: all, mean: 7.54, sd: null, n: 40, population: "young adults, ideal occlusion",
+     source: "Medicina Oral Patol Oral Cir Bucal 22(3) (lateral excursion, pooled sides)"}
+protrusion_mm:
+  - {sex: all, mean: 8.44, sd: null, n: 40, population: "young adults, ideal occlusion",
+     source: "Medicina Oral Patol Oral Cir Bucal 22(3)"}

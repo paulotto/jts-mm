@@ -1,0 +1,58 @@
+# This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+# SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+# SPDX-License-Identifier: MIT
+
+# Written captions of the ICORR camera-free paper (paper_camerafree.yaml `captions:`),
+# 2026-11-12: short, "step" for a rung of the estimator ladder, no results
+# (the text holds them), abbreviations as plain text (RMSE, IMU, CI, BCa, HL), numbers as
+# macros of numbers_dataset.yaml. `panels` pins each figure's panel count.
+_limits:
+  core: {figure: 80, table: 60}
+  supporting: {figure: 80, table: 60}
+
+cfLadder:
+  panels: 1
+  text: >-
+    Opening-angle RMSE of the IMU rotation against the optics per step: in-take fit, hand-eye
+    mountings with the heading from the optical or from the IMU-detected closed pose, and
+    resets at every IMU-detected closed pose (causal). Grey lines and dots: participants;
+    diamonds and bars: cohort median with 95\,\% BCa CI; dashed line and shaded range: bound
+    \numCfOpenBound. $n=\numCfOpenEOneN$. Exploratory.
+
+suppCfDrift:
+  panels: 3
+  text: >-
+    Participant P1. (a)~IMU opening angle minus the optical one over the phases of the take
+    (shaded), with the optical heading and with resets at every IMU-detected closed pose;
+    triangles: the error removed by each reset. (b)~Optical opening angle and (c)~incisor
+    displacement at each detected pose, relative to the optical closed pose. Single take,
+    descriptive.
+
+suppCfAxes:
+  panels: 2
+  text: >-
+    Incisor RMSE against the optics for each translation model on the reset IMU rotation,
+    (a)~in open--close and chewing and (b)~in protrusion and laterotrusion; logarithmic axis.
+    Grey dots: participants (3-D error); black diamonds and bars: cohort median with 95\,\%
+    BCa CI; coloured marks: cohort median per maxillary axis (x anterior, y left, z up);
+    dashed line: bound \numCfIncBound. $n=\numCfOpenEOneN$. Exploratory.
+
+suppCfDecomposition:
+  panels: 1
+  text: >-
+    Incisor RMSE per task with the optics replacing one half of the own-model estimate
+    (optical rotation with the own model: model error; IMU rotation with optical translation:
+    rotation-induced error), next to the task-conditioned and the full own model; logarithmic
+    axis. Grey dots: participants; markers and bars: cohort median with 95\,\% BCa CI.
+    $n=\numCfOpenEOneN$. Exploratory.
+
+tabCameraFree: >-
+  Per step the cohort median (95\,\% BCa CI) of the participants' median task RMSE against
+  the optics, with the verdict against the bound (within: upper CI below; compatible: median
+  below; exceeds: lower CI above), and the paired contrast to the step named in the cell
+  (exact Wilcoxon, HL estimate, Holm within family). Exploratory.
+
+suppTabCfOracle: >-
+  Incisor RMSE per task group with the optics replacing one half of the own-model estimate,
+  the task-conditioned and the full own model: median (95\,\% BCa CI), and the paired
+  contrasts (HL [95\,\% CI], Holm $p$). Exploratory.

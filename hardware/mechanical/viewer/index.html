@@ -1,0 +1,62 @@
+<!doctype html>
+<!--
+This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+SPDX-License-Identifier: MIT
+-->
+
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JTS-MM parts viewer</title>
+<link rel="stylesheet" href="viewer.css">
+<script type="importmap">
+  { "imports": { "three": "/software/jtsmm/viewer_web/vendor/three.module.js" } }
+</script>
+</head>
+<body>
+<aside id="side">
+  <header>
+    <h1>JTS-MM parts</h1>
+    <p class="muted">hardware/mechanical · drag to rotate, right-drag to pan, wheel to zoom</p>
+  </header>
+
+  <section>
+    <h2>Part</h2>
+    <select id="part"></select>
+    <select id="variant"></select>
+    <div id="info"></div>
+  </section>
+
+  <section>
+    <h2>Compare</h2>
+    <label>overlay variant <select id="compare"><option value="">none</option></select></label>
+  </section>
+
+  <section>
+    <h2>Concepts (molar clamp study)</h2>
+    <label class="row"><input type="checkbox" id="scan"> teeth scan</label>
+    <div id="concepts"></div>
+    <p class="muted small">Concept geometry sits in the frame of the scan; select a concept to
+      hide the part. None of the concepts was built.</p>
+  </section>
+
+  <section>
+    <h2>Tools</h2>
+    <label class="row"><input type="checkbox" id="overlay" checked> tag seats, IMU seat, tip (CAD check)</label>
+    <label class="row"><input type="checkbox" id="edges"> edges</label>
+    <label class="row"><input type="checkbox" id="measure"> measure (click two points)</label>
+    <div id="measured" class="muted"></div>
+    <label>section plane
+      <select id="clipaxis"><option value="">off</option><option>x</option><option>y</option><option>z</option></select>
+    </label>
+    <input type="range" id="clippos" min="0" max="1000" value="500" disabled>
+    <button id="reset">reset view</button>
+  </section>
+</aside>
+<main id="view"></main>
+<div id="status" class="muted"></div>
+<script type="module" src="viewer.js"></script>
+</body>
+</html>

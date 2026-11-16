@@ -1,0 +1,65 @@
+{
+  "crc_vectors": [
+    {"data_hex": "", "crc": 65535},
+    {"data_hex": "10", "crc": 62401},
+    {"data_hex": "101b0000000000000000", "crc": 8938},
+    {"data_hex": "deadbeef", "crc": 16535}
+  ],
+  "frames": [
+    {
+      "name": "emg_block_nominal",
+      "type": 16,
+      "t_master_us": 1000000,
+      "payload_hex": "000000000001000002000003000004000005000006000007000008",
+      "expected_channels": [1, 2, 3, 4, 5, 6, 7, 8]
+    },
+    {
+      "name": "imu_mta_quat_identity_legacy",
+      "type": 17,
+      "t_master_us": 2000000,
+      "payload_hex": "0000803f000000000000000000000000",
+      "expected_quat": [1.0, 0.0, 0.0, 0.0]
+    },
+    {
+      "name": "imu_mta_quat_tagged_game_rv",
+      "type": 17,
+      "t_master_us": 2000000,
+      "payload_hex": "080000803f000000000000000000000000",
+      "expected_quat": [1.0, 0.0, 0.0, 0.0],
+      "expected_quat_report_id": 8,
+      "expected_fusion": "game_rotation_vector"
+    },
+    {
+      "name": "imu_mta_raw_tagged_accel",
+      "type": 18,
+      "t_master_us": 2000000,
+      "payload_hex": "01010002000300",
+      "expected_raw_len": 7,
+      "expected_sensor_id": 1,
+      "expected_accel": [1, 2, 3]
+    },
+    {
+      "name": "imu_cra_raw_tagged_gyro",
+      "type": 21,
+      "t_master_us": 2000000,
+      "payload_hex": "02040005000600",
+      "expected_raw_len": 7,
+      "expected_sensor_id": 2,
+      "expected_gyro": [4, 5, 6]
+    },
+    {
+      "name": "trigger_event_60hz",
+      "type": 32,
+      "t_master_us": 16666,
+      "payload_hex": "010000000500000000000000",
+      "expected_trigger_id": 5
+    },
+    {
+      "name": "heartbeat",
+      "type": 48,
+      "t_master_us": 0,
+      "payload_hex": "01020304",
+      "expected_raw_len": 4
+    }
+  ]
+}

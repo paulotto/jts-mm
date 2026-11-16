@@ -1,0 +1,37 @@
+% This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+% SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+% SPDX-License-Identifier: CC-BY-4.0
+
+\section{Fabrication workflow and tests}\label{sec:workflow}
+\begin{enumerate}
+\item \textbf{Get the dentition.} Intraoral scan of the lower arch, or an impression poured in stone
+and scanned. Export STL; replace \texttt{../../scan/teeth\_02.stl} and re-run the scripts to get the
+survey and concept geometry for this subject.
+\item \textbf{Survey.} Pick the path of insertion that gives both first molars
+\SIrange{0.3}{0.5}{mm} of lingual undercut (\texttt{s03\_survey.py}); block out deeper undercut;
+add \SIrange{0.1}{0.2}{mm} relief elsewhere.
+\item \textbf{Design.} Start from the concept STL in \texttt{stl/} or rebuild in CAD. Keep the rigid
+reference, rests and marker mount as one stiff part; springs as separate, swappable parts where
+possible.
+\item \textbf{Print and assemble} (see each concept). Bench prototypes in PETG/PA12/TPU on a printed
+model; parts for participants in certified splint resin.
+\item \textbf{Fit on the model.} Seat, remove and re-seat; the part must click into place and sit on
+its rests. Measure the spring force with a spring scale.
+\item \textbf{Reline} the tooth-contacting hard surfaces with resin through the retention features.
+\item \textbf{Fit in the mouth} under dental supervision: check the bite with articulating paper at
+every embrasure crossing; check comfort, speech and tongue space.
+\end{enumerate}
+
+\paragraph{Acceptance tests.}
+\begin{description}[style=nextline]
+\item[Seating repeatability] Seat and remove the attachment ten times; measure the marker pose
+relative to a tooth-fixed reference with the optical system each time. This is a measurement of
+the system itself. A reasonable target is well below the
+\SI{182}{\micro\metre} precision of the predecessor system.
+\item[Pull-off force] Spring scale on the marker stem along the path of insertion. It must exceed
+the loads during the protocol (lips, tongue, and sticky test foods if used).
+\item[Stability under load] Log the marker pose while the participant chews; any drift relative to
+the teeth shows up as a slow offset.
+\item[Preload decay] Force after 0, 30 and \SI{60}{min} in \SI{37}{\celsius} water, for every
+polymer spring.
+\end{description}

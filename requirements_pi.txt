@@ -1,0 +1,25 @@
+# This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+# SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+# SPDX-License-Identifier: MIT
+
+# numpy comes from apt (python3-numpy: 1.24 on Bookworm, 2.2 on Trixie): the venv shares
+# it with python3-picamera2 / simplejpeg, which are built against it, so never pip-install
+# another numpy into the venv (install with -c ~/jtsmm/pip-constraints.txt, see below).
+pandas
+scipy
+pyyaml
+h5py
+opencv-python
+matplotlib
+flask
+
+# Install host packages (from repo root) -- preferred: scripts/install_pi.sh,
+# which also creates the venv with --system-site-packages (picamera2/libcamera
+# come from apt: python3-picamera2), writes ~/jtsmm/pip-constraints.txt
+# (numpy==<apt version>) and installs the analysis stack (--no-analysis skips it).
+# Manual equivalent:
+#   pip install -c ~/jtsmm/pip-constraints.txt -e software/jtsmm[cameras,viewer,native,optical,analysis]
+#   pip install -c ~/jtsmm/pip-constraints.txt -e software/optical[cameras]
+#   pip install -c ~/jtsmm/pip-constraints.txt -e software/jaw_tracking
+#   pip install -c ~/jtsmm/pip-constraints.txt -e "software/biomech[plot,stats]"
+# biomech[stats] includes spm1d (§5.4.3), so no separate `pip install spm1d`.

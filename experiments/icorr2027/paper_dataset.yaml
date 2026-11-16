@@ -1,0 +1,148 @@
+# This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+# SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+# SPDX-License-Identifier: MIT
+
+# Paper set of the data-set paper (JNER): "Requirements for Jaw Exoskeletons from Synchronized
+# Jaw Kinematics, Inertial Sensing, and Muscle Activity in Asymptomatic Adults".
+# The paper reports the reporting population of D35 (`variant: reporting_population` below, n = 13). The
+# analysis of record (n = 14) appears only in one robustness row.
+#
+# The dataset paper (author decision 2026-10-23): ONE paper set for the whole dataset
+# analysis. Whether it is later split into a conference and a journal paper is decided after
+# drafting; `in:` marks which items each output carries, so a split only edits `in:`.
+#   biomech export --config study.yaml --paper paper_dataset.yaml [--target journal|conference]
+#                  [--compile --check-size --standalone]
+# Storyline (2026-10-30): three blocks -- A Requirements, B Sensing, C Intent --
+# then a short robustness section and the supplement. Every item of the earlier nine
+# sections is kept (sections renamed, items moved; the authors pick the forms).
+# Item keys: id (view), label (LaTeX name, letters only), part (core | supporting |
+# supplement), in (targets; default all), target_params ({target: {param: value}}: view
+# parameters for one target only), every other key a view parameter;
+# `- {section: ...}` starts a storyboard section.
+variant: reporting_population   # reporting population: the reporting_population store, n = 13; the primary store (n = 14) stays the analysis of record
+# With `variant: reporting_population` the pin names a snapshot of the reporting_population store
+# (`biomech snapshot --variant reporting_population <name>`); `--snapshot live` reads the live store.
+snapshot: r17a         # paper store (D35/D36, 13 adults) of the re-run r17 (J36, 2026-11-16): the released code; values equal to r16a, only wall-clock timings differ
+record_snapshot: r17    # the analysis of record (primary store, n = 14): never read by the paper, pinned so it is never deleted (biomech snapshot --delete)
+numbers: numbers_dataset.yaml   # in-text numbers -> numbers.tex
+captions: {journal: captions_jner.yaml}   # written captions of the JNER target (2026-11-10 compression round): replace the generated ones in captions.tex
+supplementary_videos:   # J2.7: rendered from the pinned store (biomech animate --variant reporting_population)
+  - {layout: v1_hinge, pid: s09, phase: open_close, speed: 0.5, theme: light, label: videoHinge}
+  - {layout: v2_intent, pid: s09, phase: open_close, speed: 1.0, theme: light, label: videoIntent}
+  - {layout: v3_release, pid: s09, phase: [open_close, chewing], speed: 0.5, theme: light, label: videoRelease}
+  - {layout: workspace3d, theme: light, label: videoWorkspace}
+  - {layout: onset_rules, pid: s12, speed: 0.5, theme: light, label: videoOnsetRules}
+  - {layout: emg_spectrogram, pid: s01, phase: chewing, speed: 0.5, theme: light, label: videoEmgSpectrogram}
+  - {layout: multimodal, pid: s09, phase: chewing, speed: 0.5, label: videoMultimodal}
+supplementary_interactive:   # 2026-11-05: rotatable 3-D for the additional files (static 3-D does not read in print)
+  - {id: kin_workspace3d, label: interactiveWorkspace}       # incisal workspace hulls and the design box
+  - {id: kin_condyle3d, label: interactiveCondylePaths}      # condyle paths and helical axes per participant
+supplementary_data:   # 2026-11-10 (JNER revision 5.7): small CSV files for the additional files, copied by every sync
+  - {id: req_envelope_data, label: workspaceEnvelope}   # cohort workspace envelope (requirements a, b) as coordinates
+targets:
+  journal: {venue: springer, out_dir: ../../data/analysis/icorr2027/paper_dataset/journal}
+  conference: {venue: ieee, out_dir: ../../data/analysis/icorr2027/paper_dataset/conference}
+default_target: journal
+items:
+  # == A Requirements: what a jaw exoskeleton must do ==========================================
+  - {section: "A1 Setup and data"}
+  - {id: icorr_setup, label: setup, part: core, in: [journal, conference], target_params: {conference: {form: signals}}}   # journal: form story (protocol lane + multimodal excerpt, 2026-11-05)
+  - {id: table_methods, label: tabMethods, part: supporting, in: [journal]}   # 2026-11-12 (two papers): main text -> Part B   # T1 modalities, achieved rates, processing
+  - {id: cov_outcome_n, label: suppOutcomeN, part: supplement, in: [journal]}   # J2.5 A1: n per outcome under flag-not-exclude
+  - {id: acq_table_sessions, label: suppTabAcquisition, part: supplement, in: [journal]}   # X11 (J14): acquisition quality per take (drops, time base, IMU lag, calibration in use) # 2026-11-11: release folder supplementary_results/, not in Additional file 1
+  - {id: jnl_table_completeness, label: suppTabCompleteness, part: supplement, in: [journal]}   # JNER Additional file 4 (i): completeness and exclusions per participant, recording and analysis; IMU sample integrity per take (2026-11-09)
+  - {id: jnl_h2_power, label: suppHTwoPower, part: supplement, in: [journal]}   # J27: power of a future confirmatory release test # 2026-11-11: release folder supplementary_results/, not in Additional file 1
+  - {section: "A2 Requirements"}                  # workspace, speed, bandwidth (E31: P95, lower bound, maximum)
+  - {id: jnl_requirements, label: requirements, part: core, in: [journal]}
+  - {id: table_requirements, label: tabRequirements, part: core, in: [journal, conference], target_params: {journal: {scope: capacities, form: notes}, conference: {scope: conference}}}   # conference: no timing / decoding rows (H1.1); journal: derivations as notes (2026-11-05, ran 333 pt off the page)
+  - {id: table_requirements_intent, form: notes, label: tabRequirementsIntent, part: supplement, in: [journal]}   # 2026-11-10 compression round: main text -> Part B;   # 2026-11-04: the full Table I ran off the page; intent rows split off; notes form 2026-11-05  # 2026-11-12: release folder supplementary_results/, not in Additional file 1
+  - {id: req_envelope, label: envelope, part: supporting, in: [journal]}   # X7/X8: closing and free-motion speed, peak acceleration, coverage of the maximum
+  - {id: req_lowpass_bound, label: suppLowpassBound, part: supplement, in: [journal]}   # J2.5 A2: peak velocity as a lower bound (low-pass sweep) # 2026-11-11: release folder supplementary_results/, not in Additional file 1
+  - {id: kin_workspace3d, label: suppWorkspace, part: supplement, in: [journal]}   # J2.4: 3-D workspace hull and the design box
+  - {id: kin_phase_portrait, label: suppPhasePortrait, part: supplement, in: [journal]}   # J2.3: angle-velocity density per task
+  - {section: "A3 Not a hinge at the TMJ"}        # C1, led by the hinge through the condyle points (D33); Qualisys check cited (VD21)
+  - {id: icorr_hinge, label: hinge, part: core, in: [journal, conference]}
+  - {id: table_compatibility, label: tabCompatibility, part: core, in: [journal]}   # 2026-11-05: C1 as kinematic compatibility (the JNER draft's Table 3, generated)
+  - {id: kin_hinge_axis_location, label: suppAxisLocation, part: supplement, in: [journal]}   # D21: best-fit axis vs palpated condyles
+  - {id: kin_condyle3d, label: suppCondylePaths, part: supplement, in: [journal]}   # J2.4: condyle paths and helical axes per participant
+  - {id: kin_null_variants, label: suppNullVariants, part: supplement, in: [journal]}   # J2.5 A3: all noise nulls and condyle sensitivity # 2026-11-11: release folder supplementary_results/, not in Additional file 1
+  - {id: kin_coupling_surface, label: suppCoupling, part: supplement, in: [journal]}   # X9: condyle-incisor coupling
+  - {section: "A4 Geometry and reference values"} # S1
+  - {id: table_reference, label: tabReference, part: supporting, in: [journal]}
+  - {id: table_geometry, label: tabGeometry, part: supporting, in: [journal]}      # D21: jaw geometry per participant
+  - {id: table_reference_literature, label: tabReferenceLiterature, part: supporting, in: [journal]}   # J4.5: reference values vs the literature
+  - {id: kin_geometry_lit, label: suppGeometryLiterature, part: supplement, in: [journal]}   # J2.5 A4: geometry vs literature ranges
+  # == B Sensing: which wearable signals carry it =============================================
+  - {section: "B1 The IMU recovers opening"}      # C3a
+  - {id: icorr_imu, label: imu, part: core, in: [journal, conference]}
+  # 2026-11-12: the JNER core paper uses imu; camera-free goes to the ICORR paper (paper_camerafree.yaml): - {id: jnl_sensing, label: sensing, part: core, in: [journal]}
+  - {section: "B2 Camera-free rotation"}          # X5 path 2 (D28): rotation E1 / E2a / E3b; translation as the limit result; VD20 cited
+  - {id: cf_opening_ladder, label: cfLadder, part: supporting, in: [journal]}
+  - {id: cf_table_results, label: tabCameraFree, part: supporting, in: [journal]}  # 2026-11-12: release folder supplementary_results/, not in Additional file 1
+  - {id: cf_decomposition, label: suppCfDecomposition, part: supplement, in: [journal]}   # X5b oracle decomposition (rotation- vs model-induced incisor error)
+  - {id: cf_table_oracle, label: suppTabCfOracle, part: supplement, in: [journal]}       # X5b / X5c cohort table
+  - {id: cf_incisor_axes, label: suppCfAxes, part: supplement, in: [journal]}   # J2.5 B2: translation error per axis (the limit result)
+  - {id: cf_drift, label: suppCfDrift, part: supplement, in: [journal]}   # J2.5 B2: drift with and without resets
+  - {section: "B3 Muscle activation and signal quality"}   # which muscles are active, signal quality, MVC scale
+  - {id: emg_landscape, label: activation, part: supplement, in: [journal]}   # 2026-11-10 compression round: main text -> Additional file 1 Part B
+  - {id: table_emg_activation, label: tabActivation, part: supporting, in: [journal]}   # T6: activity, SNR, reference scale per muscle (D19)
+  - {id: activation_map, label: suppActivationMap, part: supplement, in: [journal]}  # 2026-11-11: release folder supplementary_results/, not in Additional file 1
+  - {id: emg_spm_sigbar, label: suppSpm, part: supplement, in: [journal]}   # J4.1: pre-specified SPM tests (openers vs closers, masseter L vs R)
+  - {id: var_cmc_cycles, label: suppVariability, part: supplement, in: [journal]}   # J4.1: CMC within vs between, cycles needed # 2026-11-11: release folder supplementary_results/, not in Additional file 1
+  - {id: emg_cycle_spectrogram, label: suppCycleSpectrogram, part: supplement, in: [journal]}   # J2.3
+  - {id: emg_activation_clock, label: suppActivationClock, part: supplement, in: [journal]}   # J2.3
+  - {id: emg_ridgelines, label: suppRidgelines, part: supplement, in: [journal]}   # J2.3
+  - {id: emg_surface, label: suppEmgSurface, part: supplement, in: [journal]}   # J2.3
+  - {id: emg_on_path, label: suppEmgOnPath, part: supplement, in: [journal]}   # J2.3
+  - {section: "B4 Electrode impedance"}           # D21: pre-take electrode check
+  - {id: emg_impedance, label: suppImpedance, part: supplement, in: [journal]}     # D21: pre-take electrode impedance # 2026-11-11: release folder supplementary_results/, not in Additional file 1
+  - {id: table_impedance, label: tabImpedance, part: supplement, in: [journal]}    # D21: impedance vs recorded rest signal # 2026-11-11: release folder supplementary_results/, not in Additional file 1
+  # == C Intent: when the exoskeleton can know =================================================
+  - {section: "C1 EMG and motion timing"}         # X6 event order (post hoc, gated): closer release -> opening -> digastric; closers -> closing. C2 not confirmed, with the window lesson (D34: the D23 null is a window bias)
+  - {id: jnl_timing_overview, form: lead, label: timingOverview, part: core, in: [journal]}   # JNER revision 3.6 (2026-11-10): split in two full-width figures; this one: envelopes with the median release and rise marked, lead per rule with its shift null
+  # 2026-11-12: not in the JNER core paper: - {id: jnl_timing_overview, form: events, label: timingEvents, part: core, in: [journal]}
+  # 2026-11-12: no part of the JNER paper uses it: - {id: c2e_sequence, label: sequence, part: core, in: [journal]}
+  - {id: c2e_table, label: tabSequence, part: supporting, in: [journal]}    # X6: H1, gated H2/H3, supporting block, structure rows, decision  # 2026-11-12: release folder supplementary_results/, not in Additional file 1
+  - {id: jnl_c2, label: timing, part: supporting, in: [journal]}
+  - {id: jnl_timing_cues, label: timingCues, part: supporting, in: [journal]}   # J18 (post hoc / exploratory): every timing cue relative to the motion onset; EMG-to-acceleration lag  # 2026-11-12: release folder supplementary_results/, not in Additional file 1
+  - {id: emg_onset_raster, label: suppOnsetRaster, part: supplement, in: [journal]}   # J2.3: rule dependence of C2 in one picture
+  - {id: emg_signal_spectrum, form: onset_qc, label: suppOnsetQc, part: supplement, in: [journal]}   # J3: onset QC sample
+  - {id: emg_signal_spectrum, label: suppSignalChain, part: supplement, in: [journal]}   # J2.3: signal, spectrum, onsets
+  - {id: emg_usability_flow, rule: first, label: suppUsabilityFlow, part: supplement, in: [journal]}   # J2.3: channel-cycles through the gates; rule: first = the pre-specified C2 rule of \numDataCTwoUsable (2026-11-10: the registry default drive gave 122, the macro 134) # 2026-11-11: release folder supplementary_results/, not in Additional file 1
+  - {id: timing_window_null, label: suppWindowNull, part: supplement, in: [journal]}   # J2.5 C1: window-bias null vs observed lead
+  - {id: timing_single_cycle, label: suppSingleCycle, part: supplement, in: [journal]}   # J2.5 C1: single-cycle usability
+  - {id: emg_motion_coupling, label: suppEmgCoupling, part: supplement, in: [journal]}   # J2.3: EMG-acceleration coupling
+  - {section: "C2 Closer release"}                # X3: detection above chance, not anticipation (D34)
+  - {id: jnl_x3, label: release, part: supporting, in: [journal]}  # 2026-11-12: release folder supplementary_results/, not in Additional file 1
+  - {section: "C3 Intent decoding"}               # C3b; few-shot calibration
+  - {id: jnl_decoding, label: decoding, part: supporting, in: [journal]}   # 2026-11-12: main text -> Part B
+  # 2026-11-10 compression round: not used by the JNER paper any more: - {id: jnl_decoding, form: with_online, label: decodingOnline, part: core, in: [journal]}   # 2026-11-05: decoding (a-d) + online (e, f) in one figure
+  - {id: jnl_table_decoding, form: offline_protocols, label: tabDecoding, part: core, in: [journal]}   # 2026-11-05: all protocols ran 64 pt off the page; split
+  - {id: jnl_table_decoding, form: realtime_protocols, label: tabDecodingRealtime, part: core, in: [journal]}  # 2026-11-12: release folder supplementary_results/, not in Additional file 1
+  - {id: emg_feature_embedding, label: suppEmbedding, part: supplement, in: [journal]}   # J2.3: why EMG does not transfer
+  - {id: ml_generalization, label: suppGeneralization, part: supplement, in: [journal]}   # J2.5 C3: age / sex, descriptive
+  - {id: table_label_kappa, label: suppKappa, part: supplement, in: [journal]}   # J2.5 A1: label validity (compact; complete table tab_labels_check__kappa)
+  - {section: "C4 Online decoding"}               # simulated real time X4
+  - {id: jnl_online, label: online, part: supporting, in: [journal]}  # 2026-11-12: release folder supplementary_results/, not in Additional file 1
+  - {id: emg_story, label: suppStory, part: supplement, in: [journal]}   # J2.3: one excerpt through C2, X3, C3, X4
+  # == Robustness (all blocks) and the supplement ==============================================
+  - {section: "Robustness and variability"}       # S2; the n = 14 values "including the participant recorded outside the protocol" (D35)
+  - {id: jnl_robustness, form: per_outcome, label: robustness, part: supporting, in: [journal]}   # JNER revision 3.8: one panel per outcome; plausible condyles
+  - {id: jnl_robustness, form: runs, label: robustnessRuns, part: supplement, in: [journal]}   # JNER revision 3.8: the sensitivity runs at full width (was robustness c) # 2026-11-11: release folder supplementary_results/, not in Additional file 1
+  - {id: jnl_table_robustness, detector: "no", label: tabRobustness, part: supplement, in: [journal]}   # 2026-11-12: without the causal release detector (X3 is in the release only)
+  - {section: "Supplement"}                       # ordered by block: A, B, C
+  - {id: movement_bandwidth, label: suppBandwidth, part: supplement, in: [journal]}  # 2026-11-11: release folder supplementary_results/, not in Additional file 1
+  - {id: imu_agreement, label: suppImuAgreement, part: supplement, in: [journal]}
+  # 2026-11-10 compression round: not used by the JNER paper any more: - {id: emg_spectra, label: suppSpectra, part: supplement, in: [journal]}
+  # 2026-11-10 compression round: not used by the JNER paper any more: - {id: timing_ensemble, phase: chewing, label: suppEnsembleChewing, part: supplement, in: [journal]}
+  - {id: timing_detectors, label: suppDetectors, part: supplement, in: [journal]}  # 2026-11-11: release folder supplementary_results/, not in Additional file 1
+  - {id: timing_release_sweep, label: suppReleaseSweep, part: supplement, in: [journal]}  # 2026-11-11: release folder supplementary_results/, not in Additional file 1
+  - {id: c2e_locking, label: suppLocking, part: supplement, in: [journal]}       # X6: closer locking vs circular-shift surrogates; continuous coupling lag
+  - {id: online_release, label: suppOnlineRelease, part: supplement, in: [journal]}
+  - {id: ml_permutation, label: suppPermutation, part: supplement, in: [journal]}
+  # 2026-11-10 compression round: not used by the JNER paper any more: - {id: ml_variants, label: suppVariants, part: supplement, in: [journal]}
+  - {id: ml_ablation, label: suppAblation, part: supplement, in: [journal]}   # X10 (2026-11-03): one muscle group left out, after the montage fix  # 2026-11-12: release folder supplementary_results/, not in Additional file 1
+  - {id: online_compute, label: suppCompute, part: supplement, in: [journal]}  # 2026-11-11: release folder supplementary_results/, not in Additional file 1
+  # 3D-printed parts (hardware/mechanical; versions from parts.yaml `usage`)
+  - {id: hw_parts, form: used, label: suppParts, part: supplement, in: [journal]}
+  - {id: hw_table, form: parts, label: suppPartsTable, part: supplement, in: [journal]}

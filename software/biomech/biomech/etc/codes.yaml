@@ -1,0 +1,24 @@
+# This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+# SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+# SPDX-License-Identifier: MIT
+
+# Internal plan codes and their reader wording. Codes name analysis-plan items:
+# they are provenance for the analyst and never appear in reader-facing text. Views keep
+# codes out of captions and labels at the source; `vocab.reader_text` is only a safety net,
+# and `check-outputs` fails on any code left in a paper item.
+#   family: reader wording (null = the code has no reader wording and is dropped)
+# Longer family prefixes are matched first (VD before V, EV before E).
+families:
+  C: pre-specified     # dataset claims C1-C3b
+  S: pre-specified     # dataset secondary outcomes S1-S2
+  A: pre-specified     # dataset amendments before the first outcome stage
+  V: pre-specified     # validation decisions V1-V9, fixed before the results
+  D: post hoc          # dataset deviations (after outcomes were seen)
+  VD: post hoc         # validation deviations
+  X: exploratory       # dataset exploratory analyses X1-X4
+  E: null              # dataset errata
+  EV: null             # validation errata
+  G: null              # plan items
+  W: null
+  R: null              # plan rounds / items (R6 ...)
+# Not codes: pseudonyms (P3), percentiles (P95), estimator names (F0-F2P: etc/vocab.yaml).

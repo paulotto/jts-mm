@@ -1,0 +1,777 @@
+# This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+# SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+# SPDX-License-Identifier: MIT
+
+# Value vocabularies: what a stored categorical value reads as in every figure,
+# table, caption, video and the viewer. One place, so a task, muscle or estimator has the same
+# name everywhere. Each domain maps a stored value to its reader label; an entry may also give
+# `short` (tight axes, legends) and `title` (capitalized, video and panel titles).
+#   value: "label"                    or
+#   value: {label: "...", short: "...", title: "..."}
+# `columns` names the domain of each categorical table column, so `vocab.cell` can translate
+# table cells. A value missing from its domain is reported by `check-outputs` (no silent
+# fallback in paper items).
+
+domains:
+  task:
+    marking: {label: "point marking (holds)", short: "marking"}
+    rest: {label: "rest", title: "Rest"}
+    open_close: {label: "open-close", short: "open", title: "Open–close"}
+    protrusion_retrusion: {label: "protrusion", short: "protr.", title: "Protrusion–retrusion"}
+    left_right: {label: "laterotrusion", short: "lat.", title: "Laterotrusion"}
+    chewing: {label: "chewing", short: "chew", title: "Chewing"}
+    free_motion: {label: "free motion", short: "free", title: "Free motion"}
+    mvc_opening: {label: "MVC opening", short: "MVC open", title: "MVC opening"}
+    mvc_closing: {label: "MVC closing", short: "MVC close", title: "MVC closing"}
+    calibration: {label: "calibration", title: "Calibration"}
+    calibration_maxillary: {label: "maxillary landmark calibration", short: "max. calibration"}
+    calibration_mandibular: {label: "mandibular landmark calibration", short: "mand. calibration"}
+    calibration_tmj: {label: "condyle landmark calibration", short: "condyle calibration"}
+    mand_point_1: {label: "lower incisor hold", short: "L1"}
+    mand_point_2: {label: "lower left molar hold", short: "L2"}
+    mand_point_3: {label: "lower right molar hold", short: "L3"}
+    max_point_1: {label: "upper incisor hold", short: "U1"}
+    max_point_2: {label: "upper left molar hold", short: "U2"}
+    max_point_3: {label: "upper right molar hold", short: "U3"}
+    tmj_left: {label: "left condyle hold", short: "TMJ L"}
+    tmj_right: {label: "right condyle hold", short: "TMJ R"}
+    sync_start: {label: "start sync motion", short: "sync"}
+    sync_end: {label: "end sync motion", short: "sync"}
+    pooled: {label: "all phases pooled", short: "pooled"}
+    movement_pooled: {label: "all movement tasks", short: "all tasks"}
+    protocol_pooled: {label: "protocol tasks", short: "protocol"}
+    free_motion_only: {label: "free motion only", short: "free only"}
+    insample: {label: "in-sample", short: "in-sample"}
+    common: {label: "common still window", short: "common"}
+    all: {label: "all tasks", short: "all"}
+    between: {label: "between tasks", short: "between"}
+  take:
+    motion: {label: "motion take", short: "motion", title: "Motion take"}
+    mvc: {label: "MVC take", short: "MVC", title: "MVC take"}
+    second_minus_first: {label: "second take minus first", short: "2nd − 1st"}
+    mvc0: {label: "first MVC recording", short: "MVC 1"}
+    mvc1: {label: "second MVC recording", short: "MVC 2"}
+  z_quality:
+    good: "good"
+    fair: "fair"
+    poor: "poor"
+    n/a: "not measured"
+  muscle:
+    masseter_r: {label: "masseter R", title: "Masseter R"}
+    masseter_l: {label: "masseter L", title: "Masseter L"}
+    temporalis_r: {label: "temporalis R", title: "Temporalis R"}
+    temporalis_l: {label: "temporalis L", title: "Temporalis L"}
+    digastric_r: {label: "digastric R", title: "Digastric R"}
+    digastric_l: {label: "digastric L", title: "Digastric L"}
+    masseter: {label: "masseter (pair)", short: "masseter", title: "Masseter"}
+    temporalis: {label: "temporalis (pair)", short: "temporalis", title: "Temporalis"}
+    digastric: {label: "digastric (pair)", short: "digastric", title: "Digastric"}
+    all: {label: all muscles}
+    all_channels: {label: "all channels (participant x muscle pairs)", short: "all channels"}
+    closers: {label: "closers (masseter, temporalis)"}
+    openers: {label: openers (digastric)}
+  landmark:
+    mand_point_1: {label: "lower incisor", title: "Lower incisor"}
+    mand_point_2: {label: "lower left second molar", short: "lower left molar", title: "Lower left molar"}
+    mand_point_3: {label: "lower right second molar", short: "lower right molar", title: "Lower right molar"}
+    max_point_1: {label: "upper incisor", title: "Upper incisor"}
+    max_point_2: {label: "upper left second molar", short: "upper left molar", title: "Upper left molar"}
+    max_point_3: {label: "upper right second molar", short: "upper right molar", title: "Upper right molar"}
+    tmj_left: {label: "left condyle (on the mandible)", short: "left condyle", title: "Left condyle"}
+    tmj_right: {label: "right condyle (on the mandible)", short: "right condyle", title: "Right condyle"}
+    tmj_left_hp: {label: "left condyle (on the head)", short: "left condyle (head)"}
+    tmj_right_hp: {label: "right condyle (on the head)", short: "right condyle (head)"}
+  body:
+    cra: {label: "head piece (JTS-MM)", short: "head piece", title: "CRA (maxilla)"}
+    mta: {label: "mouth piece (JTS-MM)", short: "mouth piece", title: "MTA (mandible)"}
+    ct: {label: "calibration tool", short: "tool", title: "CT (pointer)"}
+    CT: {label: "calibration tool (Qualisys)", short: "tool"}
+    HP: {label: "head piece (Qualisys)", short: "head piece"}
+    MP: {label: "mouth piece (Qualisys)", short: "mouth piece"}
+    MP|HP: {label: mouth piece relative to head piece}
+    hp: {label: head piece}
+    mp: {label: mouth piece}
+    joint: {label: joint fit}
+    pose: {label: pose}
+  jaw:
+    maxilla: {label: "maxillary teeth", short: "upper"}
+    mandible: {label: "mandibular teeth", short: "lower"}
+    condyle: {label: "condyles", short: "condyles"}
+  frame:
+    F_max: {label: maxillary frame}
+    F_mand: {label: mandibular frame}
+  transform:
+    A_maxillary: {label: "maxillary frame offset", short: "maxillary offset"}
+    B_mandibular: {label: "mandibular frame offset", short: "mandibular offset"}
+    X: {label: "world registration (JTS-MM to Qualisys)", short: "world registration"}
+    Y_CT: {label: "tool-body registration", short: "tool registration"}
+    Y_HP: {label: "head-piece body registration", short: "head-piece registration"}
+    Y_MP: {label: "mouth-piece body registration", short: "mouth-piece registration"}
+  system:
+    jtsmm: {label: JTS-MM}
+    jtsmm_pnp: {label: "JTS-MM, single camera (PnP)"}
+    qualisys: {label: Qualisys}
+    delsys: {label: Delsys}
+    s: {label: JTS-MM}
+    q: {label: Qualisys}
+    qualisys:primary: {label: Qualisys (primary tip)}
+    qualisys:shared: {label: Qualisys (shared tip)}
+    qualisys:own_origin: {label: Qualisys (body origin)}
+    jtsmm_optical: {label: JTS-MM optical}
+  estimator:
+    F0: {label: "optical only", short: "optical"}
+    F0_hold: {label: "optical, last pose held", short: "optical hold"}
+    I: {label: IMU alone (calibrated), short: IMU alone}
+    F1: {label: "complementary filter", short: "complementary"}
+    F2: {label: "Kalman smoother", short: "Kalman"}
+    F2_causal: {label: "Kalman filter (causal)", short: "Kalman causal"}
+    F2P: {label: "Kalman smoother with position fusion", short: "Kalman + position"}
+    F2P_causal: {label: "Kalman filter with position fusion (causal)", short: "Kalman + position causal"}
+    F1_precal: {label: "complementary filter (pre-calibrated mounting)", short: "complementary pre-cal."}
+    F2_precal: {label: "Kalman smoother (pre-calibrated mounting)", short: "Kalman pre-cal."}
+    F0_lp6: {label: "optical, 6 Hz low-pass (dataset)", short: "optical + 6 Hz"}
+    qualisys: {label: "Qualisys", short: "Qualisys"}
+    quat: {label: "IMU quaternion", short: "quaternion"}
+    comp: {label: "IMU complementary", short: "complementary"}
+    tilt: {label: "IMU accelerometer tilt", short: "tilt"}
+    E0: {label: "optics (reference)", short: "optics"}
+    optics: {label: "optical rotation", short: "optics"}
+    E1: {label: "in-take fit with the optics (camera-free baseline)", short: "in-take fit"}
+    E2a: {label: "hand-eye mountings + landmark frame, heading from the optical closed pose", short: "mountings, optical heading"}
+    E2b: {label: "hand-eye mountings + landmark frame, heading from IMU-detected closed poses", short: "mountings, IMU heading"}
+    E3: {label: "mountings with resets at closed poses", short: "closed-pose resets"}
+    E3a: {label: "mountings (optical heading) with resets at closed poses", short: "resets, optical heading"}
+    E3b: {label: "mountings (IMU heading) with resets at closed poses (primary)", short: "resets, IMU heading"}
+    E3_slerp: {label: "closed-pose resets, anchors interpolated (offline)", short: "resets, offline"}
+    E3a_slerp: {label: "resets (optical heading), anchors interpolated (offline)", short: "resets offline, optical heading"}
+    E3b_slerp: {label: "resets (IMU heading), anchors interpolated (offline)", short: "resets offline, IMU heading"}
+    E4hinge: {label: "rotation about the static condyle midpoint", short: "condyle hinge"}
+    E4own: {label: "own ridge translation model (free motion)", short: "own model"}
+    E4gen: {label: "generic translation model (other participants)", short: "generic model"}
+    E5: {label: "accelerometers between closed-pose anchors", short: "accelerometers"}
+    E5_causal: {label: "accelerometers between anchors (causal)", short: "accelerometers, causal"}
+    E6: {label: "accelerometers with the own model as pseudo-measurements", short: "accelerometers + own model"}
+    E6_causal: {label: "accelerometers + own model (causal)", short: "accelerometers + own model, causal"}
+    E7: {label: "translation model chosen by movement class (not computed)", short: "movement-class model"}
+    X5b_model: {label: "optical rotation + own translation model", short: "opt. rot. + model"}
+    X5b_rotation: {label: "camera-free rotation + optical translation", short: "IMU rot. + opt. transl."}
+    X5c: {label: "task-conditioned translation model (oracle class)", short: "task model"}
+  pipeline:
+    ref200: {label: "Qualisys 200 Hz", short: Qualisys 200 Hz}
+    ref40: {label: "Qualisys at 40 Hz, dataset chain", short: Qualisys 40 Hz}
+    jtsmm: {label: "JTS-MM, dataset chain", short: JTS-MM}
+  comparison:
+    imu_vs_qualisys: IMU alone vs Qualisys
+    optical_vs_qualisys: JTS-MM optical vs Qualisys
+    imu_vs_optical: IMU alone vs JTS-MM optical
+  feature_set:
+    emg: EMG
+    imu: IMU
+    emg_imu: EMG + IMU
+    emg+imu: EMG + IMU
+    emg_nodig: EMG without digastric
+    emg_nodig_imu: EMG without digastric + IMU
+    "emg[log_rms,mnf]+imu": reduced EMG (log RMS, MNF) + IMU
+    emg_imu-imu: EMG + IMU minus IMU
+    emg-masseter+imu: EMG without masseter + IMU
+    emg-temporalis+imu: EMG without temporalis + IMU
+    emg-digastric+imu: EMG without digastric + IMU
+    emg-digastric_r+imu: EMG without right digastric + IMU
+    emg-digastric_l+imu: EMG without left digastric + IMU
+    seq: sequence
+    seq_imu: sequence IMU
+  block:
+    emg: EMG features
+    imu: IMU features
+    seq: sequence features
+    seq_imu: IMU sequence features
+  calibration_mode:
+    abs: {label: "absolute (frame offset included)", short: "absolute"}
+    disp: {label: "displacement from the cycle start", short: "displacement"}
+    none: {label: no calibration}
+    first: {label: calibration block}
+    per_phase: {label: "per-phase calibration", short: "per phase"}
+  detector:
+    tkeo: TKEO
+    hodges_bui: Hodges–Bui
+    envelope: envelope
+  rule:
+    first: {label: "first onset", short: "first"}
+    drive: {label: "driving burst", short: "driving"}
+    drive_taskbase: {label: "driving burst, in-task threshold", short: "in-task thr."}
+  mech_source:
+    lead_ms: {label: "earliest mechanical onset", short: "earliest"}
+    lead_omega_ms: {label: "IMU angular velocity", short: "IMU velocity"}
+    lead_acc_ms: {label: "IMU acceleration", short: "IMU accel."}
+    lead_opt_ms: {label: "optical", short: "optical"}
+    jtsmm_optical: {label: JTS-MM optical}
+    qualisys: {label: Qualisys}
+  direction:
+    opening: opening
+    closing: closing
+  role:
+    agonist: agonist
+    antagonist: antagonist
+    fit: fit
+    heldout: held out
+  event:
+    rise: agonist rise
+    release: antagonist release
+  side:
+    left: {label: "left", short: "L"}
+    right: {label: "right", short: "R"}
+  ladder_orientation:
+    frontal: frontal
+    lateral: lateral
+  ladder_distance:
+    near: near
+    far: far
+  protocol:
+    loso: {label: "unseen participant (LOSO)", short: "unseen"}
+    blocked: {label: "same participant (blocked CV)", short: "same participant"}
+    blocked_default: {label: "same participant (blocked CV, default settings)", short: "same participant, defaults"}
+  ml_model:
+    svm: SVM
+    lda: LDA
+    mlp: MLP
+    rf: random forest
+    knn: kNN
+  hinge_model:           # order = figure order (condyle hinge, best-fit hinge, + translation)
+    hinge_tmj: hinge through palpated condyles
+    hinge_fit: best-fit hinge
+    rot_trans: hinge + translation
+  evidence:              # one wording for every table and caption (JNER Methods 2.1, 2026-11-10):
+    # confirmatory / descriptive / exploratory (planned: written into the plan before its own
+    # analysis ran) / exploratory (post hoc: defined after its own results were seen) / not
+    # confirmed. short = the same words (the code key of the compact tables is retired).
+    confirmatory: {label: confirmatory, short: confirmatory}
+    confirmatory_posthoc_rule: {label: "confirmatory, post hoc onset rule", short: "confirmatory, post hoc onset rule"}
+    descriptive: {label: descriptive, short: descriptive}
+    exploratory: {label: exploratory (post hoc), short: exploratory (post hoc)}
+    primary: {label: confirmatory, short: confirmatory}
+    not_confirmed: {label: not confirmed, short: not confirmed}
+    not_confirmed_posthoc_rule: {label: "not confirmed (post hoc onset rule)", short: "not confirmed (post hoc onset rule)"}
+    post_hoc: {label: exploratory (planned), short: exploratory (planned)}
+    secondary_post_hoc: {label: exploratory (post hoc), short: exploratory (post hoc)}
+    post_hoc_descriptive: {label: exploratory (planned), short: exploratory (planned)}
+  requirement_evidence:  # paper Table I only: requirement key -> evidence level
+    # shown (an `evidence` value); the stored table keeps its own. C2 rows say "not confirmed"
+    # (author decision: the result depends on the onset rule; the view refuses the label once
+    # both rules have Holm p < 0.05); C3a's pre-specified primary outcome
+    # is the generic (leave-one-subject-out) model's limits of agreement (analysis_plan §1).
+    lead_first_ms: not_confirmed
+    lead_drive_ms: not_confirmed_posthoc_rule
+    imu_opening_loa_loso_mm: primary
+    misalign_hinge_tmj_mm: secondary_post_hoc   # stored so from r14 on (J5); shown so now
+  requirements_scope:    # table_requirements picker
+    full: {label: "all requirements", short: "full"}
+    conference: {label: "conference rows (workspace, speed, bandwidth, alignment, hinge, IMU)", short: "conference"}
+    capacities: {label: "capacities and wearable sensing (journal Table I)", short: "capacities"}
+    intent: {label: "intent detection only", short: "intent"}
+  stat:
+    mean_sd: mean ± SD
+    median_iqr: median, IQR
+    mean_ci: mean, 95 % CI
+  perspective:
+    trials: all trials
+    trials+summary: trials + summary
+    participant: one participant
+    cohort: cohort
+    compare: compare
+  sensitivity_variant:
+    # kinematic reference, displacement and filter variants (parts of "a|b|c" values)
+    cycle_start: {label: "cycle-start reference", short: "cycle start"}
+    sliding_omega: {label: "sliding-window time model, angular-speed line (VD19 sensitivity)", short: "sliding (|ω|)"}
+    sliding_pose: {label: "sliding-window time model, pose line (VD19 sensitivity)", short: "sliding (pose)"}
+    closed: {label: "closed-pose reference", short: "closed pose"}
+    3d: {label: "3-D displacement", short: "3-D"}
+    vertical: {label: "vertical displacement", short: "vertical"}
+    lowpass: {label: "low-passed", short: "low-passed"}
+    raw: {label: "unfiltered", short: "unfiltered"}
+    lowfreq_mask: {label: "EMG masking before the low-frequency rule became a flag", short: "low-freq. masking"}
+    c2_muscle_mean: {label: "per-muscle mean, no minimum of channel-cycles", short: "per-muscle mean"}
+    labels_p95: {label: "label axis floor removed", short: "no label floor"}
+    reporting_population: {label: "reporting population (without the participant recorded outside the protocol)", short: "reporting population"}
+    lowpass_8hz: {label: "pose low-pass 8 Hz instead of 6 Hz", short: "low-pass 8 Hz"}
+    lowpass_10hz: {label: "pose low-pass 10 Hz instead of 6 Hz", short: "low-pass 10 Hz"}
+    lowpass_12hz: {label: "pose low-pass 12 Hz instead of 6 Hz", short: "low-pass 12 Hz"}
+    d15_min_cycles_2: {label: "at least 2 usable opener channel-cycles instead of 3", short: "≥ 2 channel-cycles"}
+    d15_min_cycles_5: {label: "at least 5 usable opener channel-cycles instead of 3", short: "≥ 5 channel-cycles"}
+    burst_3db: {label: "timing burst at least 3 dB above rest instead of 6 dB", short: "burst 3 dB"}
+    burst_10db: {label: "timing burst at least 10 dB above rest instead of 6 dB", short: "burst 10 dB"}
+    c2_symmetric_window: {label: "C2 EMG search window ±0.4 s instead of −0.6 … +0.2 s", short: "window ±0.4 s"}
+    onset_ksd_5: {label: "EMG onset threshold rest mean + 5 SD instead of 3 SD", short: "onset 5 SD"}
+    s02_day2: {label: "second recording day of the one participant recorded twice", short: "second day"}
+    imu_latency: {label: "IMU time base corrected by each participant's measured IMU-to-camera lag", short: "IMU lag removed"}
+    precal: {label: "hand-eye IMU mounting held fixed", short: "hand-eye mounting"}
+    # requirements sensitivity variants (requirements:requirements_sensitivity)
+    largest_cycle: {label: "largest cycle of the task per participant", short: "largest cycle"}
+    imu_only: {label: "bandwidth from the IMU angular velocity alone", short: "IMU only"}
+    optics_only: {label: "bandwidth from the optical opening velocity alone", short: "optics only"}
+    min_band_1.5hz: {label: "noise-limited bandwidth rule at 1.5 Hz instead of 2 Hz", short: "rule 1.5 Hz"}
+    min_band_3hz: {label: "noise-limited bandwidth rule at 3 Hz instead of 2 Hz", short: "rule 3 Hz"}
+  method:            # clock and CT-tip estimation methods
+    xcorr_ct: CT angular-speed cross-correlation
+    xcorr_ct_sync_start: cross-correlation, start window
+    xcorr_ct_sync_end: cross-correlation, end window
+    edges: CT on/off edges
+    edge_vote: CT edge vote
+    fine: fine fit (CT only)
+    fine_joint: fine fit (CT and bodies)
+    sliding_omega: sliding-window lag (angular speed)
+    sliding_pose: sliding-window lag (pose)
+    ct: CT only
+    pivot_qualisys: pivot calibration (Qualisys)
+    hold_pivot_jtsmm: hold pivots (JTS-MM)
+    hold_pivot_qualisys: hold pivots (Qualisys)
+    shared: shared tip
+    distances: landmark distances
+    tooth_holds: tooth-hold fit
+    exact: exact
+  covariate:
+    jts_HP_n_tags: JTS-MM head-piece tag count
+    jts_HP_reprojection_rms: JTS-MM head-piece reprojection RMS
+    jts_MP_n_tags: JTS-MM mouth-piece tag count
+    jts_MP_reprojection_rms: JTS-MM mouth-piece reprojection RMS
+    q_dev_max_mm: Qualisys marker-distance deviation (max)
+    speed_mm_s: incisor speed
+  alignment_variant:     # how the constant frame alignment is fitted (validation, VD3)
+    loto: {label: "leave one task out (primary)", short: "LOTO"}
+    insample: {label: "all tasks, in sample", short: "in sample"}
+    rest: {label: "rest pose", short: "rest"}
+    sync: {label: "sync windows", short: "sync"}
+  accel_variant:
+    sensor: {label: "accelerometer (Qualisys orientation)", short: "sensor"}
+    own_orientation: {label: "gravity removed with the IMU's own orientation", short: "own orientation"}
+    no_lever: {label: "without the lever arm", short: "no lever arm"}
+  cf_contrast:           # camera-free paired contrasts (a - b; camerafree_cohort)
+    E2a-E1: {label: "mountings, optical heading vs in-take fit", short: "mountings, optical heading vs in-take fit"}
+    E2b-E2a: {label: "mountings, IMU heading vs mountings, optical heading", short: "mountings, IMU heading vs mountings, optical heading"}
+    E3-E2a: {label: "closed-pose resets vs mountings, optical heading", short: "closed-pose resets vs mountings, optical heading"}
+    E4gen-E4hinge: {label: "generic model vs condyle hinge", short: "generic model vs condyle hinge"}
+    E4own-E4gen: {label: "own model vs generic model", short: "own model vs generic model"}
+    E5-E4own: {label: "accelerometers vs own model", short: "accelerometers vs own model"}
+    E6-E4own: {label: "accelerometers + own model vs own model", short: "accelerometers + own model vs own model"}
+    X5b_rotation-X5b_model: {label: "IMU rot. + opt. transl. vs opt. rot. + model", short: "IMU rot. + opt. transl. vs opt. rot. + model"}
+    X5c-E4own: {label: "task model vs own model", short: "task model vs own model"}
+  kappa_variant:         # thresholds of the second labelling rule (labels_check)
+    fixed: {label: "fixed thresholds", short: "fixed"}
+    rest_floor: {label: "thresholds raised to the rest-phase noise floor (P99)", short: "rest floor"}
+  kappa_scope:           # phases a labels_check:kappa row pools
+    all_phases: {label: "all phases", short: "all phases"}
+    without_rest: {label: "without the rest phase", short: "without rest"}
+    phase: {label: "one phase", short: "phase"}
+    boundary_tolerant: {label: "movement phases, without frames near a transition", short: "boundary-tolerant"}
+    pooled: {label: "both tasks pooled", short: "pooled"}
+    per task: {label: "per task", short: "per task"}
+  kappa_level:           # aggregation levels of labels_check:kappa
+    participant_phase: {label: "participant and phase", short: "participant, phase"}
+    participant: {label: "participant (phases pooled)", short: "participant"}
+    phase: {label: "phase (participants pooled)", short: "phase"}
+    overall_sampled: {label: "overall, sampled windows", short: "overall"}
+    overall_all_frames: {label: "overall, all frames", short: "all frames"}
+    boundary_tolerant: {label: "without frames near a transition (±2 frames)", short: "boundary-tolerant"}
+  ml_variant:            # decoder variants (ml_eval variants)
+    few_shot: {label: "per-user calibration (few-shot)", short: "few-shot"}
+    late_fusion: {label: "late fusion (finer step)", short: "late fusion"}
+    reduced_emg: {label: "reduced EMG features (RMS, MNF)", short: "reduced EMG"}
+    muscle_ablation: {label: "one muscle group left out (X10)", short: "muscle left out"}
+  noise_null:            # perfect-hinge noise nulls of the C1 test (uncertainty; D24, D25, D33)
+    bench: {label: "bench noise", short: "bench"}
+    invivo: {label: "rest noise (primary)", short: "rest"}
+    invivo_slow: {label: "slow rest noise (3 s)", short: "slow rest"}
+    invivo_motion: {label: "rest noise scaled to motion", short: "motion"}
+    invivo_teeth: {label: "rest noise, teeth-only fit", short: "teeth-only"}
+    bench_tmj: {label: "bench noise, hinge through the condyles", short: "condyle hinge, bench"}
+    invivo_tmj: {label: "rest noise, hinge through the condyles", short: "condyle hinge, rest"}
+  text_term:             # identifiers that occur inside text cells (status, notes, settings)
+    in_take: in-take calibration
+    imu_latency: the IMU-latency-corrected variant
+    imu_dyncal: the dynamic-calibration audit
+    ref_fusion: the fusion estimator
+    reference_subset: subset with reference data
+    no_reference_data: no reference data
+    ok_with_warnings: ok, with warnings
+    after_calibration: after the calibration windows
+    main_loso: main leave-one-subject-out settings
+    gamma_mult: kernel width factor
+    park_martin: Park–Martin hand-eye solution
+    f_minus_m: female minus male
+    plausible_condyles: plausible condyles only
+    plausible_condyles_30mm: plausible condyles, 30 mm depth threshold
+    plausible_condyles_50mm: plausible condyles, 50 mm depth threshold
+    condyles_unknown: condyles unknown
+    hinge_teeth: teeth-only hinge
+    single_participant: single participant
+    exploratory_spectral: exploratory (spectra)
+    log_amp: log amplitude
+    rest_rms: rest RMS
+    own_verified: own verified tip
+    pivot_qualisys: pivot calibration (Qualisys)
+    ct_tip_calibration: tool-tip calibration
+    dataset_mvc_take: dataset MVC take
+    opening_first: opening first
+    sync_start: sync start window
+    sync_end: sync end window
+    inc_al: incisor, frames aligned
+    rot_al: rotation, frames aligned
+    angle_deg: opening angle
+    speed_dps: opening speed
+    check_vs_recorded: impedance vs the recorded signal
+    check_vs_check: check readings vs their recorded counterparts
+    mover_zou2013: MOVER (Zou 2013)
+    subject_insample: same subject, in sample
+    burst_below_min_or_masked: burst below the minimum or masked
+    no_onset: no onset
+    few_usable: few usable channel-cycles
+    too_few: too few channel-cycles
+    few_leads: too few leads for the mixture
+    no_locked_component: no time-locked component
+    circular_shift: circular shift
+    anova1_masseter_r_chewing: between-participant ANOVA, right masseter, chewing
+    anova1_masseter_r_chewing_spectrum: between-participant ANOVA, right masseter spectrum, chewing
+    anova1_opening_angle_open_close: between-participant ANOVA, opening angle, open-close
+    cmc_opening_angle: coefficient of multiple correlation, opening angle
+    openers_vs_closers_open_close: openers vs closers, open-close
+    t_mech: mechanical onset
+    ml_eval: the decoding evaluation
+    trueness_precision_jtsmm: the JTS-MM precision recording
+    trueness_precision_qualisys: the Qualisys precision recording
+  variant_key:           # keys of composite variant values ("detector=…|onset=…")
+    norm: normalization
+    detector: detector
+    mech: motion event
+    onset: onset rule
+  emg_norm:              # EMG normalization reference (sensitivity)
+    rest_relative: {label: "relative to rest (decoder features)", short: "rest-relative"}
+    max_recorded: {label: "largest activity recorded (primary)", short: "max recorded"}
+    max1s: {label: "largest 1-s mean", short: "max 1 s"}
+    p95: {label: "95th percentile of the reference", short: "p95"}
+  ref_chain:             # the decoder's reference chain
+    causal: {label: "causal (past data only)", short: "causal"}
+    offline: {label: "offline (whole recording)", short: "offline"}
+  kin_channel:           # kinematic waveform channels (validation agreement)
+    incisor_x: {label: "incisor x (anterior)", short: "incisor x"}
+    incisor_y: {label: "incisor y (left)", short: "incisor y"}
+    incisor_z: {label: "incisor z (superior)", short: "incisor z"}
+    rot_x: {label: "rotation about x", short: "rot. x"}
+    rot_y: {label: "rotation about y (opening)", short: "rot. y"}
+    rot_z: {label: "rotation about z", short: "rot. z"}
+  clock_variant:
+    ct: {label: "CT only (primary)", short: "CT only"}
+    joint: {label: "CT and bodies jointly", short: "joint"}
+    two_stage: {label: "two-stage fit", short: "two-stage"}
+    hybrid: {label: "hybrid fit", short: "hybrid"}
+    tukey: {label: "robust (Tukey) fit", short: "Tukey"}
+    sliding_omega: {label: "sliding-window time model, angular-speed line (VD19 sensitivity)", short: "sliding (|ω|)"}
+    sliding_pose: {label: "sliding-window time model, pose line (VD19 sensitivity)", short: "sliding (pose)"}
+  tip_variant:
+    "-": {label: "–"}
+    primary: {label: "each system's own verified tip", short: "own tip"}
+    shared: {label: "shared tip (through the tool registration)", short: "shared tip"}
+    own_origin: {label: "Qualisys body origin as tip", short: "body origin"}
+  picker:                # view pickers in the viewer (reader names of the controls)
+    form: {label: "depiction", title: "Depiction"}
+    unc: {label: "uncertainty shown", title: "Uncertainty"}
+    colour: {label: "colour by", title: "Colour by"}
+    spm: {label: "SPM bars", title: "SPM bars"}
+    frames: {label: "frames", title: "Frames"}
+    mode: {label: "mode", title: "Mode"}
+    units: {label: "units", title: "Units"}
+    metric: {label: "metric", title: "Metric"}
+    column: {label: "column", title: "Column"}
+    test: {label: "test", title: "Test"}
+    config: {label: "configuration", title: "Configuration"}
+    scope: {label: "rows shown", title: "Rows"}
+    lead: {label: "lead source", title: "Lead source"}
+  form:
+    strip: {label: "dots with median and CI", short: "dot strip"}
+    box: {label: "box plot", short: "box"}
+    violin: {label: "violin plot", short: "violin"}
+    raincloud: {label: "raincloud (density, box, dots)", short: "raincloud"}
+    ecdf: {label: "cumulative distribution", short: "ECDF"}
+    bar: {label: "median bar with CI and dots", short: "bar"}
+    band: {label: "mean with band", short: "band"}
+    overlay: {label: "all curves overlaid", short: "overlay"}
+    small_multiples: {label: "one panel per group", short: "small multiples"}
+    difference: {label: "difference with CI", short: "difference"}
+    2d: {label: "2-D projections", short: "2-D"}
+    3d: {label: "3-D view", short: "3-D"}
+    paired: {label: "paired (slopegraph)", short: "paired"}
+    forest: {label: "estimates with CI", short: "forest"}
+    heatmap: {label: "heatmap of the per-participant values", short: "heatmap"}
+    # Item-specific depictions of the paper items (the gallery)
+    signals: {label: "protocol and stacked signals", short: "signals"}
+    lead: {label: "muscle activity and opening lead", short: "lead"}
+    events: {label: "event order and closer release", short: "events"}
+    all: {label: "all panels", short: "all"}
+    per_outcome: {label: "change per outcome", short: "per outcome"}
+    runs: {label: "values per sensitivity run", short: "runs"}
+    both_lag: {label: "both comparison takes with the lag", short: "both takes"}
+    one_take: {label: "one comparison take", short: "one take"}
+    annotated: {label: "stacked signals with sensor and rate labels", short: "annotated"}
+    schematic: {label: "hardware and modalities schematic", short: "schematic"}
+    budget: {label: "latency budget on one time axis", short: "latency budget"}
+    panels: {label: "multi-panel overview", short: "panels"}
+    panels_fit: {label: "multi-panel overview, best-fit hinge only in (c)", short: "panels, best fit"}
+    panels_helical: {label: "multi-panel overview, helical-axis arrows in (b)", short: "panels, helical"}
+    envelope_planes: {label: "sagittal and frontal incisal envelopes with the P95 box", short: "envelope planes"}
+    story: {label: "protocol lane and the multimodal excerpt", short: "story"}
+    paper_grid: {label: "both takes, sagittal and frontal per movement task", short: "paper grid"}
+    merged: {label: "near and far in one panel per orientation", short: "merged"}
+    segments: {label: "one column per recorded segment", short: "segments"}
+    rows: {label: "rungs as rows", short: "rows"}
+    path3d: {label: "3-D path with axes and per-participant dumbbells", short: "3-D path"}
+    multiples: {label: "one small panel per participant", short: "small multiples"}
+    bland_altman: {label: "Bland–Altman (difference vs mean)", short: "Bland–Altman"}
+    scatter: {label: "scatter against the reference with the identity line", short: "scatter"}
+    dotmatrix: {label: "dot matrix (size and colour)", short: "dot matrix"}
+    rugs: {label: "envelopes with onset rugs", short: "rugs"}
+    slopegraph: {label: "paired slopegraph", short: "slopegraph"}
+    ranked: {label: "ranked dot plot", short: "ranked"}
+    speccurve: {label: "specification curve with its choice matrix", short: "specification curve"}
+    speccurve_blocks: {label: "specification curve, one block per sensitivity run", short: "per-run blocks"}
+    with_online: {label: "with the simulated real-time panel", short: "with real time"}
+    own: {label: "this data set only (self-contained)", short: "own data"}
+    with_chewing: {label: "with the cited chewing reference row", short: "with chewing"}
+    columns: {label: "derivation and evidence as columns", short: "columns"}
+    notes: {label: "derivations as lettered notes, evidence as codes", short: "notes"}
+    all_protocols: {label: "every protocol", short: "all"}
+    offline_protocols: {label: "offline protocols only", short: "offline"}
+    realtime_protocols: {label: "simulated real time only", short: "real time"}
+    overlay_all: {label: "both takes on one axis per channel (colour = take)", short: "one axis"}
+    compact: {label: "compact single row", short: "compact"}
+    components: {label: "difference components along the anatomical axes", short: "components"}
+    arrows3d: {label: "3-D difference arrows on the dental arch", short: "3-D arrows"}
+    dumbbell: {label: "dumbbell (two estimates per row)", short: "dumbbell"}
+    curves: {label: "curves with bands", short: "curves"}
+    trace: {label: "example trace with the gap shaded", short: "trace"}
+    timeseries: {label: "time series", short: "time series"}
+    tasks: {label: "per task with CI", short: "per task"}
+    # J2.4-J2.6 (new depictions)
+    bars: {label: "grouped bars", short: "bars"}
+    stacked: {label: "stacked shares", short: "stacked"}
+    dot: {label: "dot plot on a log axis", short: "dot"}
+    ladder: {label: "rungs as rows, one line per participant", short: "ladder"}
+    slope: {label: "slopegraph from the optics to each rung", short: "slope"}
+    quantities: {label: "one panel per quantity", short: "per quantity"}
+    bandwidth: {label: "bandwidth panels", short: "bandwidth"}
+    limits: {label: "bias with limits of agreement", short: "limits"}
+    dots: {label: "dots per participant", short: "dots"}
+    ratio: {label: "ratio on a log axis", short: "ratio"}
+    lines: {label: "lines per task", short: "lines"}
+    correlations: {label: "same-side vs opposite-side correlations", short: "correlations"}
+    ellipsoids3d: {label: "3-D difference arrows with 95 % CI loops", short: "3-D CI loops"}
+    representatives: {label: "three representative participants", short: "representatives"}
+    arrows: {label: "arrows from the condyle midpoint", short: "arrows"}
+    offset: {label: "offset and angle with the median", short: "offset"}
+    heat: {label: "heatmap with the value in each cell", short: "heat"}
+    share: {label: "share of participants within the bound", short: "share"}
+    dominance: {label: "rotation vs translation error per participant", short: "dominance"}
+    medians: {label: "cohort medians per task", short: "medians"}
+    matrix: {label: "participants × muscles, value in each cell", short: "matrix"}
+    paths: {label: "3-D path", short: "path"}
+    geometry: {label: "geometry of the calibration tool", short: "geometry"}
+    chain: {label: "processing chain with onsets and spectra", short: "chain"}
+    onset_qc: {label: "random sample of cycles for onset checking", short: "onset QC"}
+    group: {label: "per muscle group", short: "per group"}
+    change: {label: "change from each participant's cycle mean", short: "change"}
+    muscle: {label: "per muscle", short: "per muscle"}
+    cohort: {label: "all participants", short: "cohort"}
+    participant: {label: "one participant", short: "participant"}
+    xcorr: {label: "cross-correlation over lag", short: "cross-correlation"}
+    coherence: {label: "coherence over frequency", short: "coherence"}
+    clock: {label: "cycle clock (angle = cycle phase)", short: "clock"}
+    surface: {label: "3-D surface", short: "surface"}
+    waterfall: {label: "3-D waterfall of spectra", short: "waterfall"}
+    phase_heatmap: {label: "heatmap of muscle × cycle phase", short: "heatmap"}
+    run_matrix: {label: "one row per analysis, one column per outcome", short: "matrix"}
+    run_blocks: {label: "one block per sensitivity run, with CIs and p values", short: "blocks"}
+    class: {label: "coloured by class", short: "by class"}
+    within: {label: "within each participant", short: "within"}
+    spectra: {label: "spectra as ridgelines", short: "spectra"}
+    envelopes: {label: "envelopes as ridgelines", short: "envelopes"}
+    flow: {label: "flow through the usability gates", short: "flow"}
+    velocity: {label: "angle vs angular velocity", short: "velocity"}
+    acceleration: {label: "velocity vs acceleration", short: "acceleration"}
+    offset_dots: {label: "both systems as offset dots per row", short: "offset dots"}
+    timeline: {label: "event sequence on one time axis from the opening onset", short: "timeline"}
+    aligned: {label: "each event against its own motion onset", short: "aligned"}
+    # 3D-printed parts (hw_parts / hw_table, hardware/mechanical)
+    used: {label: "renders of the part versions used", short: "parts used"}
+    lineage: {label: "design history of the parts", short: "lineage"}
+    variants: {label: "teeth-attachment variants against the saved CAD", short: "variants"}
+    concepts: {label: "molar-clamp concept study", short: "concepts"}
+    incisor: {label: "incisor-attachment analysis", short: "incisor analysis"}
+    parts: {label: "versions, materials and masses", short: "parts"}
+    crosscheck: {label: "print geometry against the optical configuration", short: "CAD check"}
+  video_layout:        # animation layouts (biomech.anim.LAYOUTS)
+    multimodal: {label: "all modalities (EMG, motion, IMU, 3-D)"}
+    kinematics: {label: "jaw kinematics"}
+    tracking: {label: "optical tracking"}
+    emg: {label: "EMG"}
+    cohort: {label: "all participants, one task"}
+    v1_hinge: {label: "supplementary video 1: not a hinge"}
+    v2_intent: {label: "supplementary video 2: intent decoding"}
+    v3_release: {label: "supplementary video 3: release timing"}
+    validation: {label: "systems paper: JTS-MM against Qualisys"}
+    workspace3d: {label: "all participants: incisal workspace in 3-D"}
+    emg_spectrogram: {label: "EMG with live spectrum strips"}
+    onset_rules: {label: "onset rules explained on real cycles"}
+  video_theme:
+    dark: {label: "dark (video default)"}
+    light: {label: "light (print, slides)"}
+  filter_chain:          # VD12: where the dataset chain is applied
+    both: {label: "both systems filtered", short: "both filtered"}
+    jtsmm_only: {label: "JTS-MM filtered, Qualisys unfiltered", short: "JTS-MM filtered"}
+  frames_choice:
+    aligned: {label: frames aligned}
+    own: {label: each system's own frames}
+  usability_flag:
+    edge: cut by a phase edge
+    no_return: no return to rest
+    short: too short
+  condyle_reason:
+    below_incisal_level: below the incisal level
+    too_close: too close to the incisor
+    too_shallow: too shallow behind the incisor
+  lead_source:           # C2-E lead sources (timing:c2e_cycles / c2e_null; picker "lead")
+    omega: {label: "lead to the angular-velocity onset", short: "velocity onset"}
+    alpha15: {label: "lead to the angular-acceleration onset (15 Hz)", short: "acceleration onset"}
+    alpha10: {label: "lead to the angular-acceleration onset (10 Hz)", short: "acceleration 10 Hz"}
+    alpha20: {label: "lead to the angular-acceleration onset (20 Hz)", short: "acceleration 20 Hz"}
+    opt: {label: "lead to the optical onset", short: "optical onset"}
+    cp: {label: "changepoint lead (threshold-free)", short: "changepoint"}
+    sym: {label: "lead in the symmetric window", short: "symmetric window"}
+  cf_component:
+    translation_model: {label: "translation-model error", short: "model"}
+    rotation: {label: "rotation-induced error", short: "rotation"}
+    full: {label: "full own-model error", short: "full"}
+  c2e_hypothesis:        # row keys of the EMG-motion sequence cohort table (stats_timing:c2e_cohort)
+    h1: {label: "closers before the closing onset (both tasks)", short: "closers before closing"}
+    h2: {label: "closer release before opening (open-close)", short: "release, open-close"}
+    h3: {label: "closer release before opening (chewing)", short: "release, chewing"}
+    p4_alpha: {label: "closers before the acceleration onset", short: "acceleration onset"}
+    p6_changepoint: {label: "changepoint onsets before closing", short: "changepoint"}
+    optical: {label: "closers before the optical onset", short: "optical onset"}
+    symmetric_window: {label: "lead in the symmetric window", short: "symmetric window"}
+    p5_chewing: {label: "EMG-to-acceleration lag (chewing)", short: "coupling, chewing"}
+    p5_open_close: {label: "EMG-to-acceleration lag (open-close)", short: "coupling, open-close"}
+    digastric: {label: "digastric locked to opening", short: "digastric"}
+    s2_h1: {label: "closer locking beyond the cycle rhythm", short: "locking vs rhythm"}
+    s2_release_open_close: {label: "release slope (open-close)", short: "release slope, open-close"}
+    s2_release_chewing: {label: "release slope (chewing)", short: "release slope, chewing"}
+    decision: {label: "decision"}
+  stage:                 # pipeline stages (coverage and sensitivity views)
+    qc: per-participant data quality
+    qc_cohort: cohort data quality
+    kinematics: jaw kinematics
+    imu: IMU calibration and opening angle
+    emg: EMG activation and profiles
+    emg_relevance: EMG activity relevance
+    timing: EMG and motion onsets
+    labels: intent labels
+    labels_check: intent label validity
+    imu_dyncal: IMU dynamic-calibration audit
+    acquisition: acquisition quality per take
+    acquisition_cohort: acquisition quality over the cohort
+    imu_dyncal_cohort: IMU dynamic-calibration audit (cohort)
+    uncertainty: noise floor and hinge uncertainty
+    validation: agreement with Qualisys and Delsys
+    camerafree: camera-free jaw pose
+    camerafree_cohort: camera-free cohort statistics
+    stats_kinematics: kinematic statistics
+    stats_emg: EMG statistics
+    stats_imu: IMU statistics
+    stats_timing: timing statistics
+    variability: variability analysis
+    requirements: derived requirements
+    ml_windows: decoder windows
+    ml_eval: intent decoding
+    ml_online: decoder replay
+    ref_agreement: agreement of the cycle features
+    ref_budget: error budget
+    ref_camerafree: camera-free estimators vs Qualisys
+    ref_emg: EMG comparability
+    ref_emg_side: EMG side check
+    ref_fusion: optical and IMU fusion
+    ref_hinge: hinge models vs Qualisys
+    ref_imu_accel: IMU accelerometer vs Qualisys
+    ref_imu_lever: IMU lever arm
+    ref_kinematics: jaw-in-head agreement
+    ref_landmarks: point-marking accuracy
+    ref_quality: Qualisys-internal quality
+    ref_sampling: sampling and filter limits
+    ref_sync: clock synchronization
+    ref_tip: tool tip
+    ref_trueness: bench trueness and precision
+  synthetic_recovery:    # where a synthetic-recovery check is verified
+    "tests/test_v_sync.py": {label: "verified by the synthetic test suite", short: "test suite"}
+
+# Table column -> domain (cells of these columns are translated). Columns whose values are
+# themselves column names use the special domain `column` (the catalog label is shown).
+columns:
+  task: task
+  phase: task
+  segment: task
+  fold: task
+  window: task
+  interval: task
+  task_max_phase: task
+  max_observed_opening_task: task
+  ref_phase: task
+  mvc_phase: task
+  muscle: muscle
+  channel: [muscle, kin_channel]
+  landmark: landmark
+  name: landmark
+  a: [landmark, estimator]
+  b: [landmark, estimator]
+  body: body
+  frame: frame
+  transform: transform
+  system: system
+  mech_source: mech_source
+  delsys_mech_source: system
+  estimator: estimator
+  primary_e3: estimator
+  rotation: estimator
+  feature_set: feature_set
+  block: block
+  mode: calibration_mode
+  detector: detector
+  rule: rule
+  direction: direction
+  role: role
+  event: event
+  side: side
+  orientation: ladder_orientation
+  distance: ladder_distance
+  protocol: protocol
+  evidence: evidence
+  chain: filter_chain
+  frames: frames_choice
+  variant: [sensitivity_variant, clock_variant, tip_variant, alignment_variant, ml_variant, accel_variant, kappa_variant]
+  level: kappa_level
+  contrast: cf_contrast
+  scope: [task, kappa_scope]
+  norm: emg_norm
+  onset: rule
+  mech: column
+  method: method
+  covariate: covariate
+  flags: usability_flag
+  condyles_reason: condyle_reason
+  component: cf_component
+  feature: column
+  comparison: comparison
+  pipeline: pipeline
+  quantity: column
+  metric: column
+  key: [column, c2e_hypothesis]
+  take: take
+  z_quality: z_quality
+  check_quantity: column
+  recorded_quantity: column
+  noise: noise_null
+  synthetic_recovery: synthetic_recovery

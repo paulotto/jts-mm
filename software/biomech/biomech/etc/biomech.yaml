@@ -1,0 +1,290 @@
+# This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+# SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+# SPDX-License-Identifier: MIT
+
+# Default analysis parameters for `biomech`. A study file (e.g.
+# experiments/icorr2027/study.yaml) overrides any key; unknown keys are an
+# error. Every stage hashes its own `stages.<name>` block, so changing a value
+# marks that stage (and everything downstream) stale.
+# Definitions: docs/analysis/an01–an08.
+
+study: unnamed
+seed: 42
+
+# Stage groups this study runs: `dataset` (the jaw-motion dataset analysis) or
+# `validation` (JTS-MM vs Qualisys/Delsys, experiments/jtsmm_validation). One code base,
+# separate studies, stores and paper sets.
+pipeline:
+  groups: [dataset]
+
+paths:
+  data_dir: null        # session root; --data-dir > $JTSMM_DATA_DIR > this
+  out_dir: null         # results root; default: <repo>/data/analysis/<study>
+  cohort: null          # cohort manifest (YAML); required for `run`
+
+# Signal processing shared by every stage (analysis_plan §4). Part of every
+# stage's cache key, so a change here re-runs everything that reads signals.
+signals:
+  emg:
+    bandpass_hz: [20.0, 450.0]       # 4th-order Butterworth, forward-backward
+    filter_order: 4
+    envelope_s: 0.15
+    nominal_line_hz: 50.0            # grid frequency is measured per take; fallback
+    line_hz_window_s: 60.0           # stretch (from the first phase) used to measure it
+    robust_mains: true               # burst-down-weighted harmonic fit (analysis_plan D8)
+    line_hz_per_phase: true          # refine the grid frequency per phase (drift; D8)
+    mains_amp_order: auto            # hum amplitude varying within a block: Legendre order by BIC (D8)
+    reference: max_recorded          # EMG normalization: max_recorded (D11: largest activity recorded,
+                                     # MVC/RVC phase or any task) | p95 (frozen: MVC/RVC p95) | max1s
+    mask:                            # sample-level artifact masks (analysis_plan §3.1)
+      env_factor: 3.0                # envelope > 3 x own MVC/RVC p95
+      lf_factor: 10.0                # 1-20 Hz raw level > 10 x own rest level ...
+      lf_ratio: 3.0                  # ... and > 3 x concurrent in-band envelope (Amendment 1)
+      lf_band_hz: [1.0, 20.0]
+      lf_window_s: 0.25
+      rail_frac: 0.99
+      dilate_s: 0.1                  # analysis mask grows by this on both sides
+      envelope_s: 0.15
+      analysis_rules: [rail, leadoff, envelope]   # D14: rules that exclude samples; lowfreq is
+                                     # computed as a QC flag + sensitivity ([..., lowfreq])
+
+  kinematics:                        # pose chain (an02 §1)
+    max_gap_s: 0.5                   # bridge optical gaps up to this (SE(3) interpolation)
+    lowpass_hz: 6.0                  # zero-phase low-pass of the relative pose
+    lowpass_order: 2
+    hold_trim: 0.2                   # ignore the first/last 20 % of a landmark hold
+    min_condyle_incisor_mm: 70.0     # skin-palpated condyle closer to the incisor -> implausible
+    min_condyle_superior_mm: 5.0     # ... or less than this above the incisal level (E13)
+    min_condyle_posterior_mm: 40.0   # ... or a side-mean depth behind the upper incisor below this (D18)
+
+sensitivity:                         # alternative-analysis runs: `biomech sensitivity NAME` re-runs
+                                     # the pipeline into <out_dir>/sensitivity/NAME with these
+                                     # dotted overrides and compares every cohort table
+  lowfreq_mask:
+    description: "D14 sensitivity: the low-frequency rule excludes samples (pre-D14 masking)"
+    set:
+      signals.emg.mask.analysis_rules: [rail, leadoff, envelope, lowfreq]
+  labels_p95:
+    description: "D16 sensitivity: free-motion label axes each scaled by their own P95 speed (pre-D16 labels)"
+    set:
+      stages.labels.axis_scale_floor: 0.0
+  c2_muscle_mean:
+    description: "D15 sensitivity: C2 per-participant lead = unweighted mean of per-muscle medians, no minimum cycle count (pre-D15)"
+    set:
+      stages.stats_timing.aggregation: muscle_mean
+      stages.stats_timing.min_cycles: 1
+  reporting_population:
+    description: "D17 sensitivity: reporting population (participants flagged outside_protocol excluded)"
+    exclude_flags: [outside_protocol]
+
+stages:
+  kinematics:
+    cycles:
+      min_period_s: 0.4              # also the shortest valid cycle (shorter = cut by a phase edge)
+      prominence_frac: 0.3           # of the phase's 5-95 % excursion range
+      min_amplitude: 0.0             # mm/deg of the excursion signal (0 = prominence rule only)
+      max_nan_frac: 0.1              # cycles with more untracked samples are flagged
+      return_frac: 0.2               # open_close/chewing: |start - end| > 20 % of the amplitude -> flagged
+    fha:
+      step_deg: 5.0                  # pose pairs >= 5 deg apart (axis noise ~ 1/angle)
+    hinge:
+      max_frames_per_cycle: 30
+    coupling:
+      max_deg: 40.0
+      step_deg: 1.0
+  imu:
+    calibration_phase: free_motion   # one-time per-participant calibration task (an04 §3)
+    grid_hz: 200.0
+    quasi_static_tol: 0.05           # | |a| - g | / g for the tilt estimator
+    tau_s: 1.0                       # complementary-filter time constant
+    omega_smooth_s: 0.02
+    latency_correction: null         # X11 variant `imu_latency`: "measured" shifts the IMU
+                                     # stamps by the acquisition stage's IMU-to-camera lag
+  labels:
+    vel_cutoff_hz: 4.0               # smoothing of the incisal trajectory before differentiation
+    hi_frac: 0.20                    # enter motion above 20 % of the phase's p95 speed ...
+    lo_frac: 0.10                    # ... leave below 10 % (hysteresis)
+    min_seg_s: 0.10                  # shorter segments are merged into neighbours
+    axis_scale_floor: 0.25           # D16, free_motion: each axis' P95 speed scale floored at 0.25 x
+                                     # the largest axis scale (0 = own P95 per axis, pre-D16)
+  emg_relevance:                     # D19: a muscle x task cell is active when its task p95
+    k_sd: 3.0                        # >= rest mean + k_sd SD of the rest envelope ...
+    min_pct: 5.0                     # ... and >= min_pct % of the largest activity recorded
+  uncertainty:
+    n_sims: 1000                     # H0 (perfect hinge + noise) simulations per noise level (D24: was 100)
+    slow_noise: true                 # D24: also the null with 3-s high-passed rest residuals in 3-s blocks
+    motion_noise_scale: 1.78         # D24: rest residuals x this motion/rest optical error ratio, cited
+                                     # from the systems paper (largest of its four ratios: rotation, P2;
+                                     # ref_kinematics:segments, movement_pooled / rest); null = not computed
+    teeth_null: true                 # D25: teeth-only hinge fit on the same in-vivo null draws
+    tmj_null: true                   # D33 (post hoc): H0 = perfect hinge about the axis through the
+                                     # condyle points, bench and in-vivo noise, vs the observed hinge_tmj
+    n_boot: 100                      # cycle bootstrap x landmark perturbation draws
+    tooth_sd_mm: 2.0                 # landmark SD for teeth (>= hold MAD)
+    tmj_sd_mm: 5.0                   # skin-palpated condyles
+  timing:
+    tasks: [open_close, chewing]
+    onset_rule: drive                # primary rule in figures/tables; both are always computed (D6):
+                                     # drive = burst that drives the movement, first = first onset (frozen)
+    vel_frac: 0.05                   # mechanical onset: 5 % of the cycle's peak velocity
+    acc_k: 3.0                       # acc onset: rest median + 3 x robust SD
+    pre_s: 0.3                       # search mechanical onset from cycle start - pre_s
+    emg_pre_s: 0.6                   # EMG search window around the mechanical onset
+    emg_post_s: 0.2
+    k_sd: 3.0                        # EMG thresholds: rest mean + 3 SD of the detector signal
+    burst_min_db: 6.0                # channel-cycle usable for timing (analysis_plan §3.1)
+    min_finite_share: 0.9            # ... and > this share of the window's samples unmasked
+    ensemble:                        # detector-free event-aligned timing (X2 (change log), exploratory)
+      window_ms: [-1000.0, 1000.0]
+      step_ms: 5.0
+      envelope_s: 0.05
+      base_ms: [-600.0, -300.0]      # pre-movement level (in-task, not the rest phase)
+      peak_ms: [-300.0, 800.0]       # agonist peak searched here
+      release_ms: [-200.0, 300.0]    # antagonist minimum searched here
+      rise_frac: 0.25                # agonist rise: 25 % of base -> peak
+      release_frac: 0.5              # antagonist release: 50 % of pre -> minimum
+      min_change_db: 3.0             # smaller change: no event
+      n_boot: 500
+    release:                         # causal closer-release detector (X3 (change log), exploratory)
+      window_s: 0.05                 # causal moving RMS
+      base_lo_s: 0.3                 # baseline = median over [t - 0.6, t - 0.3] s
+      base_hi_s: 0.6
+      drop_db: 3.0                   # release: >= 3 dB below the baseline ...
+      hold_s: 0.03                   # ... for 30 ms (decision at the end of the run)
+      refractory_s: 0.3
+      search_pre_s: 0.6              # per opening: first decision in [t_mech - 0.6, t_mech + 0.2] s
+      search_post_s: 0.2
+      sweep_drop_db: [2.0, 3.0, 6.0] # sensitivity
+      sweep_hold_s: [0.02, 0.03, 0.05]
+    c2e:                             # post hoc family C2-E (X6 (change log); timing/c2e.py, stats/cohort_c2e.py)
+      enabled: true
+      tasks: [open_close, chewing]   # H1 pools both tasks per participant
+      n_surrogates: 200              # S1: whole-phase circular shifts per participant and task
+      gap_s: 1.0                     # S1 shift uniform on [gap, T - gap]
+      n_s2: 200                      # S2: anchor-preserving cycle shuffles
+      min_usable: 5                  # usable channel-cycles for a participant's statistics ...
+      flag_usable: 3                 # ... 3-4: flagged (counted), not tested
+      alpha_cutoff_hz: 15.0          # t_alpha: 4th-order Butterworth, zero-phase, on theta_quat
+      alpha_order: 4
+      alpha_sensitivity_hz: [10.0, 20.0]
+      alpha_frac: 0.05               # onset: last sample below max(0.05 x peak, 3 SD of rest alpha)
+      alpha_guard_s: 0.05            # opening search starts this long after the closing omega ended
+      symmetric_window_s: 0.4        # supporting / fallback: EMG window +-0.4 s
+      changepoint: true              # P6 variance changepoint (AGLR family)
+      cp_min_seg_s: 0.05             # changepoint >= 50 ms from both window edges
+      mixture:                       # P1 location: locked truncated normal + S1 background
+        sigma_ms: [5.0, 150.0]
+        pi_min: 0.1                  # smaller locked share: no location (NaN, reason)
+        bandwidth_ms: 20.0           # KDE of the surrogate leads
+        floor: 0.02                  # uniform share in the background density
+        grid_ms: 5.0
+      coupling:                      # P5 (EMG -> -alpha lag, residualised)
+        smooth_s: 0.005              # rectified EMG: centred moving mean before the 200 Hz grid
+        occlusion_mask_s: 0.05       # alpha masked +-50 ms around occlusion (cycle end)
+        max_lag_ms: 150.0
+        n_phase_bins: 50
+        min_pairs: 200
+        n_null: 200
+        gap_s: 1.0
+      # Cohort (stats_timing): fixed by the synthetic gates (tests/test_r11_c2e_synth.py,
+      # run 2026-10-30) before any real-data run; null would read "delta not fixed".
+      alpha: 0.05
+      delta_ms: 17.0                 # G4: location bias at L = 0 (8.6 ms) + 8 ms latency (E34), rounded up
+      gate_power_40ms: 1.0           # G3: power of H1 at a true lead of 40 ms (jitter 20 ms)
+      s2_min_sd_ms: 232.0            # G6: S2 slope power >= 0.8 first at SD(t_mech - anchor) ~ 232 ms
+      gates_passed: true             # 2026-10-31 (author decisions, X6 (change log)): G1/G3/G6 pass; G4
+                                     # re-run 0.888/0.892/0.903/0.933 -> mixture kept, delta 17 ms
+                                     # (documented deviation); G2 per-task 0.046 pass, cohort S2 row
+                                     # 0.095 -> its p withheld (descriptive row); G5 artefact accepted
+      supporting_veto: [p4_alpha, p5_open_close, p5_chewing, p6_changepoint, optical,
+                        symmetric_window]
+  emg:
+    cycle_mask_max: 0.10             # channel-cycle masked above this -> NaN (analysis_plan §3.1)
+  stats_kinematics:
+    older_pids: [s02, s06, s08]      # leave-one-out influence
+  stats_timing:                      # C2 cohort aggregation (D15)
+    aggregation: pooled              # per-participant lead = median over its usable channel-cycles of the
+                                     # muscle group (pooled over channels) | muscle_mean (pre-D15)
+    min_cycles: 3                    # fewer usable channel-cycles: participant excluded (and counted)
+    confirmatory_rules: [first, drive]   # opening lead, TKEO, open_close + chewing: Holm over
+                                     # both rules x both tasks (D6: the frozen rule is kept)
+  ml_windows:                        # provided by the ml package (C3b); reference definition
+                                     # follows signals.emg.reference, computed on the causal chain
+    window: {window_s: 0.2, stride_s: 0.05, imu_hz: 200.0, warmup_s: 2.0, max_masked: 0.2,
+             thr_sigma: 1.0,           # ZC/SSC/WAMP: x rest SD of the sample differences
+             emg_norm: rest_relative}  # D13: log amp - rest median, counts z vs rest | mvc
+  ml_eval:
+    configs:                         # model -> feature sets evaluated with nested LOSO
+      lda: [emg, imu, emg_imu, emg_nodig, emg_nodig_imu]
+      svm: [emg, imu, emg_imu, emg_nodig, emg_nodig_imu]
+      mlp: [emg, emg_imu]
+    blocked:                         # within-subject CV, blocks cut inside every phase
+      - [lda, emg]
+      - [lda, imu]
+      - [lda, emg_imu]
+      - [svm, emg]
+      - [svm, imu]
+      - [svm, emg_imu]
+    primary_model: svm
+    inner_folds: 3
+    max_train: 12000                 # training windows per fold (random subsample)
+    n_perm: 100                      # LOSO permutation test (LDA, emg_imu)
+    n_jobs: 12                       # workers, one per LOSO fold (0 = every core); results do
+                                     # not depend on it. 24 workers were slower (pilot benchmark)
+    flat_search: false               # all folds' inner grid fits in one pool (same result; not
+                                     # faster in a loaded benchmark, ml05 / perf_investigation §5)
+    diagnostics:                     # exploratory (D13), cheap
+      fusion_variance: true          # fusion_diagnostics: between/within-participant variance
+      importance: {model: svm, feature_set: emg_imu, n_repeats: 5}   # block permutation; null = off
+    variants:                        # exploratory decoding variants (ml05 §6.1); null = all off
+      hyper: main                    # SVM params: fold choice of the main LOSO | search (1 per fold)
+      late_fusion: {w_step: 0.25}    # SVM emg + SVM imu, w_emg in {0,.25,.5,.75,1} on inner folds
+      reduced_emg: {feature_set: emg_imu, features: [log_rms, mnf]}  # EMG block cut to these
+      muscle_ablation:               # X10 (2026-11-03, exploratory): emg_imu without one muscle
+        feature_set: emg_imu         # group's EMG columns (sides as cabled, an03 §1), paired
+        drop:                        # with the main emg_imu run (variants_summary ba_minus_full)
+          masseter: [masseter_r, masseter_l]
+          temporalis: [temporalis_r, temporalis_l]
+          digastric: [digastric_r, digastric_l]
+          digastric_r: [digastric_r]
+          digastric_l: [digastric_l]
+      few_shot:                      # calibration windows of the held-out user added to training
+        feature_sets: [imu, emg_imu]
+        mode: per_phase              # first k windows of every phase (guided routine) | first (recording start)
+        k: [0, 20, 50, 100]          # windows per phase (50 ms stride: 1, 2.5, 5 s per movement)
+        guard_s: 0.35                # evaluation starts > guard after the end of window max(k)
+        weight: balanced             # per user window n_src / (n_classes n_cal), n_cal = k x phases:
+                                     # all calibration windows together = one average class | fixed multiplier
+  ml_online:                         # pseudo-online replay (X4 (change log), exploratory; docs/ml/ml08)
+    chunk_s: 0.02                    # EMG samples per replay chunk (20 ms)
+    model: svm                       # fold models: other participants' ml_windows, ml_eval best_params,
+                                     # max_train and inner_folds (the uncalibrated model is ml_eval's)
+    feature_sets: [emg_imu, imu]
+    primary_feature_set: emg_imu     # in-loop decoding (compute time) and the viewer arrays
+    line_hz: preroll                 # mains frequency from the 60 s before the stream start | offline
+    filter_mode: continuous          # one causal filter from the stream start | phase_warmup (test only)
+    imu_max_wait_s: 0.1              # a window waits at most this long for its IMU samples
+    smoothing: {n: 3, enter: 2, hold: 1}   # majority over the last 3 windows: enter with 2, hold with 1
+    calibration:
+      modes: [none, first, per_phase]
+      first_k: 100                   # first: the first 100 windows after the rest block (5 s)
+      per_phase_k: 20                # per_phase: progressive, first 20 windows of every phase (1 s)
+      guard_s: 0.35                  # scored from 0.35 s after the last calibration window
+      weight: balanced
+    latency: {pre_s: 0.5, budget_ms: 150.0}
+    fa_guard_s: 0.5                  # an onset < 0.5 s before a labelled onset is early, not false
+    pids: []                         # subset of participants (empty = all)
+    n_jobs: 0                        # model fits in parallel (0 = every core); replays run one at a time
+  qc_cohort:
+    impedance_scale: null            # B1 bench check: {channel 1-6: k}, |Z| / k (erratum only
+                                     # if the bench check's decision rule asks for it)
+  qc:
+    usability:                       # per-analysis usability (analysis_plan §3.1)
+      snr_min_db: 6.0                # shape + amplitude families
+      rest_noise_uv: 20.0            # rest family: report separately above this
+      ref_mask_max: 0.10             # amplitude family: masked share of the reference efforts (D9)
+      lowfreq_flag_frac: 0.10        # QC flag: > 10 % of task samples hit by the low-frequency rule (D14)
+    imu:
+      gap_s: 0.05                    # a quaternion gap longer than this breaks coverage
+    optical:
+      bodies: [mta, cra]

@@ -1,0 +1,22 @@
+# This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+# SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+# SPDX-License-Identifier: MIT
+
+# Stored columns that need no figure, table or video (check): pure
+# bookkeeping. Every other column of a shown table must be used by some view. Each rule:
+#   {stage: glob, table: glob, column: glob, why: reason}
+columns:
+  - {column: unit, why: "store bookkeeping: the unit (participant or cohort) a row came from"}
+  # private columns: withheld from every artefact (viz.views.blocks.PRIVATE_COLUMNS); the data
+  # export pseudonymizes them separately
+  - {column: dataset_take, why: "private: session folder name (sex, age, date)"}
+  - {column: dataset_mvc_take, why: "private: session folder name (sex, age, date)"}
+  - {column: delsys_start, why: "private: wall-clock recording time"}
+  - {column: qtm_timestamp, why: "private: wall-clock recording time"}
+  - {column: date, why: "private: recording date"}
+  - {column: source_path, why: "private: file path with session names"}
+  - {column: path, why: "private: file path with session names"}
+  - {column: session, why: "private: session folder name (sex, age, date)"}
+  - {column: when, why: "private: calibration date and time"}
+  - {column: stream_start_us, why: "private: wall-clock stream start"}
+  - {column: recording_utc, why: "private: wall-clock recording time (X11 acquisition)"}

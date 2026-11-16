@@ -1,0 +1,9 @@
+# jnl_table_decoding--form-realtime_protocols; source r16a, run 20261106T121008Z_71b75e, exported 2026-11-12T08:49:06Z
+"Protocol, features",Balanced accuracy,Lat. (ms),FA (/min),> IMU
+"Unseen, simulated real time, exploratory (post hoc)",,,,
+"EMG + IMU, no calibration",0.61 (IQR 0.53–0.69),145,0.0,4/13
+"EMG + IMU, calibration block",0.55 (IQR 0.52–0.65),143,--,3/13
+"EMG + IMU, per phase",0.69 (IQR 0.63–0.72),135,0.0,6/13
+"IMU, no calibration",0.62 (IQR 0.57–0.71),135,0.0,--
+"IMU, calibration block",0.57 (IQR 0.54–0.67),134,--,--
+"IMU, per phase",0.67 (IQR 0.64–0.73),125,0.0,--

@@ -1,0 +1,155 @@
+# This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+# SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+# SPDX-FileCopyrightText: 2026 David Stebich
+# SPDX-License-Identifier: MIT
+
+*.lck
+
+hardware/jtsmm_hat/jtsmm_hat-backups/
+__pycache__
+hardware/jtsmm_hat/audit/reports/lcsc_api_cache.json
+build/
+.venv/
+*egg-info/
+
+# Compiled native capture/storage extension (built from software/jtsmm/native/)
+software/jtsmm/jtsmm/native/*.so
+
+# Doxygen HTML output (generated locally via `doxygen Doxyfile`)
+firmware/jtsmm/doxygen/
+software/jtsmm/native/doxygen/
+
+
+*.lck
+
+hardware/jtsmm_hat/jtsmm_hat-backups/
+__pycache__
+hardware/jtsmm_hat/audit/reports/lcsc_api_cache.json
+build/
+.venv/
+*egg-info/
+
+# Compiled native capture/storage extension (built from software/jtsmm/native/)
+software/jtsmm/jtsmm/native/*.so
+
+# Doxygen HTML output (generated locally via `doxygen Doxyfile`)
+firmware/jtsmm/doxygen/
+software/jtsmm/native/doxygen/
+
+
+# Editors
+.vscode/
+.idea/
+
+hardware/jtsmm_hat/jtsmm_hat-backups/
+__pycache__
+hardware/jtsmm_hat/audit/reports/lcsc_api_cache.json
+build/
+.venv/
+*egg-info/
+
+# Compiled native capture/storage extension (built from software/jtsmm/native/)
+software/jtsmm/jtsmm/native/*.so
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+local_settings.py
+db.sqlite3
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# celery beat schedule file
+celerybeat-schedule
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# custom
+data/raw
+data/optical/
+
+# Recorded sessions: large, and may contain subject data. Never commit these.
+data/*.h5
+data/integrity.json
+data/integrity.txt
+
+# Config assets bundled into the package at build time (software/jtsmm/setup.py)
+software/jtsmm/jtsmm/_data/
+
+# Pilot recordings and analysis outputs: subject data, never commit.
+data/pilot_study/
+data/bench/
+data/analysis/
+# Reference measurements (JTS-MM + Qualisys + Delsys takes, trueness/precision ladder):
+# subject data, never commit.
+data/jtsmm_qualisys_delsys_eval/
+# Derived subject data (features, EMG windows, plots) and tool reports: never commit. The legacy
+# AS/JL/SH files once tracked here were untracked on 2026-10-29 (copies outside the repository).
+data/processed/
+data/recorder/

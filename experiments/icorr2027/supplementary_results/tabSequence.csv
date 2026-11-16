@@ -1,0 +1,20 @@
+# c2e_table; source r16a, run 20261106T121008Z_71b75e, exported 2026-11-12T08:49:06Z
+Question,n,Estimate [95 % CI],Lock. / loc.,Adj. (Holm over the three),Result
+Primary hypothesis,,,,,
+Closer activity precedes the closing onset (both tasks),12 (1 flagged),"−26 ms [−52, 167]",0.575 / 0.615,0.615 (0.615),not rejected
+Gated hypotheses (serial),,,,,
+"Closer release precedes the opening onset, open-close",12,"118 ms [48, 142]",< 0.001 / 0.001,-- (0.004),not tested (gatekeeping)
+"Closer release precedes the opening onset, chewing",7 (4 flagged),"282 ms [68, 360]",0.016 / 0.016,-- (0.031),not tested (gatekeeping)
+Supporting analyses,,,,,
+Closers before the angular-acceleration onset,11,"−8 ms [−59, 82]",-- / 0.711,1.000,not rejected
+Changepoint onsets before the closing onset,12,"118 ms [−45, 344]",-- / 0.065,0.388,not rejected
+Closers before the optical closing onset,10,"−37 ms [−70, 155]",-- / 0.500,1.000,not rejected
+Symmetric window: median lead minus its surrogate median,12,"5 ms [−44, 28]",-- / 0.604,1.000,not rejected
+"EMG-to-acceleration lag, chewing",13,"15 ms [5, 95]",-- / 0.363,1.000,not rejected
+"EMG-to-acceleration lag, open-close",13,"10 ms [−20, 20]",-- / 0.135,0.677,not rejected
+Digastric locked to the opening onset,13,"−38 ms [−60, −22]",0.004 / --,0.028,rejected (locking)
+Structure (descriptive),,,,,
+Closer locking beyond the cycle rhythm (cycle shuffle),12,"−0.41 [−0.69, −0.31]",--,--,descriptive; cohort p withheld
+"Release slope against the cycle shuffle, open-close",12,"0.94 [0.54, 1.05]",--,--,descriptive; cohort p withheld
+"Release slope against the cycle shuffle, chewing",11,"1.02 [−0.03, 1.06]",--,--,descriptive; cohort p withheld
+Decision,,margin 17 ms,,,event order not demonstrated

@@ -1,0 +1,184 @@
+# This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+# SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+# SPDX-License-Identifier: MIT
+
+# biomech study configuration for the ICORR 2027 paper.
+# Overrides software/biomech/biomech/etc/biomech.yaml; relative paths resolve against
+# this file. Changing a `stages.<name>` value marks that stage and everything
+# downstream stale (`biomech status`). Parameter meanings: docs/analysis/.
+
+study: icorr2027
+seed: 42
+
+paths:
+  data_dir: ../../data/pilot_study/jtsmm_data   # $JTSMM_DATA_DIR / --data-dir take precedence
+  out_dir: ../../data/analysis/icorr2027
+  cohort: cohort.yaml
+
+# Frozen values (analysis_plan.md §2). Only the defaults are used so far; any
+# deviation from them must be listed in analysis_plan.md "Deviations".
+stages:
+  # X11: calibration bundle for the sensitivity of the trajectories to the extrinsic calibration
+  # (path relative to the repository; the folder belongs to the data).
+  acquisition_cohort:
+    calibration_bundle: data/jtsmm_qualisys_delsys_eval/trueness_precision_jtsmm/precision_1_near_20250314T090000Z/calibration_bundle.h5
+  # X5 (exploratory, D28): camera-free jaw pose. Values fixed before any real-data
+  # run (H4.2 and "X5 method details fixed by the synthetic gate"); code defaults in
+  # biomech/imu/stage_camerafree.py (DEFAULTS), listed here so the study file states them.
+  camerafree:
+    # D28: one hand-eye calibration applies to every dataset take (the IMUs were not
+    # remounted during the recordings). Rotation from /calibration/imu_<slot>; lever arms (E5/E6)
+    # from the same session's tumbling phases (VD15 method, 6 Hz, no bootstrap) -- the
+    # calibration data, not the validation study's results. Relative to this file.
+    mounting: ../../data/jtsmm_qualisys_delsys_eval/session_imu_mounting_20250314T110000Z_0000000d/session.h5
+    lever: session
+    rest_mask: phase             # the protocol rest phase (camera-free); "labels" = rest ∩ optical label REST
+    calibration_phase: free_motion
+    exclude_scored: [rest, free_motion]
+    primary_e3: E3b              # camera-free psi; E2a's psi when not identifiable (H4.8)
+    grid_hz: 200.0
+    closed:                      # closed-pose detector (H4.2)
+      rest_quantile: 0.90        # opening below rest P90 + 1 deg
+      margin_deg: 1.0
+      speed_max_dps: 5.0         # relative angular speed < 5 deg/s
+      min_s: 0.3                 # for >= 0.3 s
+      speed_smooth_s: 0.1        # causal 0.1 s mean of the relative angular velocity (gate)
+    bridge:                      # E5 Kalman noise floors (gate); noise itself from the rest phase
+      sigma_acc_floor_mm_s2: 1.0
+      r_pos_floor_mm: 0.05
+      bias_rw: 20.0
+    pseudo_hz: 5.0               # E6: E4 pseudo-measurements thinned to 5 Hz (gate)
+    ridge_log10_lambda: [-8.0, 2.0, 21]   # E4 ridge grid, lambda by inner blocked CV
+    ridge_folds: 5
+    detect_tol_s: 0.3            # detection sensitivity / precision tolerance (H4.1)
+    drift_hz: 1.0
+    # X5c (2026-10-30, before computing): per scored task the optical label classes (labels
+    # stage) whose free_motion frames train its E4own-family model (oracle class). Free-motion
+    # labels cannot tell chewing from open-close, so both use OPEN/CLOSE; null = every
+    # calibration frame (= E4own). A class with less than x5c_min_cal_s of frames is not fitted.
+    x5c_task_labels:
+      open_close: [OPEN, CLOSE]
+      chewing: [OPEN, CLOSE]
+      protrusion_retrusion: [PROTRUSION, RETRUSION]
+      left_right: [LEFT, RIGHT]
+    x5c_min_cal_s: 2.0
+  camerafree_cohort:
+    exclude_generic: []          # participants never in E4gen's training (none in the dataset)
+    n_boot: 4000
+
+# D20 (2026-10-25): pose low-pass cutoff sensitivity for the velocity requirements (the VD9
+# finding: the 6 Hz chain underestimates peak velocities). Kept here, not in biomech.yaml:
+# that file is hashed with the analysis code; this block enters no cache key.
+# D22 (2026-10-27): the low-pass and low-frequency-masking variants skip the decoding
+# (ml_windows and everything downstream: ml_eval, ml_online), about 75 % of a variant's run
+# time; no paper result reads their decoding except one robustness-table row, which then
+# reads "not re-run". labels_p95 (the decoding labels) and reporting_population (the cohort) keep it.
+sensitivity:
+  lowfreq_mask:
+    base: reporting_population            # D36: on the 13-adult paper store
+    skip_stages: [ml_windows, camerafree]
+  lowpass_8hz:
+    base: reporting_population            # D36: on the 13-adult paper store
+    description: "D20 sensitivity: pose low-pass 8 Hz instead of 6 Hz (VD9 velocity bias)"
+    set:
+      signals.kinematics.lowpass_hz: 8.0
+    skip_stages: [ml_windows, camerafree]
+  lowpass_10hz:
+    base: reporting_population            # D36: on the 13-adult paper store
+    description: "D20 sensitivity: pose low-pass 10 Hz instead of 6 Hz (VD9 velocity bias)"
+    set:
+      signals.kinematics.lowpass_hz: 10.0
+    skip_stages: [ml_windows, camerafree]
+  lowpass_12hz:
+    base: reporting_population            # D36: on the 13-adult paper store
+    description: "D20 sensitivity: pose low-pass 12 Hz instead of 6 Hz (VD9 velocity bias)"
+    set:
+      signals.kinematics.lowpass_hz: 12.0
+    skip_stages: [ml_windows, camerafree]
+  # D23 (2026-10-29): window sensitivity of the C2 lead and its chance null; a symmetric EMG
+  # search window of ±0.4 s around the mechanical onset instead of −0.6 … +0.2 s (the
+  # drive_taskbase threshold then comes from −0.4 … −0.1 s). The decoding does not read the
+  # onsets (ml_windows depends on labels and qc only, ml_eval on ml_windows); ml_online reads
+  # the mechanical onsets of timing.onsets, which the window does not change, but would re-run
+  # because the timing key changes. So it skips the decoding like the D22 variants.
+  # X5 (2026-10-29): labels_p95 re-keys the labels stage, which the camera-free stage depends
+  # on; X5 is not a target of the D16 sensitivity, so it is skipped (as in every variant that
+  # would re-run it).
+  labels_p95:
+    base: reporting_population            # D36: on the 13-adult paper store
+    skip_stages: [camerafree]
+  # X11 (2026-11-06): the IMU game rotation vector lags the
+  # optics (exposure centre) by about 3 ms in most takes but about 13 ms in three (an20); the
+  # pre-specified C2 does not correct the latency chain (E34). This variant moves each
+  # participant's IMU stamps earlier by its measured lag (acquisition stage) in the imu stage,
+  # so the IMU onsets (C2 timing, C3a) are read on the optical time base. The decoding does
+  # not read the IMU onsets of this stage's arrays for its labels; it is skipped as in D23.
+  imu_latency:
+    base: reporting_population            # D36: on the 13-adult paper store
+    description: "X11 sensitivity: IMU time base corrected by each participant's measured IMU-to-camera lag"
+    set:
+      stages.imu.latency_correction: measured
+    skip_stages: [ml_windows, camerafree]
+  c2_symmetric_window:
+    base: reporting_population            # D36: on the 13-adult paper store
+    description: "D23 sensitivity: C2 EMG search window ±0.4 s instead of −0.6 … +0.2 s"
+    set:
+      stages.timing.emg_pre_s: 0.4
+      stages.timing.emg_post_s: 0.4
+    skip_stages: [ml_windows, camerafree]
+  # D29 (2026-10-29): fixed neighbours of the exclusion thresholds that decide an inference
+  # (an07 "Thresholds and exclusions"); never tuned. Stage reach, verified on the cache keys:
+  # - stages.stats_timing.min_cycles (D15) enters only stats_timing and its dependants
+  #   (requirements, variability): every participant stage and the decoding keep their keys
+  #   and are copied from the primary (seed_cache), so these runs cost only the cohort
+  #   stages (seconds); no skip needed.
+  # - stages.timing.burst_min_db (6 dB) is read only by the timing stage (lead.py) and gates
+  #   the D23 null as well; it reaches stats_timing, requirements, variability and ml_online
+  #   (c2_lead_ms from the usable timing rows). ml_windows / ml_eval do not depend on timing
+  #   and are linked unchanged, so only ml_online is skipped.
+  # - D18 30 / 50 mm (signals.kinematics.min_condyle_posterior_mm) would re-key every stage
+  #   (signals block); it changes only the condyle flag, so it is computed in-stage instead
+  #   (stats_kinematics:condyle_sensitivity groups plausible_condyles_30mm / _50mm).
+  # - noise-limited 1.5 / 3 Hz (imu/analysis.py MIN_COHERENT_BAND_HZ, a module constant) is
+  #   computed in-stage from the stored imu:bandwidth.coh_band_hz (requirements), no variant.
+  d15_min_cycles_2:
+    base: reporting_population            # D36: on the 13-adult paper store
+    description: "D29 sensitivity: C2 participants need >= 2 usable opener channel-cycles instead of 3 (D15)"
+    set:
+      stages.stats_timing.min_cycles: 2
+  d15_min_cycles_5:
+    base: reporting_population            # D36: on the 13-adult paper store
+    description: "D29 sensitivity: C2 participants need >= 5 usable opener channel-cycles instead of 3 (D15)"
+    set:
+      stages.stats_timing.min_cycles: 5
+  burst_3db:
+    base: reporting_population            # D36: on the 13-adult paper store
+    description: "D29 sensitivity: channel-cycle usable for timing with a burst >= 3 dB above rest instead of 6 dB"
+    set:
+      stages.timing.burst_min_db: 3.0
+    skip_stages: [ml_online, camerafree]
+  burst_10db:
+    base: reporting_population            # D36: on the 13-adult paper store
+    description: "D29 sensitivity: channel-cycle usable for timing with a burst >= 10 dB above rest instead of 6 dB"
+    set:
+      stages.timing.burst_min_db: 10.0
+    skip_stages: [ml_online, camerafree]
+  # D36 (2026-11-02): the participant recorded outside the protocol is excluded from both papers, so every run the paper
+  # quotes builds on the reporting_population store (its cohort filter + the variant's own change),
+  # is seeded from it and compared with it. reporting_population itself stays a variant of the primary.
+  c2_muscle_mean:
+    base: reporting_population
+  # J3 (post hoc sensitivity, analysis_plan "C2 onset sensitivity"): stricter EMG onset
+  # threshold, rest mean + 5 SD instead of 3 SD. The decoding does not read the onsets.
+  onset_ksd_5:
+    base: reporting_population
+    description: "C2 onset sensitivity: EMG onset threshold rest mean + 5 SD instead of 3 SD"
+    set:
+      stages.timing.k_sd: 5.0
+    skip_stages: [ml_windows, camerafree]
+  # S5.4 (owed, pre-specified): between-day reliability of s02, the second session
+  # analysed in place of the first; only s02's units re-run.
+  s02_day2:
+    base: reporting_population
+    description: "S5.4 between-day: s02 analysed from its second session"
+    cohort_swap: {s02: 1}

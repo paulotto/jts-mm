@@ -1,0 +1,17 @@
+# This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+# SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+# SPDX-License-Identifier: MIT
+
+# Render @brief / @param / @p etc. as Markdown in hover (clangd 22+).
+Documentation:
+  CommentFormat: Doxygen
+
+# ARM Pico firmware is cross-compiled; clangd needs newlib headers for stdio/assert.
+# Scoped to firmware trees so host C++ (software/jtsmm/native) is unaffected.
+---
+If:
+  PathMatch: (firmware|bringup)/.*
+CompileFlags:
+  Add:
+    - -isystem
+    - /usr/include/newlib

@@ -1,0 +1,798 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://exofusion.local/schema/v1/jtsmm.schema.json",
+  "title": "JTS-MM runtime configuration",
+  "description": "Schema v1 — monolithic operator contract. Human docs: docs/software/s08_runtime_configuration.md",
+  "type": "object",
+  "required": ["schema_version", "hat", "mcu", "host", "session"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "const": 1,
+      "description": "Configuration contract version."
+    },
+    "hat": {
+      "type": "object",
+      "description": "Host link layer (never sent to MCU).",
+      "additionalProperties": false,
+      "required": ["serial_port", "firmware_version"],
+      "properties": {
+        "serial_port": { "type": "string", "default": "/dev/jtsmm_hat" },
+        "firmware_version": { "type": "string" }
+      }
+    },
+    "mcu": {
+      "type": "object",
+      "description": "RP2350-owned blocks (apply order: platform → emg → imu → trigger).",
+      "additionalProperties": false,
+      "required": ["platform", "emg", "imu_mta", "imu_cra", "trigger"],
+      "properties": {
+        "platform": { "$ref": "#/$defs/mcu_platform" },
+        "emg": { "$ref": "#/$defs/mcu_emg" },
+        "imu_mta": { "$ref": "#/$defs/mcu_imu_slot" },
+        "imu_cra": { "$ref": "#/$defs/mcu_imu_slot" },
+        "trigger": { "$ref": "#/$defs/mcu_trigger" }
+      }
+    },
+    "host": {
+      "type": "object",
+      "description": "Pi-only settings — never sent over USB.",
+      "additionalProperties": false,
+      "required": [
+        "cameras",
+        "paths",
+        "capture",
+        "record",
+        "emg_check",
+        "emg_filter",
+        "viewer",
+        "schema"
+      ],
+      "properties": {
+        "cameras": { "$ref": "#/$defs/host_cameras" },
+        "storage": { "$ref": "#/$defs/host_storage" },
+        "paths": { "$ref": "#/$defs/host_paths" },
+        "capture": { "$ref": "#/$defs/host_capture" },
+        "record": { "$ref": "#/$defs/host_record" },
+        "emg_check": { "$ref": "#/$defs/host_emg_check" },
+        "integrity": { "$ref": "#/$defs/host_integrity" },
+        "emg_filter": { "$ref": "#/$defs/host_emg_filter" },
+        "viewer": { "$ref": "#/$defs/host_viewer" },
+        "schema": { "$ref": "#/$defs/host_schema" }
+      }
+    },
+    "session": {
+      "type": "object",
+      "description": "Per-record overrides and HDF5 /meta defaults.",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "duration_s",
+        "default_duration_s",
+        "subject_id",
+        "protocol",
+        "meta"
+      ],
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": ["acquisition", "bench", "calibration"]
+        },
+        "duration_s": {
+          "oneOf": [{ "type": "null" }, { "type": "number", "minimum": 0 }]
+        },
+        "default_duration_s": { "type": "number", "minimum": 0 },
+        "subject_id": {
+          "oneOf": [{ "type": "null" }, { "type": "string" }]
+        },
+        "protocol": {
+          "oneOf": [{ "type": "null" }, { "type": "string" }]
+        },
+        "meta": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "ct_calibration": {
+          "type": "boolean",
+          "description": "Run interactive CT tip pivot calibration (cone + SPACE) before recording."
+        },
+        "ct_calibration_n_poses": {
+          "type": "integer",
+          "minimum": 3,
+          "maximum": 200,
+          "description": "Number of pivot poses for OLS tip solve (default 20)."
+        },
+        "ct_tip_calibration": {
+          "oneOf": [{ "type": "null" }, { "type": "string" }],
+          "description": "Path to reusable tip-offset JSON. Written when ct_calibration is true; loaded and applied when false."
+        },
+        "persist_ct_calibration": {
+          "type": "boolean",
+          "description": "When true, save CT tip calib poses and camera frames under ct_calibration_recordings_dir."
+        },
+        "ct_calibration_recordings_dir": {
+          "oneOf": [{ "type": "null" }, { "type": "string" }],
+          "description": "Directory for persisted CT tip calib recordings. {experiment_name} is substituted when present. Default: ~/experiments/5_2_1_pivot_calibration_repeatability/recordings"
+        },
+        "persist_imu_calibration": {
+          "type": "boolean",
+          "description": "When true (default), copy IMU mounting session.h5 + imu_mounting.json under imu_calibration_recordings_dir."
+        },
+        "imu_mounting_calibration": {
+          "oneOf": [{ "type": "null" }, { "type": "string" }],
+          "description": "Stable IMU mounting JSON (R_mount per IMU): updated by `jtsmm imu calibrate` when a fit is accepted; embedded into every recorded session as /calibration/imu_*/mounting_transform."
+        },
+        "imu_calibration_recordings_dir": {
+          "oneOf": [{ "type": "null" }, { "type": "string" }],
+          "description": "Directory for persisted IMU–optical hand-eye takes. {experiment_name} is substituted when present. Default: ~/experiments/5_2_2_imu_optical_handeye/recordings"
+        },
+        "optical_track": {
+          "type": "boolean",
+          "description": "Enable ArUco optical tracking into /optical during record."
+        },
+        "optical_track_hz": {
+          "oneOf": [
+            { "type": "null" },
+            { "type": "number", "exclusiveMinimum": 0, "maximum": 120 }
+          ],
+          "description": "Live tracking rate in Hz. null detects every stereo pair (the camera trigger rate). A lower rate detects every Nth pair (20 Hz = every 2nd, 10 Hz = every 4th at the 40 Hz template trigger rate). Camera timestamps stay at the trigger rate; /optical only stores the poses that were detected. CT tip calibration and IMU mounting calibration ignore this and track every pair."
+        },
+        "optical_config": {
+          "oneOf": [{ "type": "null" }, { "type": "string" }],
+          "description": "Path to monolithic optical.yaml (markers/calibration/tracker/experiment)."
+        },
+        "use_experiment_plan": {
+          "type": "boolean",
+          "description": "Walk SPACE-bounded experiment phases during jtsmm record. When false, capture runs for duration_s with no /events /phases. CLI --use-experiment-plan / --no-use-experiment-plan overrides."
+        },
+        "experiment": {
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["name", "phases"],
+              "properties": {
+                "name": { "type": "string" },
+                "description": {
+                  "oneOf": [{ "type": "null" }, { "type": "string" }]
+                },
+                "phases": {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "oneOf": [
+                      { "type": "string" },
+                      {
+                        "type": "object",
+                        "required": ["name"],
+                        "properties": {
+                          "name": { "type": "string" },
+                          "kind": { "type": "string" }
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          ],
+          "description": "Inline motion-phase plan (same shape as optical.yaml experiment:). Landmark calibration is inserted before the first motion phase. MVC is a separate mode (session.mvc / jtsmm record --mvc), not a plan name. Used when use_experiment_plan is true and experiment_plan path is unset."
+        },
+        "experiment_plan": {
+          "oneOf": [{ "type": "null" }, { "type": "string" }],
+          "description": "Optional path override (JSON or optical.yaml). Wins over session.experiment when use_experiment_plan is true. CLI --experiment-plan."
+        },
+        "mvc": {
+          "type": "boolean",
+          "description": "Dedicated EMG-only MVC take (mvc_opening then mvc_closing SPACE). Independent of session.experiment. CLI --mvc / --no-mvc. Cannot combine with --use-experiment-plan."
+        },
+        "write_jts_config": {
+          "type": "boolean",
+          "description": "Write JTS config sidecar from phase intervals when an experiment plan is walked."
+        }
+      }
+    }
+  },
+  "$defs": {
+    "profile_block": {
+      "type": "object",
+      "properties": {
+        "profile": { "type": "string" },
+        "custom": { "type": "object", "additionalProperties": true }
+      },
+      "additionalProperties": true
+    },
+    "mcu_platform": {
+      "allOf": [{ "$ref": "#/$defs/profile_block" }],
+      "additionalProperties": false,
+      "required": ["profile", "system", "spi0", "i2c", "pio", "buffers", "irq"],
+      "properties": {
+        "profile": {
+          "type": "string",
+          "enum": ["default", "custom"],
+          "description": "The firmware refuses anything else (config_json.c parse_platform)."
+        },
+        "custom": { "type": "object", "additionalProperties": true },
+        "system": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["cpu_mhz"],
+          "properties": {
+            "cpu_mhz": { "type": "integer", "const": 150 },
+            "xosc_hz": { "type": "integer" }
+          }
+        },
+        "spi0": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["hz"],
+          "properties": {
+            "hz": { "type": "integer", "minimum": 500000, "maximum": 4000000 },
+            "cfg_hz": { "type": "integer", "minimum": 100000, "maximum": 8000000 }
+          }
+        },
+        "i2c": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["hz"],
+          "properties": {
+            "hz": { "type": "integer", "enum": [100000, 400000] }
+          }
+        },
+        "pio": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["trigger"],
+          "properties": {
+            "trigger": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["clock_hz"],
+              "properties": {
+                "clock_hz": { "type": "integer", "minimum": 100000, "maximum": 50000000 }
+              }
+            }
+          }
+        },
+        "buffers": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["emg_ring", "imu_ring", "event_ring"],
+          "properties": {
+            "emg_ring": { "type": "integer", "minimum": 64 },
+            "imu_ring": { "type": "integer", "minimum": 32 },
+            "event_ring": { "type": "integer", "minimum": 32 }
+          }
+        },
+        "irq": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["emg", "imu", "trigger"],
+          "properties": {
+            "emg": { "type": "integer", "minimum": 0, "maximum": 7 },
+            "imu": { "type": "integer", "minimum": 0, "maximum": 7 },
+            "trigger": { "type": "integer", "minimum": 0, "maximum": 3 }
+          }
+        }
+      }
+    },
+    "mcu_emg": {
+      "allOf": [{ "$ref": "#/$defs/profile_block" }],
+      "additionalProperties": false,
+      "required": [
+        "profile",
+        "sample_rate_sps",
+        "default_gain",
+        "bias",
+        "leadoff",
+        "test_signal",
+        "stream_channels"
+      ],
+      "properties": {
+        "profile": {
+          "type": "string",
+          "enum": [
+            "acquisition",
+            "high_rate",
+            "bench",
+            "noise_characterization",
+            "custom"
+          ]
+        },
+        "custom": { "type": "object", "additionalProperties": true },
+        "enabled": { "type": "boolean" },
+        "sample_rate_sps": {
+          "type": "integer",
+          "enum": [250, 500, 1000, 2000, 4000]
+        },
+        "default_gain": {
+          "type": "integer",
+          "enum": [1, 2, 4, 6, 8, 12, 24]
+        },
+        "stream_channels": {
+          "type": "integer",
+          "enum": [6, 8]
+        },
+        "active_channels": {
+          "type": "array",
+          "items": { "type": "integer", "minimum": 1, "maximum": 6 },
+          "uniqueItems": true
+        },
+        "bias": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["enabled"],
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "channels": {
+              "type": "array",
+              "items": { "type": "integer", "minimum": 1, "maximum": 6 },
+              "uniqueItems": true
+            },
+            "ch7_readback": { "type": "boolean" }
+          }
+        },
+        "leadoff": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["enabled", "during_recording", "ac_tone", "current_na"],
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "during_recording": { "type": "boolean" },
+            "ac_tone": { "type": "boolean" },
+            "current_na": { "type": "integer", "enum": [6, 24] },
+            "probe_drl": { "type": "boolean" }
+          }
+        },
+        "test_signal": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["enabled"],
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "amplitude_mv": { "type": "integer", "minimum": 0, "maximum": 255 }
+          }
+        }
+      }
+    },
+    "imu_report_entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["enabled", "rate_hz"],
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "rate_hz": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "imu_reports_map": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "accelerometer": { "$ref": "#/$defs/imu_report_entry" },
+        "gyroscope": { "$ref": "#/$defs/imu_report_entry" },
+        "magnetometer": { "$ref": "#/$defs/imu_report_entry" },
+        "linear_acceleration": { "$ref": "#/$defs/imu_report_entry" },
+        "rotation_vector": { "$ref": "#/$defs/imu_report_entry" },
+        "game_rotation_vector": { "$ref": "#/$defs/imu_report_entry" },
+        "geomagnetic_rotation_vector": { "$ref": "#/$defs/imu_report_entry" },
+        "gyro_integrated_rotation_vector": { "$ref": "#/$defs/imu_report_entry" },
+        "gravity": { "$ref": "#/$defs/imu_report_entry" },
+        "raw_accelerometer": { "$ref": "#/$defs/imu_report_entry" },
+        "arvr_stabilized_rotation_vector": { "$ref": "#/$defs/imu_report_entry" },
+        "arvr_stabilized_game_rotation_vector": { "$ref": "#/$defs/imu_report_entry" }
+      }
+    },
+    "mcu_imu_slot": {
+      "allOf": [{ "$ref": "#/$defs/profile_block" }],
+      "additionalProperties": false,
+      "required": ["enabled", "profile", "fusion", "sync", "reports"],
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "profile": {
+          "type": "string",
+          "enum": [
+            "fused_only",
+            "raw_only",
+            "kinematics_accel",
+            "kinematics_default",
+            "datasheet_motion",
+            "all",
+            "custom"
+          ]
+        },
+        "custom": { "type": "object", "additionalProperties": true },
+        "fusion": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["primary", "rate_hz"],
+          "properties": {
+            "primary": {
+              "type": "string",
+              "enum": [
+                "game_rotation_vector",
+                "rotation_vector",
+                "geomagnetic_rotation_vector",
+                "gyro_integrated_rotation_vector"
+              ],
+              "description": "Fusion quaternions the firmware implements (config_json.c parse_fusion_primary); must name the one enabled fusion report."
+            },
+            "rate_hz": { "type": "integer", "minimum": 1 }
+          }
+        },
+        "sync": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mode"],
+          "properties": {
+            "mode": {
+              "type": "string",
+              "enum": ["int_driven", "emg_drdy_divisor"]
+            },
+            "decimation_factor": { "type": "integer", "minimum": 1, "maximum": 255 }
+          }
+        },
+        "dynamic_calibration": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "BNO085 motion-engine dynamic calibration per sensor (firmware default: all true, as in every recording up to 2026-11-02); false keeps the saved calibration (imu_savecal) fixed during a take. cv02 §7.1.",
+          "properties": {
+            "accel": { "type": "boolean" },
+            "gyro": { "type": "boolean" },
+            "mag": { "type": "boolean" }
+          }
+        },
+        "reports": { "$ref": "#/$defs/imu_reports_map" }
+      }
+    },
+    "mcu_trigger": {
+      "allOf": [{ "$ref": "#/$defs/profile_block" }],
+      "additionalProperties": false,
+      "required": ["enabled", "profile", "rate_hz", "pulse", "outputs", "start_on"],
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "profile": {
+          "type": "string",
+          "enum": [
+            "imx296_dual_csi",
+            "imx296_high_fps",
+            "bench_scope",
+            "track_a_led",
+            "custom"
+          ]
+        },
+        "custom": { "type": "object", "additionalProperties": true },
+        "rate_hz": { "type": "integer", "minimum": 1, "maximum": 200 },
+        "pulse": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["width_us", "polarity"],
+          "properties": {
+            "width_us": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Must be below the trigger period 1e6/rate_hz (validate.py); the firmware silently halves the period otherwise."
+            },
+            "polarity": {
+              "type": "string",
+              "enum": ["imx296_fast", "active_high"]
+            }
+          }
+        },
+        "outputs": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["csi1", "csi2", "scope", "sync_led"],
+          "properties": {
+            "csi1": { "type": "boolean" },
+            "csi2": { "type": "boolean" },
+            "scope": { "type": "boolean" },
+            "sync_led": { "type": "boolean" }
+          }
+        },
+        "start_on": {
+          "type": "string",
+          "enum": ["stream_start", "manual", "immediate"]
+        }
+      }
+    },
+    "host_camera_entry": {
+      "type": "object",
+      "required": [
+        "id",
+        "device",
+        "resolution",
+        "exposure_us",
+        "gain",
+        "ae_enable",
+        "awb_enable",
+        "trigger"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string" },
+        "device": {
+          "type": "string",
+          "description": "picamera2 camera index or alias (csi0, csi1, 0, 1)"
+        },
+        "resolution": {
+          "type": "array",
+          "items": { "type": "integer", "minimum": 1 },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "format": {
+          "type": "string",
+          "enum": ["YUV420", "RGB888", "XBGR8888", "BGR888"],
+          "default": "YUV420"
+        },
+        "buffer_count": {
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 16,
+          "default": 6
+        },
+        "exposure_us": {
+          "type": "number",
+          "minimum": 1,
+          "description": "Manual ExposureTime (µs) when ae_enable is false; Track B must fit MCU pulse budget"
+        },
+        "gain": {
+          "type": "number",
+          "minimum": 1.0,
+          "maximum": 16.0,
+          "description": "AnalogueGain when ae_enable is false"
+        },
+        "ae_enable": {
+          "type": "boolean",
+          "description": "libcamera AeEnable; false locks ExposureTime + AnalogueGain"
+        },
+        "awb_enable": {
+          "type": "boolean",
+          "description": "libcamera AwbEnable; false uses awb_gains"
+        },
+        "awb_gains": {
+          "type": "array",
+          "items": { "type": "number", "minimum": 0 },
+          "minItems": 2,
+          "maxItems": 2,
+          "description": "ColourGains [red, blue] used when awb_enable is false"
+        },
+        "sharpness": { "type": "number", "minimum": 0.0, "maximum": 16.0, "default": 1.0 },
+        "brightness": { "type": "number", "minimum": -1.0, "maximum": 1.0, "default": 0.0 },
+        "contrast": { "type": "number", "minimum": 0.0, "maximum": 32.0, "default": 1.0 },
+        "saturation": { "type": "number", "minimum": 0.0, "maximum": 32.0, "default": 1.0 },
+        "noise_reduction_mode": {
+          "type": "string",
+          "enum": ["off", "fast", "high_quality"],
+          "default": "fast"
+        },
+        "trigger": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["source", "expect_rate_hz"],
+          "properties": {
+            "source": { "type": "string", "enum": ["mcu"] },
+            "expect_rate_hz": { "type": "number", "minimum": 1 }
+          }
+        }
+      }
+    },
+    "host_cameras": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["track", "marker_detector", "list"],
+      "properties": {
+        "track": { "type": "string", "enum": ["A", "B"] },
+        "marker_detector": { "type": "string" },
+        "list": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/host_camera_entry" }
+        }
+      }
+    },
+    "host_storage": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Deprecated: use host.paths.data_dir. base_dir is only read when paths.data_dir is absent; validation warns when both are set and differ.",
+      "required": ["base_dir"],
+      "properties": {
+        "base_dir": { "type": "string" }
+      }
+    },
+    "host_paths": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["data_dir"],
+      "properties": {
+        "data_dir": { "type": "string" }
+      }
+    },
+    "host_capture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["settle_ms", "stream_restart", "native_prefer"],
+      "properties": {
+        "settle_ms": { "type": "integer", "minimum": 0 },
+        "stream_restart": { "type": "boolean" },
+        "native_prefer": { "type": "boolean" },
+        "trigger_after_cameras": { "type": "boolean" },
+        "pps_samples": { "type": "integer", "minimum": 0, "maximum": 64 },
+        "camera_pps_anchor": { "type": "boolean" },
+        "camera_delta_tracking": { "type": "boolean" }
+      }
+    },
+    "host_record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["emg_check", "preflight", "integrity", "mcu_apply"],
+      "properties": {
+        "abort_on_error": {
+          "type": "boolean",
+          "description": "Whether jtsmm record stops on a quality gate (preflight, EMG contact, integrity verdict). Operational failures abort regardless."
+        },
+        "emg_check": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["enabled"],
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "block_on_contact_failure": {
+              "type": "boolean",
+              "description": "Abort before recording when the pre-recording EMG check finds unusable electrode contact (comparator lead-off, channel railed, or |Z| above 50 kOhm). Noise/line-hum findings never block. Override per run with `jtsmm record --force-emg-check`."
+            }
+          }
+        },
+        "preflight": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["enabled"],
+          "properties": {
+            "enabled": { "type": "boolean" }
+          }
+        },
+        "integrity": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["enabled"],
+          "properties": {
+            "enabled": { "type": "boolean" }
+          }
+        },
+        "mcu_apply": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["enabled"],
+          "properties": {
+            "enabled": { "type": "boolean" }
+          }
+        }
+      }
+    },
+    "host_emg_check": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "line_hz",
+        "leadoff",
+        "noise",
+        "impedance",
+        "drl_isolation",
+        "settle_ms"
+      ],
+      "properties": {
+        "line_hz": { "type": "number", "minimum": 1 },
+        "settle_ms": { "type": "integer", "minimum": 0 },
+        "leadoff": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["duration_s"],
+          "properties": {
+            "duration_s": { "type": "number", "minimum": 0 }
+          }
+        },
+        "noise": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["duration_s"],
+          "properties": {
+            "duration_s": { "type": "number", "minimum": 0 }
+          }
+        },
+        "impedance": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["enabled", "duration_s"],
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "duration_s": { "type": "number", "minimum": 0 }
+          }
+        },
+        "drl_isolation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["duration_s"],
+          "properties": {
+            "duration_s": { "type": "number", "minimum": 0 }
+          }
+        }
+      }
+    },
+    "host_integrity": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Pass/fail gates for the post-session integrity check. Read after the recording is closed, so they cannot affect sampling. Separate from host.record.integrity.enabled, which only decides whether jtsmm record runs the check.",
+      "properties": {
+        "errors_as_warnings": {
+          "type": "boolean",
+          "description": "Report integrity errors as warnings so no session is RESULT: FAIL. Demotion is recorded in the report and integrity.json."
+        },
+        "thresholds": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "emg_gap_warn_periods": { "type": "number", "minimum": 0 },
+            "emg_gap_err_periods": { "type": "number", "minimum": 0 },
+            "emg_loss_warn_frac": { "type": "number", "minimum": 0 },
+            "emg_loss_err_frac": { "type": "number", "minimum": 0 },
+            "emg_missed_drdy_warn_frac": { "type": "number", "minimum": 0 },
+            "emg_missed_drdy_err_frac": { "type": "number", "minimum": 0 },
+            "imu_ring_drop_err_frac": { "type": "number", "minimum": 0 },
+            "imu_gap_warn_periods": { "type": "number", "minimum": 0 },
+            "stream_end_gap_err_s": { "type": "number", "minimum": 0 },
+            "stream_start_lag_warn_s": { "type": "number", "minimum": 0 },
+            "stream_start_lag_err_s": { "type": "number", "minimum": 0 },
+            "camera_coverage_min_frac": { "type": "number", "minimum": 0 },
+            "camera_trailing_gap_warn_s": { "type": "number", "minimum": 0 },
+            "camera_trailing_gap_err_s": { "type": "number", "minimum": 0 },
+            "sync_residual_warn_us": { "type": "number", "minimum": 0 },
+            "sync_residual_err_us": { "type": "number", "minimum": 0 },
+            "assign_frames_warn": { "type": "number", "minimum": 0 },
+            "assign_frames_err": { "type": "number", "minimum": 0 },
+            "assign_spread_frames_warn": { "type": "number", "minimum": 0 },
+            "assign_spread_frames_err": { "type": "number", "minimum": 0 },
+            "assign_drift_warn_us_per_s": { "type": "number", "minimum": 0 },
+            "assign_drift_err_us_per_s": { "type": "number", "minimum": 0 },
+            "assign_offset_dev_frames_warn": { "type": "number", "minimum": 0 },
+            "assign_offset_dev_frames_err": { "type": "number", "minimum": 0 },
+            "anchor_refined_frames_err": { "type": "number", "minimum": 0 }
+          }
+        }
+      }
+    },
+    "host_emg_filter": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Viewer/plot EMG filtering. Only mains_mode is read; enabled/notch_hz/highpass_hz/lowpass_hz are deprecated and have no effect (validation warns when they would suggest one).",
+      "properties": {
+        "enabled": { "type": "boolean", "description": "Deprecated, no effect." },
+        "notch_hz": { "type": "number", "description": "Deprecated, no effect." },
+        "highpass_hz": { "type": "number", "description": "Deprecated, no effect." },
+        "lowpass_hz": { "type": "number", "description": "Deprecated, no effect." },
+        "mains_mode": {
+          "enum": ["track", "notch", "off"],
+          "description": "How line interference is removed in the viewer and plots. 'track' fits and subtracts the tone and locks onto the real grid frequency (~1 Hz of band per harmonic); 'notch' is the biquad bank (~5 Hz per harmonic, fixed at the nominal frequency); 'off' leaves only the band-pass."
+        }
+      }
+    },
+    "host_viewer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["enabled", "bind_host", "port"],
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "bind_host": { "type": "string" },
+        "port": { "type": "integer", "minimum": 1, "maximum": 65535 }
+      }
+    },
+    "host_schema": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["relaxed_unknown_keys"],
+      "properties": {
+        "relaxed_unknown_keys": { "type": "boolean" }
+      }
+    }
+  }
+}

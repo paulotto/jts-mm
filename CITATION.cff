@@ -1,0 +1,34 @@
+# This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+# SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+# SPDX-License-Identifier: CC-BY-4.0
+
+cff-version: 1.2.0
+message: "If you use this system or this software, please cite it as below, together with the article that describes the part you use."
+type: software
+title: "JTS-MM: An open-source multimodal jaw tracking measurement system"
+abstract: >-
+  Hardware, firmware, recording software, and analysis code of JTS-MM, a low-cost system
+  that records six-degree-of-freedom jaw kinematics, surface electromyography of the
+  masticatory muscles, and inertial signals on one hardware clock.
+authors:
+  - family-names: Müller
+    given-names: Paul-Otto
+    orcid: "https://orcid.org/0009-0006-2418-458X"
+  - family-names: Stebich
+    given-names: David
+  - family-names: Stryk
+    name-particle: von
+    given-names: Oskar
+repository-code: "https://github.com/paulotto/jts-mm"
+keywords:
+  - jaw tracking
+  - mandibular kinematics
+  - surface electromyography
+  - inertial measurement unit
+  - sensor synchronization
+  - open-source hardware
+license:
+  - MIT
+  - CERN-OHL-P-2.0
+  - CC-BY-4.0
+  - CC-BY-NC-SA-4.0

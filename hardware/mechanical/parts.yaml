@@ -1,0 +1,297 @@
+# This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+# SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+# SPDX-License-Identifier: CERN-OHL-P-2.0
+
+# The 3D-printed parts of the JTS-MM setup: parts, versions, design analyses, and which version
+# each study used. Single source of truth for hardware/mechanical (README.md) and for the paper
+# figures (software/biomech/biomech/hwparts.py). Paths are relative to this folder.
+#
+# Field reference: README.md "parts.yaml fields". In short:
+# part: title, role, fcstd, fcstd_extra (reference objects kept in the FCStd), material
+#   {name, density_g_cm3}, legacy_render (original JTS render), candidate (variant shown, marked
+#   "candidate", while usage is null), inspired_by, seat_on_scan, variants.
+# variant: title (reader-facing: no plan-code look such as "V5"/"C1"), status, stl (the geometry
+#   that was or would be printed), fcstd_body (FreeCAD body it is exported from; `make parts`
+#   regenerates the STL and checks it against the committed one), params ({<sheet label>.<alias>:
+#   value} set before the export), cad_pending (STL only, model added later), print (slicer
+#   record), date, note.
+# status: used | variant (candidate version) | printed (slicer record) | superseded | concept
+#
+# To state what a study used, fill `usage` below (null = not yet specified; the setup figures then
+# keep the original JTS renders). Per participant: `usage.overrides.<study>.<pid>.<part>`.
+
+parts:
+  teeth_attachment:
+    title: Teeth attachment
+    candidate: v5_print_2026-10-03   # shown, marked "candidate", while usage is null
+    role: >-
+      Bonds the mouth marker to the lower teeth (mandible). Carries the mouth-marker interface;
+      version 5 adds a molar arc. Held on the lower front teeth by its own clamping fit and glued.
+    fcstd: parts/teeth_attachment/teeth_attachment.FCStd
+    fcstd_extra: [Teeth_02]   # the teeth scan, hidden, for fitting by eye
+    # Variant parameter: inner-arc separation Params.ta_separation (cell B40). The molar-arc
+    # offset reads Params004.ta_separation, which must stay 6.5 (other values break Sketch110).
+    material: {name: PETG, density_g_cm3: 1.27}
+    legacy_render: ../../software/jaw_tracking/.resources/images/mouth_attachement_render_blender.png
+    inspired_by: [molar_clamp_concepts, incisor_attachment]
+    variants:
+      jts:
+        title: JTS original
+        status: superseded
+        stl: ../../software/jaw_tracking/models/JTS_Teeth_Attachment.stl
+        note: Original JTS part (software/jaw_tracking), glued to the lower incisors.
+      v1:
+        title: Version 1
+        status: superseded
+        stl: parts/teeth_attachment/v1.stl
+        fcstd_body: Body001
+      v2:
+        title: Version 2
+        status: superseded
+        stl: parts/teeth_attachment/v2.stl
+        fcstd_body: Body007
+      v4:
+        title: Version 4
+        status: superseded
+        stl: parts/teeth_attachment/v4.stl
+        fcstd_body: Body008
+      v5_draft:
+        title: Version 5 draft
+        status: superseded
+        stl: parts/teeth_attachment/v5_draft.stl
+        fcstd_body: Body010
+        note: First version-5 body; the version-5 variants below are its revision (Body011).
+      v5_print_2026-10-03:
+        title: Version 5, 5 mm (print 2026-10-03)
+        status: printed
+        stl: parts/teeth_attachment/v5_print_2026-10-03.stl
+        print: print/teeth_attachment_v5_5mm_2026-10-03.3mf
+        date: "2026-10-03"
+        note: >-
+          Geometry of the 30-part print plate of 2026-10-03, an earlier version-5 state than the
+          v5_5mm export of 2026-10-08 (extracted from the 3MF).
+      v5_4mm:
+        title: "Version 5, 4 mm"
+        status: variant
+        stl: parts/teeth_attachment/v5_4mm.stl
+        cad_pending: true
+        date: "2026-10-08"
+        note: >-
+          Exported from an earlier version-5 state; the saved CAD with ta_separation 4.0 gives a different
+          shape (1 mm shallower).
+      v5_4_5mm: {title: "Version 5, 4.5 mm", status: variant, stl: parts/teeth_attachment/v5_4_5mm.stl, fcstd_body: Body011, params: {Params.ta_separation: 4.5}, date: "2026-10-09"}
+      v5_5mm:   {title: "Version 5, 5 mm", status: variant, stl: parts/teeth_attachment/v5_5mm.stl, fcstd_body: Body011, params: {Params.ta_separation: 5.0}, date: "2026-10-08"}
+      v5_5_5mm: {title: "Version 5, 5.5 mm", status: variant, stl: parts/teeth_attachment/v5_5_5mm.stl, fcstd_body: Body011, params: {Params.ta_separation: 5.5}, date: "2026-10-09"}
+      v5_6_5mm:
+        title: "Version 5, 6.5 mm"
+        status: variant
+        stl: parts/teeth_attachment/v5_6_5mm.stl
+        cad_pending: true
+        date: "2026-10-09"
+        note: >-
+          Not reproducible from the saved CAD (ta_separation 6.5 leaves Sketch110 unsolvable);
+          the STL is authoritative.
+    seat_on_scan: null    # placement of the attachment on scan/teeth_02.stl (enables the fit map)
+
+  mouth_marker:
+    title: Mouth marker
+    candidate: qualisys_aruco   # shown, marked "candidate", while usage is null
+    role: Carries the mouth-piece tags (MP, ids 13/17) and the mandible IMU; mounts on the teeth attachment.
+    fcstd: parts/mouth_marker/mouth_marker.FCStd
+    material: {name: PLA, density_g_cm3: 1.24}
+    legacy_render: ../../software/jaw_tracking/.resources/images/mouthpiece_render_blender.png
+    variants:
+      jts:
+        title: JTS original
+        status: superseded
+        stl: ../../software/jaw_tracking/models/JTS_Mouth_Marker.stl
+      v1:
+        title: Version 1
+        status: superseded
+        stl: parts/mouth_marker/v1.stl
+        fcstd_body: Body
+      aruco:
+        title: ArUco + IMU (CAD state 2026-10-09)
+        status: variant
+        stl: parts/mouth_marker/aruco.stl
+        fcstd_body: Body005
+        note: The mouth marker of the current FreeCAD model, used in the dataset (user, 2026-11-04).
+      qualisys_aruco:
+        title: Qualisys + ArUco
+        status: variant
+        stl: parts/mouth_marker/qualisys_aruco.stl
+        fcstd: parts/mouth_marker/qualisys_aruco.FCStd
+        fcstd_body: Body005
+        date: "2026-10-13"
+        note: >-
+          With the reflective markers (systems study). CAD: the reflective-marker model
+          (saved 2026-11-04), split to its own project.
+
+  head_marker:
+    title: Head marker
+    candidate: qualisys_aruco   # shown, marked "candidate", while usage is null
+    role: Carries the head-piece tags (HP, ids 1/8) and the head IMU; strapped to the head (maxilla reference).
+    fcstd: parts/head_marker/head_marker.FCStd
+    material: {name: PLA, density_g_cm3: 1.24}
+    legacy_render: ../../software/jaw_tracking/.resources/images/headpiece_render_blender.png
+    variants:
+      jts:
+        title: JTS original
+        status: superseded
+        stl: ../../software/jaw_tracking/models/JTS_Head_Marker.stl
+      aruco_2026-08-18:
+        title: ArUco + IMU (print 2026-08-18)
+        status: printed
+        stl: parts/head_marker/aruco_2026-08-18.stl
+        fcstd_body: Body002
+        print: print/head_marker_2026-08-18.3mf
+        date: "2026-08-18"
+      qualisys_aruco:
+        title: Qualisys + ArUco
+        status: variant
+        stl: parts/head_marker/qualisys_aruco.stl
+        fcstd: parts/head_marker/qualisys_aruco.FCStd
+        fcstd_body: Body002
+        date: "2026-10-13"
+        note: >-
+          With the reflective markers (systems study). CAD: the reflective-marker model
+          (saved 2026-11-04), split to its own project.
+
+  calibration_tool:
+    title: Calibration tool
+    candidate: qualisys_aruco   # shown, marked "candidate", while usage is null
+    role: Pointer (CT, tags 20/22) for landmark digitisation; tip by pivot calibration.
+    fcstd: parts/calibration_tool/calibration_tool.FCStd
+    material: {name: PLA, density_g_cm3: 1.24}
+    legacy_render: ../../software/jaw_tracking/.resources/images/calibration_tool_render_blender.png
+    variants:
+      jts:
+        title: JTS original
+        status: superseded
+        stl: ../../software/jaw_tracking/models/JTS_Calibration_Tool.stl
+      aruco:
+        title: ArUco (CAD state 2026-10-09)
+        status: superseded
+        stl: parts/calibration_tool/aruco.stl
+        fcstd_body: Body003
+      qualisys_aruco:
+        title: Qualisys + ArUco
+        status: variant
+        stl: parts/calibration_tool/qualisys_aruco.stl
+        fcstd: parts/calibration_tool/qualisys_aruco.FCStd
+        fcstd_body: Body003
+        date: "2026-10-13"
+        note: >-
+          With the reflective markers. CAD: the reflective-marker model
+          (saved 2026-11-04), split to its own project.
+
+  ct_calibrater:
+    title: CT calibrater
+    candidate: v1   # shown, marked "candidate", while usage is null
+    role: Pivot cup for the calibration-tool tip calibration (jtsmm ct-calibrate).
+    fcstd: parts/ct_calibrater/ct_calibrater.FCStd
+    material: {name: PLA, density_g_cm3: 1.24}
+    variants:
+      cad_2026-10-09: {title: CAD state 2026-10-09, status: superseded, stl: parts/ct_calibrater/cad_2026-10-09.stl, fcstd_body: Body006}
+      v1:
+        title: Version 1
+        status: variant
+        stl: parts/ct_calibrater/v1.stl
+        cad_pending: true
+        date: "2026-10-19"
+        note: Exported after the saved CAD (same box, 1.3 mm different geometry).
+
+  teeth_protector:
+    title: Teeth protector
+    candidate: v1   # shown, marked "candidate", while usage is null
+    role: Small plate (16 x 10 x 2 mm).
+    fcstd: parts/teeth_protector/teeth_protector.FCStd
+    material: {name: PLA, density_g_cm3: 1.24}
+    variants:
+      v1: {title: Version 1, status: variant, stl: parts/teeth_protector/v1.stl, fcstd_body: Body009, date: "2026-09-23"}
+
+  trueness_ladder:
+    title: Trueness ladder
+    candidate: v1   # shown, marked "candidate", while usage is null
+    role: 3D-printed step ladder for the optical trueness test (cv05, 20 mm steps).
+    material: {name: PLA, density_g_cm3: 1.24}
+    variants:
+      v1: {title: Version 1, status: variant, stl: parts/trueness_ladder/v1.stl, cad_pending: true, date: "2026-10-01"}
+
+  trueness_array:
+    title: Trueness array
+    candidate: v1   # shown, marked "candidate", while usage is null
+    role: Two-tag array (ids 35/41) moved along the trueness ladder (cv05).
+    material: {name: PLA, density_g_cm3: 1.24}
+    variants:
+      v1: {title: Version 1, status: variant, stl: parts/trueness_array/v1.stl, cad_pending: true, date: "2026-10-02"}
+
+# Setup bodies as the figures show them; the first part of each with a used variant gives the
+# image (legacy_render while usage is not specified).
+assemblies:
+  head_piece:
+    title: Head piece
+    parts: [head_marker]
+    legacy_render: ../../software/jaw_tracking/.resources/images/headpiece_render_blender.png
+  mouth_piece:
+    title: Mouth piece
+    parts: [mouth_marker, teeth_attachment]
+    legacy_render: ../../software/jaw_tracking/.resources/images/mouthpiece_render_blender.png
+  calibration_tool:
+    title: Calibration tool
+    parts: [calibration_tool]
+    legacy_render: ../../software/jaw_tracking/.resources/images/calibration_tool_render_blender.png
+
+analyses:
+  incisor_attachment:
+    title: Incisor attachment analysis
+    path: analyses/incisor_attachment
+    status: analysis
+    date: "2026-09-22"
+    figures:
+      "why flat jaws slip off a lower incisor": analyses/incisor_attachment/stop_and_pad_explained.png
+      "arch curvature vs. straight wings": analyses/incisor_attachment/arch_vs_wings.png
+  molar_clamp_concepts:
+    title: Molar clamp concepts
+    path: analyses/molar_clamp_concepts
+    status: concept
+    date: "2026-09-23"
+    report: analyses/molar_clamp_concepts/latex/molar_clamp_concepts.pdf
+    figures:
+      "undercut survey": analyses/molar_clamp_concepts/latex/figures/png/mech_undercut_bars.png
+      "Concept 1: snap shell": analyses/molar_clamp_concepts/latex/figures/png/render_c1_obl.png
+      "Concept 2: clothespin jaw": analyses/molar_clamp_concepts/latex/figures/png/render_c2_obl.png
+      "Concept 3: wire clasps": analyses/molar_clamp_concepts/latex/figures/png/render_c3_obl.png
+      "Concept 4: spring arch": analyses/molar_clamp_concepts/latex/figures/png/render_c4_obl.png
+      "Concept 5: rigid clamp + TPU liner": analyses/molar_clamp_concepts/latex/figures/png/render_c5_obl.png
+
+# Render cameras per part (tools/render.py); elevation/azimuth in degrees about `up`.
+render:
+  views:
+    mouth_marker: {elevation: 55}
+    head_marker: {elevation: 55}
+    calibration_tool: {elevation: 60}
+    trueness_array: {elevation: 50}
+    ct_calibrater: {elevation: 30, azimuth: -40}
+
+# Filled 2026-11-04 from the user's statement: the dataset (icorr2027) used teeth attachment
+# version 5 and the mouth and head marker of the current FreeCAD model (JTS_Models_simple_aruco);
+# the systems study (jtsmm_validation, P1 and P2) version 5 and the mouth and head marker of the
+# reflective-marker model (qualisys_aruco). Version 5 = the printed 5-mm part (print record
+# 2026-10-03); the calibration tool of the same model per study (both confirmed by the user); the
+# bench parts have one version each.
+usage:
+  icorr2027:
+    teeth_attachment: v5_print_2026-10-03
+    mouth_marker: aruco
+    head_marker: aruco_2026-08-18
+    calibration_tool: aruco
+  jtsmm_validation:
+    teeth_attachment: v5_print_2026-10-03
+    mouth_marker: qualisys_aruco
+    head_marker: qualisys_aruco
+    calibration_tool: qualisys_aruco
+    ct_calibrater: v1
+    trueness_ladder: v1
+    trueness_array: v1
+  overrides: {}

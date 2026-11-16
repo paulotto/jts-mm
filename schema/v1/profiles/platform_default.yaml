@@ -1,0 +1,22 @@
+# This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+# SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+# SPDX-License-Identifier: MIT
+
+# MCU platform profile — RP2350 clocks, buses, IRQ, buffers (stub)
+# Resolved into mcu.platform when profile: default
+
+profile: default
+system:
+  cpu_mhz: 150
+spi0:
+  hz: 4000000
+i2c:
+  hz: 400000
+# Ring sizes are byte budgets; the firmware divides by each ring's slot size
+# (compact 48 B EMG slots, 256 B IMU/event slots) and caps at its backing store.
+# EMG is the back-pressure-absorbing stream: 98304 B = 2048 slots ≈ 1.0 s at
+# 2 kHz, so a host/USB stall (or the ~1.5 s libusb start) does not overflow the
+# MCU ring before the reader catches up. IMU is low-rate: 16384 B = 64 slots.
+buffers:
+  emg_ring: 98304
+  imu_ring: 16384

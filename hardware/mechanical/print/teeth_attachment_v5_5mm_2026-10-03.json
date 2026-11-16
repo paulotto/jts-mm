@@ -1,0 +1,16 @@
+{
+ "copies_on_plate": 30,
+ "date": "2026-10-03",
+ "enable_support": true,
+ "filament": "Generic PETG @BBL H2C 0.4 nozzle",
+ "filament_type": "PETG",
+ "layer_height": "0.16",
+ "nozzle_diameter": "0.4",
+ "print_settings_id": "0.16mm Standard @BBL H2C",
+ "printer_model": "Bambu Lab H2C",
+ "slicer": "BambuStudio-02.08.02.61",
+ "sparse_infill_density": "15%",
+ "sparse_infill_pattern": "honeycomb",
+ "support_type": "tree(auto)",
+ "wall_loops": "2"
+}

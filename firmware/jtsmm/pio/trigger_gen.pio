@@ -1,0 +1,71 @@
+; This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+; SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+; SPDX-License-Identifier: MIT
+
+;
+; Camera trigger generator — h05 §4.1 / h06 §3.1
+; PIO clock default 1 MHz: period and pulse in microseconds.
+;
+; FIFO order (see trigger_pio_start): low_ticks, high_ticks
+;   Templates are stored once, then reloaded every wrap period.
+;   For IMX296 fast trigger: low phase ≈ exposure (pulse.width_us),
+;   high phase = period_us - pulse.width_us.
+;
+; Cycle accounting (every instruction is one PIO clock, no delays):
+;   high phase = `mov y, x` (1) + `jmp y--` executed high_ticks+1 times
+;              = high_ticks + 2 cycles
+;   low phase  = `irq set 0` (1) + `mov y, isr` (1) + `jmp y--` low_ticks+1 times
+;              = low_ticks + 3 cycles
+; trigger_timing.c subtracts these overheads from the templates so the period
+; on the pin is exactly period_us. Change one, change the other.
+;
+; `irq set 0` raises PIO IRQ flag 0 on the very instruction that drives the pin
+; LOW, i.e. at the IMX296 exposure-start edge. trigger_pio.c latches
+; t_master_us() in that IRQ so TRIGGER_EVENT is stamped from the edge itself
+; instead of from a free-running software timer.
+;
+; Idle level: the template pulls do not side-set, so the pin keeps the idle
+; level trigger_gen_program_init() preloads (the INACTIVE level of the polarity:
+; HIGH for imx296_fast, LOW otherwise; trigger_timing_idle_high()). The first
+; HIGH phase is then glitch-free from either idle level. (The pulls used to
+; drive `side 0`: a LOW glitch before the first HIGH phase from an idle-HIGH line.)
+;
+.program trigger_gen
+.side_set 1 opt
+
+    pull block                    ; pin keeps its idle level
+    mov isr, osr                  ; ISR = low_ticks template
+    pull block
+    mov x, osr                    ; X = high_ticks template
+
+.wrap_target
+    mov y, x             side 1   ; reload high, pin HIGH
+pulse_high:
+    jmp y--, pulse_high
+    irq set 0            side 0   ; pin LOW + raise IRQ flag 0 (exposure start)
+    mov y, isr                    ; reload low
+delay_low:
+    jmp y--, delay_low
+.wrap
+
+% c-sdk {
+#include "hardware/clocks.h"
+
+/*
+ * Configure the SM and hand @p pin to it without an edge: the SM's output latch
+ * is preloaded with @p idle_high and its pindir set BEFORE the pad function is
+ * switched to PIO (calling pio_gpio_init() first exposed whatever the latch
+ * held, i.e. LOW after reset).
+ */
+static inline void trigger_gen_program_init(PIO pio, uint sm, uint offset, uint pin, float clk_hz,
+                                            bool idle_high) {
+    pio_sm_config c = trigger_gen_program_get_default_config(offset);
+    sm_config_set_sideset_pins(&c, pin);
+    float div = (float)clock_get_hz(clk_sys) / clk_hz;
+    sm_config_set_clkdiv(&c, div);
+    pio_sm_init(pio, sm, offset, &c);
+    pio_sm_set_pins_with_mask(pio, sm, idle_high ? (1u << pin) : 0u, 1u << pin);
+    pio_sm_set_consecutive_pindirs(pio, sm, pin, 1, true);
+    pio_gpio_init(pio, pin);
+}
+%}

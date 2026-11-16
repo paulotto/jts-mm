@@ -1,0 +1,47 @@
+# This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+# SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+# SPDX-License-Identifier: MIT
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "optical"
+version = "0.1.0"
+description = "ArUco multi-camera jaw tracking for JTS-MM (Qualisys replacement)"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.24",
+    "h5py>=3.8",
+    "opencv-python>=4.8",
+    "flask>=3.0",
+    "click>=8.0",
+    "PyYAML>=6.0",
+]
+
+[project.optional-dependencies]
+cameras = ["picamera2>=0.3"]
+# Live picamera2 track writes MCU t_master_us; install jtsmm (pip install -e ../jtsmm)
+hat = []
+dev = ["pytest>=7.0", "ruff>=0.4"]
+
+[project.scripts]
+optical = "optical.cli.main:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["optical*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint.per-file-ignores]
+# pytest.importorskip("cv2") must run before the imports that need OpenCV.
+"tests/*" = ["E402"]

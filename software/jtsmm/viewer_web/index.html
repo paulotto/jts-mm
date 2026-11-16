@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<!--
+This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+SPDX-FileCopyrightText: 2026 David Stebich
+SPDX-License-Identifier: MIT
+-->
+
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>jtsmm viewer</title>
+  <link rel="stylesheet" href="vendor/uPlot.min.css" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">JTS·MM</span>
+      <span id="session-mode" class="badge">live</span>
+    </div>
+    <div class="clock">
+      <span class="clock-label">elapsed</span>
+      <span id="elapsed" class="clock-value">00:00.0</span>
+    </div>
+    <div class="chips">
+      <span id="chip-emg" class="chip">EMG</span>
+      <span id="chip-imu-mta" class="chip">MTA</span>
+      <span id="chip-imu-cra" class="chip">CRA</span>
+      <span id="chip-cam" class="chip">CAM</span>
+      <span id="chip-tx" class="chip">TX</span>
+    </div>
+    <div id="stats-line" class="stats-line"></div>
+    <div class="layout-presets" title="Layout focus">
+      <button type="button" class="preset-btn" data-focus="">balance</button>
+      <button type="button" class="preset-btn" data-focus="emg">EMG</button>
+      <button type="button" class="preset-btn" data-focus="imu">IMU</button>
+      <button type="button" class="preset-btn" data-focus="cam">cam</button>
+      <button type="button" class="preset-btn" id="layout-reset" title="Reset layout">↺</button>
+    </div>
+    <div class="spacer"></div>
+    <div class="note">
+      <input id="note-text" type="text" placeholder="operator note…" />
+      <button id="note-send">mark</button>
+    </div>
+    <span id="conn" class="conn">connecting</span>
+  </header>
+
+  <div id="transport" class="transport hidden">
+    <button id="play-pause">⏸</button>
+    <span id="pos-label" class="t-label">00:00.0</span>
+    <div id="seek-track" class="seek-track"><input id="seek" type="range" min="0" max="0" step="0.01" value="0" /></div>
+    <span id="dur-label" class="t-label">00:00.0</span>
+    <select id="speed-sel" title="speed">
+      <option value="0.25">0.25×</option>
+      <option value="0.5">0.5×</option>
+      <option value="1" selected>1×</option>
+      <option value="2">2×</option>
+      <option value="4">4×</option>
+    </select>
+  </div>
+
+  <main id="layout-root" class="dock-root">
+    <div class="dock-slot dock-slot-tl" data-slot="tl"></div>
+    <div id="split-col" class="splitter splitter-col" title="Drag to resize · double-click to reset"></div>
+    <div id="dock-stack" class="dock-stack">
+      <div class="dock-slot dock-slot-tr" data-slot="tr"></div>
+      <div id="split-row" class="splitter splitter-row" title="Drag to resize · double-click to reset"></div>
+      <div class="dock-slot dock-slot-br" data-slot="br"></div>
+    </div>
+
+    <section id="panel-emg" class="dock-panel" data-panel="emg">
+      <header class="dock-head">
+        <span class="dock-drag" title="Drag onto another panel to swap">⠿</span>
+        <h2>EMG</h2>
+        <div class="mode-toggle">
+          <label><input type="radio" name="mode" value="raw" /> raw</label>
+          <label><input type="radio" name="mode" value="filtered" checked /> filtered</label>
+          <label><input type="radio" name="mode" value="envelope" /> envelope</label>
+        </div>
+        <label class="win">window
+          <select id="window-sel">
+            <option value="5">5 s</option>
+            <option value="10" selected>10 s</option>
+            <option value="20">20 s</option>
+          </select>
+        </label>
+        <label class="win" title="When on, Y follows the trace. Envelope always includes 0 µV.">
+          <input type="checkbox" id="y-auto" checked /> Auto Y
+        </label>
+        <label class="win">Y
+          <select id="y-span" disabled title="Fixed Y range (µV). Envelope is 0…N, raw/filtered ±N.">
+            <option value="50">±50 µV</option>
+            <option value="100" selected>±100 µV</option>
+            <option value="200">±200 µV</option>
+          </select>
+        </label>
+        <button type="button" id="imp-toggle" class="imp-btn" title="Toggle electrode impedance panel">|Z|</button>
+        <button type="button" class="dock-focus" title="Focus EMG (click again to balance)">⛶</button>
+      </header>
+      <div id="emg-panel" class="dock-body emg-panel-wrap emg-panel"></div>
+    </section>
+
+    <section id="panel-imu" class="dock-panel" data-panel="imu">
+      <header class="dock-head">
+        <span class="dock-drag" title="Drag onto another panel to swap">⠿</span>
+        <h2>IMU kinematics</h2>
+        <button type="button" class="dock-focus" title="Focus IMU">⛶</button>
+      </header>
+      <div id="imu-panel" class="dock-body imu-panel"></div>
+    </section>
+
+    <section id="panel-cam" class="dock-panel" data-panel="cam">
+      <header class="dock-head">
+        <span class="dock-drag" title="Drag onto another panel to swap">⠿</span>
+        <h2>Cameras</h2>
+        <button type="button" class="dock-focus" title="Focus cameras">⛶</button>
+      </header>
+      <div id="cam-grid" class="dock-body cam-grid"></div>
+    </section>
+  </main>
+
+  <div id="flash" class="flash"></div>
+
+  <script src="vendor/uPlot.iife.min.js"></script>
+  <script type="module" src="src/app.js"></script>
+</body>
+</html>

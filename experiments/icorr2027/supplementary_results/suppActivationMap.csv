@@ -1,0 +1,38 @@
+# activation_map: Activation map; source r16a, run 20261106T121008Z_71b75e, exported 2026-11-11T14:43:26Z
+panel,panel_title,series,kind,label,role,point,x_label,x,y_label,y,y2,ylo,c,z
+0,Median activation (% of max recorded),0,heatmap,,primary,0,,masseter R,,rest,,,,3.410396902510313
+0,Median activation (% of max recorded),0,heatmap,,primary,1,,masseter L,,rest,,,,4.545175912484533
+0,Median activation (% of max recorded),0,heatmap,,primary,2,,temporalis R,,rest,,,,2.7256822199011848
+0,Median activation (% of max recorded),0,heatmap,,primary,3,,temporalis L,,rest,,,,1.8862125631818998
+0,Median activation (% of max recorded),0,heatmap,,primary,4,,digastric R,,rest,,,,3.804036669160182
+0,Median activation (% of max recorded),0,heatmap,,primary,5,,digastric L,,rest,,,,3.8223909933467173
+0,Median activation (% of max recorded),0,heatmap,,primary,6,,masseter R,,open-close,,,,6.622207963658425
+0,Median activation (% of max recorded),0,heatmap,,primary,7,,masseter L,,open-close,,,,7.087945329917641
+0,Median activation (% of max recorded),0,heatmap,,primary,8,,temporalis R,,open-close,,,,5.105004923806558
+0,Median activation (% of max recorded),0,heatmap,,primary,9,,temporalis L,,open-close,,,,3.683149138135953
+0,Median activation (% of max recorded),0,heatmap,,primary,10,,digastric R,,open-close,,,,7.933373925143023
+0,Median activation (% of max recorded),0,heatmap,,primary,11,,digastric L,,open-close,,,,7.761672092246778
+0,Median activation (% of max recorded),0,heatmap,,primary,12,,masseter R,,protrusion,,,,8.633474402407035
+0,Median activation (% of max recorded),0,heatmap,,primary,13,,masseter L,,protrusion,,,,10.912849829013345
+0,Median activation (% of max recorded),0,heatmap,,primary,14,,temporalis R,,protrusion,,,,8.202661337950405
+0,Median activation (% of max recorded),0,heatmap,,primary,15,,temporalis L,,protrusion,,,,5.917431467292363
+0,Median activation (% of max recorded),0,heatmap,,primary,16,,digastric R,,protrusion,,,,7.854064733708993
+0,Median activation (% of max recorded),0,heatmap,,primary,17,,digastric L,,protrusion,,,,9.080382439258932
+0,Median activation (% of max recorded),0,heatmap,,primary,18,,masseter R,,laterotrusion,,,,9.515513758526618
+0,Median activation (% of max recorded),0,heatmap,,primary,19,,masseter L,,laterotrusion,,,,9.249647373401517
+0,Median activation (% of max recorded),0,heatmap,,primary,20,,temporalis R,,laterotrusion,,,,6.5451232868649685
+0,Median activation (% of max recorded),0,heatmap,,primary,21,,temporalis L,,laterotrusion,,,,5.339955330001546
+0,Median activation (% of max recorded),0,heatmap,,primary,22,,digastric R,,laterotrusion,,,,7.280861351422674
+0,Median activation (% of max recorded),0,heatmap,,primary,23,,digastric L,,laterotrusion,,,,8.027200904958406
+0,Median activation (% of max recorded),0,heatmap,,primary,24,,masseter R,,chewing,,,,9.133770184832409
+0,Median activation (% of max recorded),0,heatmap,,primary,25,,masseter L,,chewing,,,,9.964260925269276
+0,Median activation (% of max recorded),0,heatmap,,primary,26,,temporalis R,,chewing,,,,6.483892946812334
+0,Median activation (% of max recorded),0,heatmap,,primary,27,,temporalis L,,chewing,,,,5.4686315084857124
+0,Median activation (% of max recorded),0,heatmap,,primary,28,,digastric R,,chewing,,,,8.69095698083795
+0,Median activation (% of max recorded),0,heatmap,,primary,29,,digastric L,,chewing,,,,8.14083343814465
+0,Median activation (% of max recorded),0,heatmap,,primary,30,,masseter R,,free motion,,,,10.792271667729228
+0,Median activation (% of max recorded),0,heatmap,,primary,31,,masseter L,,free motion,,,,12.487613114987337
+0,Median activation (% of max recorded),0,heatmap,,primary,32,,temporalis R,,free motion,,,,8.097028811260135
+0,Median activation (% of max recorded),0,heatmap,,primary,33,,temporalis L,,free motion,,,,6.528772267053653
+0,Median activation (% of max recorded),0,heatmap,,primary,34,,digastric R,,free motion,,,,10.370824311289326
+0,Median activation (% of max recorded),0,heatmap,,primary,35,,digastric L,,free motion,,,,12.941447478709849

@@ -1,0 +1,20 @@
+// This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+// SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+// SPDX-License-Identifier: MIT
+
+// C struct mirror of schema/v1 MCU blocks — hand-synced with jtsmm.schema.json (Phase 1).
+// Optional codegen target; not yet generated.
+
+#pragma once
+
+#include <stdint.h>
+#include <stdbool.h>
+
+typedef struct {
+    uint8_t schema_version;
+    // platform_config_t platform;
+    // emg_config_t emg;
+    // imu_slot_config_t imu_mta;
+    // imu_slot_config_t imu_cra;
+    // trigger_config_t trigger;
+} jtsmm_mcu_config_t;

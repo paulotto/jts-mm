@@ -1,0 +1,14 @@
+# This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+# SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+# SPDX-License-Identifier: MIT
+
+# IMU profile fragment — default fusion for any imu_* profile that isn't custom.
+# Resolved into mcu.imu_mta / mcu.imu_cra (profiles.py). The report set is chosen
+# by the profile name via catalog.IMU_PROFILE_REPORTS; this fragment only sets
+# the fusion primary/rate defaults (390 Hz keeps the integrity budget robust).
+
+profile: kinematics_accel
+enabled: true
+fusion:
+  primary: game_rotation_vector
+  rate_hz: 390

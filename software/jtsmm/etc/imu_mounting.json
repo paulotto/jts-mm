@@ -1,0 +1,5 @@
+{
+  "name": "imu_mounting",
+  "description": "Figure-eight IMU-to-array mounting calibration. SPACE-start each phase; keep tags visible; slow tumble about ~3 axes (not nod-only). MTA is handheld; CRA is the whole head plus band. Once per rigid IMU–array pair.",
+  "phases": ["imu_mount_mta", "imu_mount_cra"]
+}

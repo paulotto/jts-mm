@@ -1,0 +1,21 @@
+% This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+% SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+% SPDX-License-Identifier: CC-BY-4.0
+
+\section{The parts on their own}\label{sec:parts}
+The same geometry as in \cref{sec:concepts}, without the teeth: an overall view, the view from
+above (occlusal), and the right first-molar region from the lingual and from the buccal side.
+
+\newcommand{\partsfig}[2]{%
+\begin{figure}[H]\centering
+\begin{subfigure}[b]{0.5\textwidth}\includegraphics[width=\linewidth]{render_#1_solo_obl}\caption{overview}\end{subfigure}\hfill
+\begin{subfigure}[b]{0.34\textwidth}\includegraphics[width=\linewidth]{render_#1_solo_top}\caption{from above}\end{subfigure}\\[1mm]
+\begin{subfigure}[b]{0.49\textwidth}\includegraphics[width=\linewidth,height=42mm,keepaspectratio]{render_#1_solo_detL}\caption{right M1 region, lingual}\end{subfigure}\hfill
+\begin{subfigure}[b]{0.49\textwidth}\includegraphics[width=\linewidth,height=42mm,keepaspectratio]{render_#1_solo_detB}\caption{right M1 region, buccal}\end{subfigure}
+\caption{#2}\label{fig:parts_#1}\end{figure}}
+
+\partsfig{c1}{Concept 1, snap shell (one part).}
+\partsfig{c2}{Concept 2, clothespin jaw: rigid frame \swatch{crigid} and loop module \swatch{cspring}.}
+\partsfig{c3}{Concept 3, rigid lingual plate with rests and two Adams clasps.}
+\partsfig{c4}{Concept 4, rigid yoke and labial bar, stainless arch and relined pads.}
+\partsfig{c5}{Concept 5, rigid frame and TPU liners \swatch{ctpu}.}

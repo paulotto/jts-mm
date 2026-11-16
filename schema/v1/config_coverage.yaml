@@ -1,0 +1,660 @@
+# This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+# SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+# SPDX-FileCopyrightText: 2026 David Stebich
+# SPDX-License-Identifier: MIT
+
+# Parameter coverage manifest — every tunable key and where it is consumed.
+# Maintained alongside schema/v1/jtsmm.schema.json changes;
+# tests/test_fix_H_audit.py fails when a schema key has no entry here.
+# layer: schema | yaml (in the template) | host_apply (in the MCU payload) |
+#        firmware (a key config_json.c parses) | host_code (a host consumer).
+
+parameters:
+  # --- Root / hat ---
+  - path: schema_version
+    required: true
+    layer: [schema, yaml, host_apply]
+    consumer: software/jtsmm/jtsmm/config/mcu_apply.py
+
+  - path: host.integrity.errors_as_warnings
+    required: false
+    layer: [schema, yaml, host_code]
+    consumer: software/jtsmm/jtsmm/integrity/checker.py
+
+  - path: host.record.abort_on_error
+    required: false
+    layer: [schema, yaml, host_code]
+    consumer: software/jtsmm/jtsmm/cli/record.py
+
+  - path: host.integrity.thresholds
+    required: false
+    layer: [schema, yaml, host_code]
+    consumer: software/jtsmm/jtsmm/integrity/checker.py
+
+  - path: hat.serial_port
+    required: true
+    layer: [schema, yaml, host_code]
+    consumer: software/jtsmm/jtsmm/capture/serial_util.py
+
+  - path: hat.firmware_version
+    required: true
+    layer: [schema, yaml, host_code]
+    consumer: software/jtsmm/jtsmm/doctor/preflight.py
+
+  # --- MCU platform ---
+  # default | custom; parse_platform refuses anything else (no other effect).
+  - path: mcu.platform.profile
+    required: true
+    layer: [schema, yaml, host_apply, firmware]
+    consumer: firmware/jtsmm/src/runtime/config_json.c
+
+  - path: mcu.platform.system.cpu_mhz
+    required: true
+    layer: [schema, yaml, host_apply, firmware]
+    consumer: firmware/jtsmm/src/runtime/config_json.c
+
+  - path: mcu.platform.spi0.hz
+    required: true
+    layer: [schema, yaml, host_apply, firmware]
+    consumer: firmware/jtsmm/src/runtime/config_json.c
+
+  - path: mcu.platform.i2c.hz
+    required: true
+    layer: [schema, yaml, host_apply, firmware]
+    consumer: firmware/jtsmm/src/runtime/config_json.c
+
+  - path: mcu.platform.pio.trigger.clock_hz
+    required: true
+    layer: [schema, yaml, host_apply, firmware]
+    consumer: firmware/jtsmm/src/runtime/config_json.c
+
+  - path: mcu.platform.buffers.emg_ring
+    required: true
+    layer: [schema, yaml, host_apply, firmware]
+    consumer: firmware/jtsmm/src/runtime/config_json.c
+
+  - path: mcu.platform.buffers.imu_ring
+    required: true
+    layer: [schema, yaml, host_apply, firmware]
+    consumer: firmware/jtsmm/src/runtime/config_json.c
+
+  - path: mcu.platform.buffers.event_ring
+    required: true
+    layer: [schema, yaml, host_apply, firmware]
+    consumer: firmware/jtsmm/src/runtime/config_json.c
+
+  - path: mcu.platform.irq.emg
+    required: true
+    layer: [schema, yaml, host_apply, firmware]
+    consumer: firmware/jtsmm/src/runtime/config_json.c
+
+  - path: mcu.platform.irq.imu
+    required: true
+    layer: [schema, yaml, host_apply, firmware]
+    consumer: firmware/jtsmm/src/runtime/config_json.c
+
+  - path: mcu.platform.irq.trigger
+    required: true
+    layer: [schema, yaml, host_apply, firmware]
+    consumer: firmware/jtsmm/src/runtime/config_json.c
+
+  - path: mcu.platform.system.xosc_hz
+    required: false
+    layer: [schema, host_apply, firmware]
+    consumer: firmware/jtsmm/src/runtime/config_json.c
+
+  - path: mcu.platform.spi0.cfg_hz
+    required: false
+    layer: [schema, host_apply, firmware]
+    consumer: firmware/jtsmm/src/runtime/config_json.c
+
+  # Profile-override blocks: only resolve_profiles (doctor imu-rates) reads them.
+  - path: mcu.platform.custom
+    required: false
+    layer: [schema]
+    consumer: software/jtsmm/jtsmm/config/profiles.py
+
+  - path: mcu.emg.custom
+    required: false
+    layer: [schema]
+    consumer: software/jtsmm/jtsmm/config/profiles.py
+
+  - path: mcu.imu_mta.custom
+    required: false
+    layer: [schema]
+    consumer: software/jtsmm/jtsmm/config/profiles.py
+
+  - path: mcu.imu_cra.custom
+    required: false
+    layer: [schema]
+    consumer: software/jtsmm/jtsmm/config/profiles.py
+
+  - path: mcu.trigger.custom
+    required: false
+    layer: [schema]
+    consumer: software/jtsmm/jtsmm/config/profiles.py
+
+  # --- MCU EMG ---
+  - path: mcu.emg.profile
+    required: true
+    layer: [schema, yaml, host_apply, firmware]
+    consumer: firmware/jtsmm/src/runtime/config_json.c
+
+  - path: mcu.emg.sample_rate_sps
+    required: true
+    layer: [schema, yaml, host_apply, firmware]
+    consumer: firmware/jtsmm/src/domain/emg_config.c
+
+  - path: mcu.emg.default_gain
+    required: true
+    layer: [schema, yaml, host_apply, firmware]
+    consumer: firmware/jtsmm/src/domain/emg_config.c
+
+  - path: mcu.emg.stream_channels
+    required: true
+    layer: [schema, yaml, host_apply, firmware]
+    consumer: firmware/jtsmm/src/runtime/config_json.c
+
+  - path: mcu.emg.bias.enabled
+    required: true
+    layer: [schema, yaml, host_apply, firmware]
+    consumer: firmware/jtsmm/src/runtime/config_json.c
+
+  - path: mcu.emg.leadoff.enabled
+    required: true
+    layer: [schema, yaml, host_apply, firmware]
+    consumer: firmware/jtsmm/src/domain/emg_config.c
+
+  - path: mcu.emg.leadoff.during_recording
+    required: true
+    layer: [schema, yaml, host_apply, firmware]
+    consumer: firmware/jtsmm/src/domain/emg_config.c
+
+  - path: mcu.emg.leadoff.ac_tone
+    required: true
+    layer: [schema, yaml, host_apply, firmware]
+    consumer: firmware/jtsmm/src/domain/emg_config.c
+
+  - path: mcu.emg.leadoff.current_na
+    required: true
+    layer: [schema, yaml, host_apply, firmware]
+    consumer: firmware/jtsmm/src/domain/emg_config.c
+
+  - path: mcu.emg.test_signal.enabled
+    required: true
+    layer: [schema, yaml, host_apply, firmware]
+    consumer: firmware/jtsmm/src/runtime/config_json.c
+
+  # Parsed by the firmware but not acted on (s08 "Firmware wiring notes").
+  - path: mcu.emg.enabled
+    required: false
+    layer: [schema, host_apply, firmware]
+    consumer: firmware/jtsmm/src/runtime/config_json.c
+
+  # 1-based lists; mcu_apply.py turns them into the pd_channels / bias masks.
+  - path: mcu.emg.active_channels
+    required: false
+    layer: [schema, host_apply, firmware]
+    consumer: software/jtsmm/jtsmm/config/mcu_apply.py
+
+  - path: mcu.emg.bias.channels
+    required: false
+    layer: [schema, host_apply, firmware]
+    consumer: software/jtsmm/jtsmm/config/mcu_apply.py
+
+  - path: mcu.emg.bias.ch7_readback
+    required: false
+    layer: [schema, host_apply, firmware]
+    consumer: firmware/jtsmm/src/runtime/config_json.c
+
+  - path: mcu.emg.leadoff.probe_drl
+    required: false
+    layer: [schema, host_apply, firmware]
+    consumer: firmware/jtsmm/src/domain/emg_config.c
+
+  - path: mcu.emg.test_signal.amplitude_mv
+    required: false
+    layer: [schema, host_apply, firmware]
+    consumer: firmware/jtsmm/src/runtime/config_json.c
+
+  # --- MCU IMU slots ---
+  - path: mcu.imu_mta.enabled
+    required: true
+    layer: [schema, yaml, host_apply, firmware]
+    consumer: firmware/jtsmm/src/domain/imu_config.c
+
+  - path: mcu.imu_mta.profile
+    required: true
+    layer: [schema, yaml, host_apply, firmware]
+    consumer: firmware/jtsmm/src/domain/imu_config.c
+
+  - path: mcu.imu_mta.fusion.primary
+    required: true
+    layer: [schema, yaml, host_apply, firmware]
+    consumer: firmware/jtsmm/src/runtime/config_json.c
+
+  - path: mcu.imu_mta.fusion.rate_hz
+    required: true
+    layer: [schema, yaml, host_apply, firmware]
+    consumer: firmware/jtsmm/src/runtime/config_json.c
+
+  - path: mcu.imu_mta.sync.mode
+    required: true
+    layer: [schema, yaml, host_apply, firmware]
+    consumer: firmware/jtsmm/src/runtime/config_json.c
+
+  - path: mcu.imu_mta.dynamic_calibration.accel
+    required: false
+    layer: [schema, yaml, host_apply, firmware]
+    consumer: firmware/jtsmm/src/domain/imu_config.c
+
+  - path: mcu.imu_mta.dynamic_calibration.gyro
+    required: false
+    layer: [schema, yaml, host_apply, firmware]
+    consumer: firmware/jtsmm/src/domain/imu_config.c
+
+  - path: mcu.imu_mta.dynamic_calibration.mag
+    required: false
+    layer: [schema, yaml, host_apply, firmware]
+    consumer: firmware/jtsmm/src/domain/imu_config.c
+
+  - path: mcu.imu_mta.reports
+    required: true
+    layer: [schema, yaml, host_apply, firmware]
+    consumer: firmware/jtsmm/src/runtime/config_json.c
+
+  - path: mcu.imu_mta.sync.decimation_factor
+    required: false
+    layer: [schema, host_apply, firmware]
+    consumer: firmware/jtsmm/src/runtime/config_json.c
+
+  - path: mcu.imu_cra.enabled
+    required: true
+    layer: [schema, yaml, host_apply, firmware]
+    consumer: firmware/jtsmm/src/domain/imu_config.c
+
+  - path: mcu.imu_cra.profile
+    required: true
+    layer: [schema, yaml, host_apply, firmware]
+    consumer: firmware/jtsmm/src/domain/imu_config.c
+
+  - path: mcu.imu_cra.fusion.primary
+    required: true
+    layer: [schema, yaml, host_apply, firmware]
+    consumer: firmware/jtsmm/src/runtime/config_json.c
+
+  - path: mcu.imu_cra.fusion.rate_hz
+    required: true
+    layer: [schema, yaml, host_apply, firmware]
+    consumer: firmware/jtsmm/src/runtime/config_json.c
+
+  - path: mcu.imu_cra.sync.mode
+    required: true
+    layer: [schema, yaml, host_apply, firmware]
+    consumer: firmware/jtsmm/src/runtime/config_json.c
+
+  - path: mcu.imu_cra.dynamic_calibration.accel
+    required: false
+    layer: [schema, yaml, host_apply, firmware]
+    consumer: firmware/jtsmm/src/domain/imu_config.c
+
+  - path: mcu.imu_cra.dynamic_calibration.gyro
+    required: false
+    layer: [schema, yaml, host_apply, firmware]
+    consumer: firmware/jtsmm/src/domain/imu_config.c
+
+  - path: mcu.imu_cra.dynamic_calibration.mag
+    required: false
+    layer: [schema, yaml, host_apply, firmware]
+    consumer: firmware/jtsmm/src/domain/imu_config.c
+
+  - path: mcu.imu_cra.reports
+    required: true
+    layer: [schema, yaml, host_apply, firmware]
+    consumer: firmware/jtsmm/src/runtime/config_json.c
+
+  - path: mcu.imu_cra.sync.decimation_factor
+    required: false
+    layer: [schema, host_apply, firmware]
+    consumer: firmware/jtsmm/src/runtime/config_json.c
+
+  # --- MCU trigger ---
+  - path: mcu.trigger.enabled
+    required: true
+    layer: [schema, yaml, host_apply, firmware]
+    consumer: firmware/jtsmm/src/domain/trigger_config.c
+
+  - path: mcu.trigger.profile
+    required: true
+    layer: [schema, yaml, host_apply, firmware]
+    consumer: firmware/jtsmm/src/runtime/config_json.c
+
+  - path: mcu.trigger.rate_hz
+    required: true
+    layer: [schema, yaml, host_apply, firmware]
+    consumer: firmware/jtsmm/src/domain/trigger_config.c
+
+  - path: mcu.trigger.pulse.width_us
+    required: true
+    layer: [schema, yaml, host_apply, firmware]
+    consumer: firmware/jtsmm/src/domain/trigger_config.c
+
+  - path: mcu.trigger.pulse.polarity
+    required: true
+    layer: [schema, yaml, host_apply, firmware]
+    consumer: firmware/jtsmm/src/runtime/config_json.c
+
+  - path: mcu.trigger.outputs.csi1
+    required: true
+    layer: [schema, yaml, host_apply, firmware]
+    consumer: firmware/jtsmm/src/runtime/config_json.c
+
+  - path: mcu.trigger.outputs.csi2
+    required: true
+    layer: [schema, yaml, host_apply, firmware]
+    consumer: firmware/jtsmm/src/runtime/config_json.c
+
+  - path: mcu.trigger.outputs.scope
+    required: true
+    layer: [schema, yaml, host_apply, firmware]
+    consumer: firmware/jtsmm/src/runtime/config_json.c
+
+  - path: mcu.trigger.outputs.sync_led
+    required: true
+    layer: [schema, yaml, host_apply, firmware]
+    consumer: firmware/jtsmm/src/runtime/config_json.c
+
+  - path: mcu.trigger.start_on
+    required: true
+    layer: [schema, yaml]
+    consumer: schema_only
+
+  # --- Host capture / record / paths ---
+  - path: host.capture.settle_ms
+    required: true
+    layer: [schema, yaml, host_code]
+    consumer: software/jtsmm/jtsmm/capture/supervisor.py
+
+  - path: host.capture.stream_restart
+    required: true
+    layer: [schema, yaml, host_code]
+    consumer: software/jtsmm/jtsmm/capture/supervisor.py
+
+  - path: host.capture.native_prefer
+    required: true
+    layer: [schema, yaml, host_code]
+    consumer: software/jtsmm/jtsmm/native/__init__.py
+
+  # Optional (default true): arm cameras before the first trigger pulse so the
+  # frame<->trigger sequence association starts at pulse 1. Off = legacy order.
+  - path: host.capture.trigger_after_cameras
+    required: false
+    layer: [schema, yaml, host_code]
+    consumer: software/jtsmm/jtsmm/capture/supervisor.py
+
+  # Optional (default 8): host<->MCU `pps` clock-handshake samples per pass; 0 off.
+  - path: host.capture.pps_samples
+    required: false
+    layer: [schema, yaml, host_code]
+    consumer: software/jtsmm/jtsmm/capture/supervisor.py
+
+  # Optional (default true): anchor each camera's first frame on the trigger
+  # nearest its PPS-mapped SensorTimestamp instead of the oldest buffered one.
+  - path: host.capture.camera_pps_anchor
+    required: false
+    layer: [schema, yaml, host_code]
+    consumer: software/jtsmm/jtsmm/sync/clock_align.py
+
+  # Optional (default true): advance a camera's trigger cursor by its own
+  # elapsed frame periods so a burst of dropped frames does not shift the
+  # frame<->trigger association for the rest of the take.
+  - path: host.capture.camera_delta_tracking
+    required: false
+    layer: [schema, yaml, host_code]
+    consumer: software/jtsmm/jtsmm/sync/clock_align.py
+
+  - path: host.paths.data_dir
+    required: true
+    layer: [schema, yaml, host_code]
+    consumer: software/jtsmm/jtsmm/io/session_layout.py
+
+  # Deprecated alias of host.paths.data_dir: read only when that is absent.
+  - path: host.storage.base_dir
+    required: false
+    layer: [schema]
+    consumer: schema_only
+
+  - path: host.record.emg_check.enabled
+    required: true
+    layer: [schema, yaml, host_code]
+    consumer: software/jtsmm/jtsmm/cli/record.py
+
+  - path: host.record.emg_check.block_on_contact_failure
+    required: false
+    layer: [schema, yaml, host_code]
+    consumer: software/jtsmm/jtsmm/cli/record.py
+
+  - path: host.record.preflight.enabled
+    required: true
+    layer: [schema, yaml, host_code]
+    consumer: software/jtsmm/jtsmm/cli/record.py
+
+  - path: host.record.integrity.enabled
+    required: true
+    layer: [schema, yaml, host_code]
+    consumer: software/jtsmm/jtsmm/cli/record.py
+
+  - path: host.record.mcu_apply.enabled
+    required: true
+    layer: [schema, yaml, host_code]
+    consumer: software/jtsmm/jtsmm/capture/session.py
+
+  - path: host.emg_check.line_hz
+    required: true
+    layer: [schema, yaml, host_code]
+    consumer: software/jtsmm/jtsmm/emg/check.py
+
+  - path: host.emg_check.settle_ms
+    required: true
+    layer: [schema, yaml, host_code]
+    consumer: software/jtsmm/jtsmm/emg/check.py
+
+  - path: host.emg_check.leadoff.duration_s
+    required: true
+    layer: [schema, yaml, host_code]
+    consumer: software/jtsmm/jtsmm/emg/check.py
+
+  - path: host.emg_check.noise.duration_s
+    required: true
+    layer: [schema, yaml, host_code]
+    consumer: software/jtsmm/jtsmm/emg/check.py
+
+  - path: host.emg_check.impedance.enabled
+    required: true
+    layer: [schema, yaml, host_code]
+    consumer: software/jtsmm/jtsmm/emg/check.py
+
+  - path: host.emg_check.impedance.duration_s
+    required: true
+    layer: [schema, yaml, host_code]
+    consumer: software/jtsmm/jtsmm/emg/check.py
+
+  - path: host.emg_check.drl_isolation.duration_s
+    required: true
+    layer: [schema, yaml, host_code]
+    consumer: software/jtsmm/jtsmm/emg/check.py
+
+  - path: host.viewer.enabled
+    required: true
+    layer: [schema, yaml, host_code]
+    consumer: software/jtsmm/jtsmm/config/registry.py
+
+  - path: host.viewer.bind_host
+    required: true
+    layer: [schema, yaml, host_code]
+    consumer: software/jtsmm/jtsmm/config/registry.py
+
+  - path: host.viewer.port
+    required: true
+    layer: [schema, yaml, host_code]
+    consumer: software/jtsmm/jtsmm/config/registry.py
+
+  - path: host.cameras.track
+    required: true
+    layer: [schema, yaml, host_code]
+    consumer: software/jtsmm/jtsmm/capture/capture_cam.py
+
+  - path: host.cameras.marker_detector
+    required: true
+    layer: [schema, yaml]
+    consumer: schema_only
+
+  - path: host.cameras.list
+    required: true
+    layer: [schema, yaml, host_code]
+    consumer: software/jtsmm/jtsmm/capture/capture_cam.py
+    # Nested list[].{exposure_us,gain,ae_enable,awb_enable,awb_gains,format,
+    # buffer_count,sharpness,brightness,contrast,saturation,noise_reduction_mode}
+    # are applied by cameras_from_config → picamera2 set_controls.
+
+  # Deprecated, no consumer (validate.py warns when set to something effective).
+  - path: host.emg_filter.enabled
+    required: false
+    layer: [schema]
+    consumer: schema_only
+
+  - path: host.emg_filter.notch_hz
+    required: false
+    layer: [schema]
+    consumer: schema_only
+
+  - path: host.emg_filter.highpass_hz
+    required: false
+    layer: [schema]
+    consumer: schema_only
+
+  - path: host.emg_filter.lowpass_hz
+    required: false
+    layer: [schema]
+    consumer: schema_only
+
+  - path: host.emg_filter.mains_mode
+    required: false
+    layer: [schema, yaml, host_code]
+    consumer: software/jtsmm/jtsmm/viewer/sources.py
+
+  - path: host.schema.relaxed_unknown_keys
+    required: true
+    layer: [schema, yaml, host_code]
+    consumer: software/jtsmm/jtsmm/config/strict.py
+
+  # --- Session / HDF5 meta ---
+  - path: session.mode
+    required: true
+    layer: [schema, yaml, host_code]
+    consumer: software/jtsmm/jtsmm/config/registry.py
+
+  - path: session.duration_s
+    required: true
+    layer: [schema, yaml, host_code]
+    consumer: software/jtsmm/jtsmm/capture/session.py
+
+  - path: session.default_duration_s
+    required: true
+    layer: [schema, yaml, host_code]
+    consumer: software/jtsmm/jtsmm/config/registry.py
+
+  - path: session.subject_id
+    required: true
+    layer: [schema, yaml, host_code]
+    consumer: software/jtsmm/jtsmm/cli/record.py → HDF5 /meta/subject_id
+
+  - path: session.protocol
+    required: true
+    layer: [schema, yaml, host_code]
+    consumer: software/jtsmm/jtsmm/cli/record.py → HDF5 /meta/protocol
+
+  - path: session.meta
+    required: true
+    layer: [schema, yaml, host_code]
+    consumer: software/jtsmm/jtsmm/cli/record.py → HDF5 /meta/*
+
+  - path: session.ct_calibration
+    required: false
+    layer: [schema, yaml, host_code]
+    consumer: software/jtsmm/jtsmm/capture/ct_pivot.py
+
+  - path: session.ct_calibration_n_poses
+    required: false
+    layer: [schema, yaml, host_code]
+    consumer: software/jtsmm/jtsmm/capture/ct_pivot.py
+
+  - path: session.ct_tip_calibration
+    required: false
+    layer: [schema, yaml, host_code]
+    consumer: software/jtsmm/jtsmm/capture/ct_pivot.py
+
+  - path: session.persist_ct_calibration
+    required: false
+    layer: [schema, yaml, host_code]
+    consumer: software/jtsmm/jtsmm/capture/ct_pivot.py
+
+  - path: session.ct_calibration_recordings_dir
+    required: false
+    layer: [schema, yaml, host_code]
+    consumer: software/jtsmm/jtsmm/capture/ct_pivot.py
+
+  - path: session.imu_mounting_calibration
+    required: false
+    layer: [schema, yaml, host_code]
+    consumer: software/jtsmm/jtsmm/imu/mounting.py
+
+  - path: session.persist_imu_calibration
+    required: false
+    layer: [schema, yaml, host_code]
+    consumer: software/jtsmm/jtsmm/imu/persist.py
+
+  - path: session.imu_calibration_recordings_dir
+    required: false
+    layer: [schema, yaml, host_code]
+    consumer: software/jtsmm/jtsmm/imu/persist.py
+
+  - path: session.optical_track
+    required: false
+    layer: [schema, yaml, host_code]
+    consumer: software/jtsmm/jtsmm/capture/session.py
+
+  - path: session.optical_track_hz
+    required: false
+    layer: [schema, yaml, host_code]
+    consumer: software/jtsmm/jtsmm/capture/optical_bridge.py
+
+  - path: session.optical_config
+    required: false
+    layer: [schema, yaml, host_code]
+    consumer: software/jtsmm/jtsmm/capture/session.py
+
+  - path: session.mvc
+    required: false
+    layer: [schema, yaml, host_code]
+    consumer: software/jtsmm/jtsmm/cli/record.py
+
+  - path: session.use_experiment_plan
+    required: false
+    layer: [schema, yaml, host_code]
+    consumer: software/jtsmm/jtsmm/capture/session.py
+
+  - path: session.experiment
+    required: false
+    layer: [schema, yaml, host_code]
+    consumer: software/jtsmm/jtsmm/capture/session.py
+
+  - path: session.experiment_plan
+    required: false
+    layer: [schema, yaml, host_code]
+    consumer: software/jtsmm/jtsmm/capture/phase_walker.py
+
+  - path: session.write_jts_config
+    required: false
+    layer: [schema, yaml, host_code]
+    consumer: software/jtsmm/jtsmm/capture/supervisor.py

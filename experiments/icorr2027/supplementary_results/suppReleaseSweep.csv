@@ -1,0 +1,20 @@
+# timing_release_sweep: Release detector sweep; source r16a, run 20261106T121008Z_71b75e, exported 2026-11-11T14:43:26Z
+panel,panel_title,series,kind,label,role,point,x_label,x,y_label,y,y2,ylo,c,z
+0,Detected − chance (median),0,heatmap,,primary,0,Hold time,20 ms,Drop below baseline,2 dB,,,,9.999999999999998
+0,Detected − chance (median),0,heatmap,,primary,1,Hold time,30 ms,Drop below baseline,2 dB,,,,15.666666666666663
+0,Detected − chance (median),0,heatmap,,primary,2,Hold time,50 ms,Drop below baseline,2 dB,,,,17.049999999999997
+0,Detected − chance (median),0,heatmap,,primary,3,Hold time,20 ms,Drop below baseline,3 dB,,,,10.7
+0,Detected − chance (median),0,heatmap,,primary,4,Hold time,30 ms,Drop below baseline,3 dB,,,,14.450000000000006
+0,Detected − chance (median),0,heatmap,,primary,5,Hold time,50 ms,Drop below baseline,3 dB,,,,24.944444444444443
+0,Detected − chance (median),0,heatmap,,primary,6,Hold time,20 ms,Drop below baseline,6 dB,,,,7.72222222222222
+0,Detected − chance (median),0,heatmap,,primary,7,Hold time,30 ms,Drop below baseline,6 dB,,,,16.249999999999996
+0,Detected − chance (median),0,heatmap,,primary,8,Hold time,50 ms,Drop below baseline,6 dB,,,,12.833333333333332
+1,Causal margin (median),0,heatmap,,primary,0,Hold time,20 ms,Drop below baseline,2 dB,,,,162.4325
+1,Causal margin (median),0,heatmap,,primary,1,Hold time,30 ms,Drop below baseline,2 dB,,,,143.33350000000002
+1,Causal margin (median),0,heatmap,,primary,2,Hold time,50 ms,Drop below baseline,2 dB,,,,126.78900000000002
+1,Causal margin (median),0,heatmap,,primary,3,Hold time,20 ms,Drop below baseline,3 dB,,,,134.637
+1,Causal margin (median),0,heatmap,,primary,4,Hold time,30 ms,Drop below baseline,3 dB,,,,102.5505
+1,Causal margin (median),0,heatmap,,primary,5,Hold time,50 ms,Drop below baseline,3 dB,,,,56.081
+1,Causal margin (median),0,heatmap,,primary,6,Hold time,20 ms,Drop below baseline,6 dB,,,,8.521
+1,Causal margin (median),0,heatmap,,primary,7,Hold time,30 ms,Drop below baseline,6 dB,,,,-8.3235
+1,Causal margin (median),0,heatmap,,primary,8,Hold time,50 ms,Drop below baseline,6 dB,,,,-44.981500000000004

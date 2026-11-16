@@ -1,0 +1,283 @@
+# This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+# SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+# SPDX-FileCopyrightText: 2026 David Stebich
+# SPDX-License-Identifier: MIT
+
+# Optical operator config — one file for markers, calibration, tracking, experiment, eval.
+# Copy to ~/optical.yaml to override, or pass --config explicitly.
+# Schema notes: schema/v1/optical.schema.yaml
+#
+# Camera count is chosen automatically at runtime (1 vs 2 CSI cameras connected).
+# See profiles: below — do not maintain separate optical_1cam / optical_2cams files.
+
+schema_version: "1.0"
+rig_id: rig_pi5_lab_v1
+
+paths:
+  calibration_bundle: data/optical/calibrations/rig_pi5_lab_v1/calibration_bundle.h5
+  tracking_dir: data/optical/tracking
+  # Leaf: {experiment_name}_{condition}_{timestamp}/ (session.h5 + frames/)
+  recordings_dir: ~/experiments/{experiment_folder}/recordings
+  jts_config_template: software/optical/etc/jts_config.json
+
+# Per-rig overrides merged when 1 or 2 cameras are detected / opened.
+profiles:
+  "1":
+    rig_id: rig_pi5_lab_v1
+    calibration_bundle: data/optical/calibrations/rig_pi5_lab_v1/calibration_bundle.h5
+    tracking_dir: data/optical/tracking
+    tracker:
+      pose_method: pnp
+      cam_ids: [cam0]
+    calibration:
+      board:
+        square_length_mm: 37.51
+        marker_length_mm: 27.7
+  "2":
+    rig_id: rig_2cams_pi5_lab_v1
+    calibration_bundle: data/optical/calibrations/rig_pi5_lab_v1/calibration_bundle_2cams.h5
+    tracking_dir: data/optical/tracking_2cams
+    tracker:
+      pose_method: triangulation
+      cam_ids: [cam0, cam1]
+      triangulation:
+        min_views: 2
+        max_residual_mm: 5.0
+    calibration:
+      board:
+        square_length_mm: 37.51
+        marker_length_mm: 27.7
+
+# ---------------------------------------------------------------------------
+# Markers — ArUco layout for HP / MP / CT (was marker_config.json)
+# ---------------------------------------------------------------------------
+markers:
+  detector:
+    type: aruco
+    dictionary: DICT_4X4_50
+    tag_size_mm: 30.0
+    # Sub-pixel corner refinement (none | subpix | contour). Keep the half-window
+    # below one tag cell (~5 px for a 30 px tag on the 728x544 lores stream).
+    corner_refinement: subpix
+    corner_refine_win_px: 3
+  id_ranges:
+    HP: [0, 9]
+    MP: [10, 19]
+    CT: [20, 29]
+    # Two-marker ladder array (§5.1). IDs sit past CT in DICT_4X4_50.
+    eval_array: [35, 41]
+  rigid_bodies:
+    HP: { tag_ids: [1, 8] }
+    MP: { tag_ids: [13, 17] }
+    CT: { tag_ids: [20, 22] }
+    eval_array: { tag_ids: [35, 41] }
+  # T_body←tag (mm). Identity placeholders — replace with CAD / measurement.
+  mounts_T_body_tag:
+    "1":
+      [
+        [1, 0, 0, -40.5],
+        [0, 1, 0, 0],
+        [0, 0, 1, 0],
+        [0, 0, 0, 1]
+      ]
+    "8":
+      [
+        [1, 0, 0, 40.5],
+        [0, 1, 0, 0],
+        [0, 0, 1, 0],
+        [0, 0, 0, 1]
+      ]
+    "13":
+      [
+        [1, 0, 0, 20],
+        [0, 1, 0, 0],
+        [0, 0, 1, 0],
+        [0, 0, 0, 1]
+      ]
+    "17":
+      [
+        [1, 0, 0, -20],
+        [0, 1, 0, 0],
+        [0, 0, 1, 0],
+        [0, 0, 0, 1]
+      ]
+
+    "20":
+      [
+        [0.3939419, -0.9191353, 0, -42.1148],
+        [0.9191353, 0.3939419, 0, -8.37938],
+        [0, 0, 1, 0],
+        [0, 0, 0, 1]
+      ]
+    "22":
+      [
+        [0.3939419, 0.9191353, 0, 42.1148],
+        [-0.9191353, 0.3939419, 0, -8.37938],
+        [0, 0, 1, 0],
+        [0, 0, 0, 1]
+      ]
+    # eval_array: measured tag centers, 59.90 mm apart.
+    "35":
+      [
+        [1, 0, 0, 29.95],
+        [0, 1, 0, 0],
+        [0, 0, 1, 0],
+        [0, 0, 0, 1]
+      ]
+    "41":
+      [
+        [1, 0, 0, -29.95],
+        [0, 1, 0, 0],
+        [0, 0, 1, 0],
+        [0, 0, 0, 1]
+      ]
+
+# ---------------------------------------------------------------------------
+# Calibration — ChArUco intrinsics / extrinsics / bundle (was calibration_config*.json)
+# ---------------------------------------------------------------------------
+calibration:
+  cameras:
+    - id: cam0
+      camera_num: 0
+      resolution: [1456, 1088]
+    - id: cam1
+      camera_num: 1
+      resolution: [1456, 1088]
+  board:
+    type: charuco
+    squares_x: 7
+    squares_y: 5
+    square_length_mm: 37.51
+    marker_length_mm: 27.7
+    dictionary: DICT_4X4_50
+    min_corners: 6
+  expected_baseline_mm: 450.0
+  capture:
+    min_images_intrinsics: 25
+    min_snapshots_extrinsics: 40
+    # Extrinsics acceptance gates (bundle written only when they pass; see doc 02).
+    max_pnp_rms_px: 1.5
+    max_cross_view_rms_px: 4.0
+    min_inlier_fraction: 0.6
+    # Exposure is fixed by the trigger pulse width and the lens is manual focus,
+    # so there is nothing to lock (the former lock_exposure / lock_focus keys
+    # were never read).
+  # fiducials.marker_config_path is filled automatically from this file
+
+# ---------------------------------------------------------------------------
+# Tracker — live / multimodal pose estimation (was tracker_config*.json)
+# Profile overrides pose_method / cam_ids / triangulation thresholds.
+# ---------------------------------------------------------------------------
+tracker:
+  pose_method: pnp
+  cam_ids: [cam0]
+  use_reprojection_weights: false
+  # CT tip offset (pivot calibration JSON, same file as jtsmm session.ct_tip_calibration).
+  # optical track / replay report pose_CT at the tip; null = CT body origin.
+  ct_tip_calibration: software/optical/etc/ct_tip_calibration.json
+  pnp:
+    # Per tag, under the joint body solve; the worst tag above it is dropped.
+    max_reprojection_rms_px: 8.0
+    # Single-tag flip resolution may lean on the previous pose for this many
+    # frames after the last unambiguous solve (0 = off).
+    prior_max_frames: 15
+  triangulation:
+    min_views: 2
+    max_residual_mm: 5.0
+    # Drop a corner view whose reprojection error exceeds this (px, 0 = off).
+    max_corner_reprojection_px: 2.0
+
+# ---------------------------------------------------------------------------
+# Experiment — motion phases (8 landmark calib phases inserted before first motion).
+# EMG MVC is a separate take: jtsmm record --mvc (not listed here).
+# ---------------------------------------------------------------------------
+experiment:
+  # Leaf: ~/experiments/{folder}/recordings/{name}_{condition}_{timestamp}/
+  name: trueness_lateral_1
+  folder: 5_1_1_pnp_vs_triangulation
+  condition: near  # CLI --condition overrides; required for --persist-frames
+  # false → single SPACE take (phase=condition), no landmark calib / no JTS sidecar
+  use_experiment_plan: true
+  # true → walk `phases` only; do not insert the 8 landmark phases.
+  # Leave false for a real jaw-motion take.
+  no_landmark_calibration: true
+  description: Jaw motion analysis experiment
+  phases:
+    - d000
+    - d020
+    - d040
+    - d060
+    - d080
+    - d100
+    - d120
+    - d140
+    - d160
+    - d180
+    - d200
+
+# ---------------------------------------------------------------------------
+# Eval — marker size study (optical eval)
+# ---------------------------------------------------------------------------
+eval:
+  dictionary: DICT_4X4_50
+  camera_id: cam0
+  n_cameras: 2
+  markers:
+    - { id: 6, size_mm: 60, label: "60mm" }
+    - { id: 5, size_mm: 50, label: "50mm" }
+    - { id: 4, size_mm: 40, label: "40mm" }
+    - { id: 3, size_mm: 30, label: "30mm" }
+    - { id: 2, size_mm: 20, label: "20mm" }
+  capture:
+    static_frames: 300
+    motion_frames: 300
+    warmup_frames: 30
+    # null / omit → half-res lores (728×544); set [1456, 1088] for full main
+    resolution: null
+  thresholds:
+    static:
+      min_detection_rate_pct: 95
+      max_translation_jitter_mm: 0.5
+      min_marker_side_px: 25
+      triangulation:
+        min_detection_rate_pct: 90
+        max_reprojection_rms_px: 2.0
+        max_translation_jitter_mm: 0.5
+        max_rotation_jitter_deg: 1.0
+    motion:
+      min_detection_rate_pct: 85
+      triangulation:
+        min_detection_rate_pct: 80
+        max_reprojection_rms_px: 3.0
+
+# ---------------------------------------------------------------------------
+# Eval quality — lores ladder (optical eval-quality)
+# ---------------------------------------------------------------------------
+eval_quality:
+  dictionary: DICT_4X4_50
+  camera_id: cam0
+  triangulation: false
+  markers:
+    - { id: 6, size_mm: 60, label: "60mm" }
+    - { id: 5, size_mm: 50, label: "50mm" }
+    - { id: 4, size_mm: 40, label: "40mm" }
+    - { id: 3, size_mm: 30, label: "30mm" }
+    - { id: 2, size_mm: 20, label: "20mm" }
+  capture:
+    frames: 60
+    warmup_frames: 15
+  qualities:
+    - { name: native_1456x1088, width: 1456, height: 1088 }
+    - { name: half_728x544, width: 728, height: 544 }
+    - { name: vga_640x480, width: 640, height: 480 }
+    - { name: third_486x363, width: 486, height: 363 }
+    - { name: quarter_364x272, width: 364, height: 272 }
+    - { name: half_blur, width: 728, height: 544, blur_sigma: 1.2 }
+    - { name: half_jpeg50, width: 728, height: 544, jpeg_quality: 50 }
+  thresholds:
+    min_detection_rate_pct: 95
+    min_marker_side_px: 20
+    max_reprojection_rms_mm: 0.5
+    triangulation:
+      min_detection_rate_pct: 90
+      max_reprojection_rms_px: 2.0

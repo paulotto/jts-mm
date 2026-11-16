@@ -1,0 +1,40 @@
+# This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+# SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+# SPDX-License-Identifier: MIT
+
+PROJECT_NAME           = "jtsmm firmware"
+PROJECT_BRIEF          = "RP2350 production firmware for jtsmm_hat"
+OUTPUT_DIRECTORY       = doxygen
+CREATE_SUBDIRS         = NO
+ALLOW_UNICODE_NAMES    = YES
+OUTPUT_LANGUAGE        = English
+BRIEF_MEMBER_DESC      = YES
+REPEAT_BRIEF           = YES
+ALWAYS_DETAILED_SEC    = NO
+JAVADOC_AUTOBRIEF      = YES
+QT_AUTOBRIEF           = NO
+MULTILINE_CPP_IS_BRIEF = NO
+TAB_SIZE               = 4
+OPTIMIZE_OUTPUT_FOR_C  = YES
+EXTRACT_ALL            = NO
+EXTRACT_PRIVATE        = NO
+EXTRACT_STATIC         = YES
+HIDE_UNDOC_MEMBERS     = NO
+HIDE_UNDOC_CLASSES     = NO
+WARNINGS               = YES
+WARN_IF_UNDOCUMENTED   = YES
+WARN_IF_DOC_ERROR      = YES
+WARN_NO_PARAMDOC       = YES
+INPUT                  = include src
+FILE_PATTERNS          = *.c *.h
+RECURSIVE              = YES
+EXCLUDE                = third_party tests
+EXCLUDE_PATTERNS       = */third_party/* */tests/*
+USE_MDFILE_AS_MAINPAGE =
+GENERATE_HTML          = YES
+GENERATE_LATEX         = NO
+HTML_OUTPUT            = html
+HAVE_DOT               = NO
+SOURCE_BROWSER         = YES
+ALPHABETICAL_INDEX     = YES
+QUIET                  = YES

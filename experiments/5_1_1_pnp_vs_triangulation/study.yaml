@@ -1,0 +1,42 @@
+# This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+# SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+# SPDX-FileCopyrightText: 2026 David Stebich
+# SPDX-License-Identifier: MIT
+
+# Precision and trueness of the two-marker ladder array.
+# PnP (single camera) vs multi-camera triangulation. The rigid body is the
+# array, not the CRA (HP).
+optical_config: null  # null → ~/optical.yaml or package etc/optical.yaml
+pnp_camera_id: cam0
+
+# Name of the array in optical.yaml markers.rigid_bodies / id_ranges.
+array_body: eval_array
+
+precision:
+  conditions: [near, mid, far]
+  window_s: 10
+
+# Hand-measured insertion distances of the array in the ladder.
+# `section` is the experiment-plan phase recorded in that take.
+# Replace `mm` with the ruler value before evaluating trueness.
+# Each orientation is recorded at near / mid / far (ladder-to-camera distance).
+ladder:
+  reference_mm: 0.0
+  ranges: [near, mid, far]
+  orientations:
+    # Intended placement only. Trueness fits the ladder line; it does not
+    # project the slots onto this axis.
+    lateral: { axis: z, label: depth }
+    frontal: { axis: x, label: left-right }
+  slots:
+    - { section: d000, mm: 0.0 }
+    - { section: d020, mm: 20.0 }
+    - { section: d040, mm: 40.0 }
+    - { section: d060, mm: 60.0 }
+    - { section: d080, mm: 80.0 }
+    - { section: d100, mm: 100.0 }
+    - { section: d120, mm: 120.0 }
+    - { section: d140, mm: 140.0 }
+    - { section: d160, mm: 160.0 }
+    - { section: d180, mm: 180.0 }
+    - { section: d200, mm: 200.0 }

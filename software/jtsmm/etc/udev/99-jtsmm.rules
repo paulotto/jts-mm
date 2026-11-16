@@ -1,0 +1,17 @@
+# This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+# SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+# SPDX-License-Identifier: MIT
+
+# jtsmm_hat composite USB device (Raspberry Pi VID 0x2e8a, jtsmm PID 0x0004).
+# The device exposes two functions on J_USB1:
+#   * CDC ACM  -> text banner, status, and the command line (pyserial).
+#   * Vendor   -> bulk IN endpoint carrying the framed binary record stream (libusb).
+#
+# Install: copy to /etc/udev/rules.d/ then `sudo udevadm control --reload && sudo udevadm trigger`.
+
+# Stable serial symlink for the CDC command/text port.
+SUBSYSTEM=="tty", ATTRS{idVendor}=="2e8a", ATTRS{idProduct}=="0004", SYMLINK+="jtsmm_hat"
+
+# Grant the local/console user (and plugdev) libusb access to the vendor bulk
+# interface so `jtsmm record`/`capture_mcu` can read binary without root.
+SUBSYSTEM=="usb", ATTRS{idVendor}=="2e8a", ATTRS{idProduct}=="0004", MODE="0666", GROUP="plugdev", TAG+="uaccess"

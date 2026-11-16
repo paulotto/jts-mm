@@ -1,0 +1,64 @@
+# This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+# SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+# SPDX-License-Identifier: MIT
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "jtsmm"
+version = "0.1.0"
+description = "Production multimodal capture stack for JTS-MM (Pi 5 host)"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.24",
+    "h5py>=3.8",
+    "pyserial>=3.5",
+    "pyusb>=1.2",
+    "pyyaml>=6.0",
+    "jsonschema>=4.0",
+    "click>=8.0",
+    "packaging>=23.0",
+]
+
+[project.optional-dependencies]
+# picamera2 needs libcamera's Python bindings, which only exist as the apt
+# package python3-libcamera: on Pi OS install python3-picamera2 via apt and
+# create the venv with --system-site-packages (scripts/build_install.sh does
+# both), so this requirement is satisfied by the system copy.
+cameras = ["picamera2>=0.3", "opencv-python>=4.8"]
+# Optical tracking / CT pivot / IMU hand-eye (capture/optical_bridge.py,
+# ct_pivot.py, imu/persist.py, viewer/cam_preview.py). Also needs the in-repo
+# `optical` package, which is not on PyPI: pip install -e software/optical
+# (scripts/build_install.sh installs it unless --no-optical).
+optical = ["opencv-python>=4.8"]
+# Offline analysis / plotting tools under jtsmm/tools/.
+analysis = ["matplotlib>=3.7", "scipy>=1.10"]
+dev = ["pytest>=7.0", "ruff>=0.4", "httpx2>=2.0.0"]
+# Build deps for the optional native capture/storage extension (see
+# software/jtsmm/native/). System packages libusb-1.0-0-dev and libhdf5-dev are
+# also required; build with software/jtsmm/native/build.sh.
+native = ["pybind11>=2.11"]
+# Web viewer backend (jtsmm view / replay / record --viewer). The browser SPA
+# under viewer_web/ is served statically and needs no Node on the rig.
+viewer = ["fastapi>=0.110", "uvicorn[standard]>=0.27", "msgpack>=1.0", "Pillow>=10.0"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[project.scripts]
+jtsmm = "jtsmm.cli.main:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["jtsmm*"]
+
+[tool.setuptools.package-data]
+"jtsmm.native" = ["*.so"]

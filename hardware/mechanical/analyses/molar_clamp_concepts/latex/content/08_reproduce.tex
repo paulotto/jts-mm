@@ -1,0 +1,45 @@
+% This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+% SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+% SPDX-License-Identifier: CC-BY-4.0
+
+\section{Reproducing and editing the figures}\label{sec:reproduce}
+Everything in this document is generated from \texttt{../../scan/teeth\_02.stl} by the scripts in
+\texttt{scripts/}. Install the Python packages in \texttt{scripts/requirements.txt} and run
+\texttt{scripts/run\_all.sh}; it rebuilds all figures, tables, STLs and this PDF (about
+\SI{3}{min}; the 3D renders use VTK off-screen and need no display).
+
+\begin{table}[H]\centering\small
+\begin{tabularx}{\textwidth}{l X l}
+\toprule
+script & what it does & output\\
+\midrule
+\texttt{s00\_export\_teeth\_freecad.py} & optional, run with \texttt{freecadcmd}: exports \texttt{Teeth\_02} with its placement & \texttt{../../scan/}\\
+\texttt{s01\_arch\_frame.py} & arch centreline, local frame, occlusal profile & \texttt{build/arch.npz}\\
+\texttt{s02\_voxelize.py} & filled \SI{0.2}{mm} voxel model, distance field, arch coordinates & \texttt{build/field.npz}\\
+\texttt{s03\_survey.py} & height of contour and undercut per tooth & \texttt{build/survey.json}, \cref{tab:survey}\\
+\texttt{s04\_concepts.py} & the five concepts as voxel masks + wire paths, built from \texttt{params.py} & \texttt{stl/}, \texttt{build/concepts.pkl}\\
+\texttt{s05\_render3d.py} & 3D renders, cameras in \texttt{CAMS} & \texttt{figures/png/render\_*}\\
+\texttt{s06\_fig\_mechanics.py} & \cref{fig:mech,fig:undercut} & \texttt{mech\_*}\\
+\texttt{s07\_fig\_sections.py} & first-molar sections of every concept & \texttt{section\_*}\\
+\texttt{s08\_springs.py} & spring mathematics, \cref{fig:springs,fig:loopchart}, \cref{tab:wire,tab:loop,tab:tpu,tab:energy,tab:arm} & \texttt{springs\_*}, \texttt{generated/}\\
+\texttt{s09\_drawings.py} & dimensioned drawings, reference dimensions, parameter tables & \texttt{drw\_*}, \texttt{generated/}\\
+\texttt{s10\_export\_cad.py} & reference curves, stations, tooth sections and the FreeCAD macro & \texttt{cad/}\\
+\texttt{params.py} & \textbf{every part dimension} (read by s04, s08, s09) & --\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\paragraph{Editing figures.} Every 2D figure is written three times: \texttt{figures/svg/} (text is
+kept as text, so labels can be edited in Inkscape or Illustrator), \texttt{figures/pdf/} (used by
+this document) and \texttt{figures/png/} (preview). If you edit an SVG by hand, export it to PDF
+under the same name (Inkscape: \emph{Save a Copy} $\rightarrow$ PDF) and LaTeX picks it up; but a
+re-run of the scripts overwrites manual edits, so prefer changing the script where possible. The 3D
+renders are PNG only: a vector export of \num{e5} triangles is neither small nor editable. To
+change what they show, edit \texttt{params.py} (dimensions) or the masks in \texttt{s04\_concepts.py} or the camera in
+\texttt{s05\_render3d.py}.
+
+\paragraph{Coordinates.} $x$ mesio-distal, $y$ arch depth, $z$ tooth axis with the cusp tips at the
+smallest $z$ (the frame of \texttt{Teeth\_02} in the FreeCAD files of the parts). The
+scripts add $h$ (height below the lowest cusp tip), $s$ (arc length along the arch, 0 at the
+midline) and $n$ (offset from the arch centreline, positive buccal). Every mask in
+\texttt{s04\_concepts.py} is written in $s$, $n$, $h$ and the distance to the teeth.

@@ -1,0 +1,30 @@
+# This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+# SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+# SPDX-License-Identifier: MIT
+
+# ICORR camera-free paper (2026-11-12: the study packed into two papers; this
+# one carries X5, the camera-free jaw pose; the JNER core paper no longer does). Analysis plan:
+# X5 (section 1, Exploratory), D28 and its routing revision of 2026-11-12, the X5 method
+# entries, X5b, X5c, the X5 results
+# Same store and code state as the JNER export: the reporting_population variant at snapshot r17a (the
+# camera-free cohort is the 13 participants with a jaw IMU, all adults; D35, D36).
+#   biomech export --config study.yaml --paper paper_camerafree.yaml --target conference
+#                  --compile --check-size --standalone
+# IEEE two-column format, 88 / 181 mm, figure text >= 8 pt (venue ieee8). "Step" is the
+# paper's word for a rung of the estimator ladder.
+variant: reporting_population
+snapshot: r17a
+record_snapshot: r17
+numbers: numbers_dataset.yaml   # the existing numCf... / numDyncal... macros (same names in both papers)
+captions: {conference: captions_icorr_cf.yaml}   # written short captions ("step", not "rung")
+targets:
+  conference: {venue: ieee8, out_dir: ../../data/analysis/icorr2027/paper_camerafree/conference}
+default_target: conference
+items:
+  - {section: "Camera-free tracking"}
+  - {id: cf_opening_ladder, form: rows, offline: "no", label: cfLadder, part: core, width: column}   # opening-angle error per step (causal steps)
+  - {id: cf_drift, label: suppCfDrift, part: core, width: column}                       # drift example with and without resets
+  - {id: cf_incisor_axes, label: suppCfAxes, part: core, width: text}                   # incisor error per translation model
+  - {id: cf_decomposition, label: suppCfDecomposition, part: core, width: column}       # rotation- vs model-induced incisor error (X5b, X5c)
+  - {id: cf_table_results, label: tabCameraFree, part: core, width: text}               # results per step
+  - {id: cf_table_oracle, rows: groups, label: suppTabCfOracle, part: supporting, width: text}   # the decomposition, two task groups

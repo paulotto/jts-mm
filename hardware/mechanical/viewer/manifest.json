@@ -1,0 +1,834 @@
+{
+ "concepts": [
+  {
+   "concept": "c1",
+   "id": "c1_printed",
+   "kind": "printed",
+   "title": "C1 snap shell",
+   "url": "/hardware/mechanical/viewer/models/concept_c1_printed.stl"
+  },
+  {
+   "concept": "c2",
+   "id": "c2_rigid",
+   "kind": "rigid",
+   "title": "C2 clothespin jaw: frame",
+   "url": "/hardware/mechanical/viewer/models/concept_c2_rigid.stl"
+  },
+  {
+   "concept": "c2",
+   "id": "c2_spring",
+   "kind": "spring",
+   "title": "C2: flexure jaw",
+   "url": "/hardware/mechanical/viewer/models/concept_c2_spring.stl"
+  },
+  {
+   "concept": "c3",
+   "id": "c3_rigid",
+   "kind": "rigid",
+   "title": "C3 wire clasps: plate",
+   "url": "/hardware/mechanical/viewer/models/concept_c3_rigid.stl"
+  },
+  {
+   "concept": "c3",
+   "id": "c3_wire_0p7mm",
+   "kind": "wire",
+   "title": "C3: 0.7 mm clasps",
+   "url": "/hardware/mechanical/viewer/models/concept_c3_wire_0p7mm.stl"
+  },
+  {
+   "concept": "c4",
+   "id": "c4_rigid",
+   "kind": "rigid",
+   "title": "C4 spring arch: pads",
+   "url": "/hardware/mechanical/viewer/models/concept_c4_rigid.stl"
+  },
+  {
+   "concept": "c4",
+   "id": "c4_printed",
+   "kind": "printed",
+   "title": "C4: printed parts",
+   "url": "/hardware/mechanical/viewer/models/concept_c4_printed.stl"
+  },
+  {
+   "concept": "c4",
+   "id": "c4_arch_wire_0p9mm",
+   "kind": "wire",
+   "title": "C4: 0.9 mm arch wire",
+   "url": "/hardware/mechanical/viewer/models/concept_c4_arch_wire_0p9mm.stl"
+  },
+  {
+   "concept": "c5",
+   "id": "c5_rigid",
+   "kind": "rigid",
+   "title": "C5 rigid clamp",
+   "url": "/hardware/mechanical/viewer/models/concept_c5_rigid.stl"
+  },
+  {
+   "concept": "c5",
+   "id": "c5_tpu",
+   "kind": "tpu",
+   "title": "C5: TPU liner",
+   "url": "/hardware/mechanical/viewer/models/concept_c5_tpu.stl"
+  }
+ ],
+ "parts": [
+  {
+   "id": "teeth_attachment",
+   "material": "PETG",
+   "role": "Bonds the mouth marker to the lower teeth (mandible). Carries the mouth-marker interface; version 5 adds a molar arc. Held on the lower front teeth by its own clamping fit and glued.",
+   "seat_on_scan": null,
+   "title": "Teeth attachment",
+   "used": {
+    "icorr2027": "v5_print_2026-10-03",
+    "jtsmm_validation": "v5_print_2026-10-03"
+   },
+   "variants": [
+    {
+     "cad": "no",
+     "date": "",
+     "id": "jts",
+     "mass_printed_g": 2.0,
+     "mass_solid_g": 2.0,
+     "note": "Original JTS part (software/jaw_tracking), glued to the lower incisors.",
+     "overlay": null,
+     "size_mm": [
+      60.0,
+      24.25,
+      49.25
+     ],
+     "status": "superseded",
+     "title": "JTS original",
+     "triangles": 568,
+     "url": "/software/jaw_tracking/models/JTS_Teeth_Attachment.stl",
+     "volume_mm3": 1539.1
+    },
+    {
+     "cad": "yes",
+     "date": "",
+     "id": "v1",
+     "mass_printed_g": 2.3,
+     "mass_solid_g": 2.3,
+     "note": "",
+     "overlay": null,
+     "size_mm": [
+      60.0,
+      28.75,
+      47.75
+     ],
+     "status": "superseded",
+     "title": "Version 1",
+     "triangles": 632,
+     "url": "/hardware/mechanical/parts/teeth_attachment/v1.stl",
+     "volume_mm3": 1842.0
+    },
+    {
+     "cad": "yes",
+     "date": "",
+     "id": "v2",
+     "mass_printed_g": 2.5,
+     "mass_solid_g": 2.5,
+     "note": "",
+     "overlay": null,
+     "size_mm": [
+      47.38,
+      23.75,
+      39.32
+     ],
+     "status": "superseded",
+     "title": "Version 2",
+     "triangles": 13826,
+     "url": "/hardware/mechanical/parts/teeth_attachment/v2.stl",
+     "volume_mm3": 1956.8
+    },
+    {
+     "cad": "yes",
+     "date": "",
+     "id": "v4",
+     "mass_printed_g": 1.9,
+     "mass_solid_g": 1.9,
+     "note": "",
+     "overlay": null,
+     "size_mm": [
+      51.2,
+      21.75,
+      23.18
+     ],
+     "status": "superseded",
+     "title": "Version 4",
+     "triangles": 4428,
+     "url": "/hardware/mechanical/parts/teeth_attachment/v4.stl",
+     "volume_mm3": 1483.3
+    },
+    {
+     "cad": "yes",
+     "date": "",
+     "id": "v5_draft",
+     "mass_printed_g": 3.1,
+     "mass_solid_g": 3.1,
+     "note": "First version-5 body; the version-5 variants below are its revision (Body011).",
+     "overlay": null,
+     "size_mm": [
+      73.41,
+      21.25,
+      57.87
+     ],
+     "status": "superseded",
+     "title": "Version 5 draft",
+     "triangles": 3374,
+     "url": "/hardware/mechanical/parts/teeth_attachment/v5_draft.stl",
+     "volume_mm3": 2426.3
+    },
+    {
+     "cad": "no",
+     "date": "2026-10-03",
+     "id": "v5_print_2026-10-03",
+     "mass_printed_g": 2.9,
+     "mass_solid_g": 2.9,
+     "note": "Geometry of the 30-part print plate of 2026-10-03, an earlier version-5 state than the v5_5mm export of 2026-10-08 (extracted from the 3MF).",
+     "overlay": null,
+     "size_mm": [
+      63.86,
+      21.25,
+      55.08
+     ],
+     "status": "printed",
+     "title": "Version 5, 5 mm (print 2026-10-03)",
+     "triangles": 3184,
+     "url": "/hardware/mechanical/parts/teeth_attachment/v5_print_2026-10-03.stl",
+     "volume_mm3": 2283.5
+    },
+    {
+     "cad": "pending",
+     "date": "2026-10-08",
+     "id": "v5_4mm",
+     "mass_printed_g": 3.1,
+     "mass_solid_g": 3.1,
+     "note": "Exported from an earlier version-5 state; the saved CAD with ta_separation 4.0 gives a different shape (1 mm shallower).",
+     "overlay": null,
+     "size_mm": [
+      69.95,
+      21.25,
+      58.72
+     ],
+     "status": "variant",
+     "title": "Version 5, 4 mm",
+     "triangles": 3546,
+     "url": "/hardware/mechanical/parts/teeth_attachment/v5_4mm.stl",
+     "volume_mm3": 2475.5
+    },
+    {
+     "cad": "yes",
+     "date": "2026-10-09",
+     "id": "v5_4_5mm",
+     "mass_printed_g": 3.2,
+     "mass_solid_g": 3.2,
+     "note": "",
+     "overlay": null,
+     "size_mm": [
+      69.95,
+      21.25,
+      57.72
+     ],
+     "status": "variant",
+     "title": "Version 5, 4.5 mm",
+     "triangles": 3556,
+     "url": "/hardware/mechanical/parts/teeth_attachment/v5_4_5mm.stl",
+     "volume_mm3": 2511.0
+    },
+    {
+     "cad": "yes",
+     "date": "2026-10-08",
+     "id": "v5_5mm",
+     "mass_printed_g": 3.1,
+     "mass_solid_g": 3.1,
+     "note": "",
+     "overlay": null,
+     "size_mm": [
+      69.95,
+      21.25,
+      57.72
+     ],
+     "status": "variant",
+     "title": "Version 5, 5 mm",
+     "triangles": 3582,
+     "url": "/hardware/mechanical/parts/teeth_attachment/v5_5mm.stl",
+     "volume_mm3": 2454.3
+    },
+    {
+     "cad": "yes",
+     "date": "2026-10-09",
+     "id": "v5_5_5mm",
+     "mass_printed_g": 3.0,
+     "mass_solid_g": 3.0,
+     "note": "",
+     "overlay": null,
+     "size_mm": [
+      69.95,
+      21.25,
+      57.72
+     ],
+     "status": "variant",
+     "title": "Version 5, 5.5 mm",
+     "triangles": 3610,
+     "url": "/hardware/mechanical/parts/teeth_attachment/v5_5_5mm.stl",
+     "volume_mm3": 2393.9
+    },
+    {
+     "cad": "pending",
+     "date": "2026-10-09",
+     "id": "v5_6_5mm",
+     "mass_printed_g": 3.1,
+     "mass_solid_g": 3.1,
+     "note": "Not reproducible from the saved CAD (ta_separation 6.5 leaves Sketch110 unsolvable); the STL is authoritative.",
+     "overlay": null,
+     "size_mm": [
+      69.95,
+      21.25,
+      57.72
+     ],
+     "status": "variant",
+     "title": "Version 5, 6.5 mm",
+     "triangles": 3546,
+     "url": "/hardware/mechanical/parts/teeth_attachment/v5_6_5mm.stl",
+     "volume_mm3": 2454.1
+    }
+   ]
+  },
+  {
+   "id": "mouth_marker",
+   "material": "PLA",
+   "role": "Carries the mouth-piece tags (MP, ids 13/17) and the mandible IMU; mounts on the teeth attachment.",
+   "seat_on_scan": null,
+   "title": "Mouth marker",
+   "used": {
+    "icorr2027": "aruco",
+    "jtsmm_validation": "qualisys_aruco"
+   },
+   "variants": [
+    {
+     "cad": "no",
+     "date": "",
+     "id": "jts",
+     "mass_printed_g": 8.4,
+     "mass_solid_g": 14.9,
+     "note": "",
+     "overlay": null,
+     "size_mm": [
+      87.0,
+      52.0,
+      9.0
+     ],
+     "status": "superseded",
+     "title": "JTS original",
+     "triangles": 5760,
+     "url": "/software/jaw_tracking/models/JTS_Mouth_Marker.stl",
+     "volume_mm3": 12036.4
+    },
+    {
+     "cad": "yes",
+     "date": "",
+     "id": "v1",
+     "mass_printed_g": 27.4,
+     "mass_solid_g": 58.9,
+     "note": "",
+     "overlay": null,
+     "size_mm": [
+      145.0,
+      103.5,
+      9.0
+     ],
+     "status": "superseded",
+     "title": "Version 1",
+     "triangles": 2380,
+     "url": "/hardware/mechanical/parts/mouth_marker/v1.stl",
+     "volume_mm3": 47501.7
+    },
+    {
+     "cad": "yes",
+     "date": "",
+     "id": "aruco",
+     "mass_printed_g": 10.5,
+     "mass_solid_g": 11.2,
+     "note": "The mouth marker of the current FreeCAD model, used in the dataset (user, 2026-11-04).",
+     "overlay": null,
+     "size_mm": [
+      80.0,
+      64.86,
+      12.0
+     ],
+     "status": "variant",
+     "title": "ArUco + IMU (CAD state 2026-10-09)",
+     "triangles": 218,
+     "url": "/hardware/mechanical/parts/mouth_marker/aruco.stl",
+     "volume_mm3": 9046.3
+    },
+    {
+     "cad": "yes",
+     "date": "2026-10-13",
+     "id": "qualisys_aruco",
+     "mass_printed_g": 13.8,
+     "mass_solid_g": 15.9,
+     "note": "With the reflective markers (systems study). CAD: the reflective-marker model (saved 2026-11-04), split to its own project.",
+     "overlay": {
+      "angles": [
+       0.0,
+       0.0
+      ],
+      "imu_seat": [
+       -181.0,
+       31.93000030517578,
+       2.0049999713897706
+      ],
+      "imu_seat_size": [
+       25.399993896484375,
+       23.860000610351562
+      ],
+      "part": "mouth_marker",
+      "seat_side": [
+       30.4,
+       29.8
+      ],
+      "seats": [
+       [
+        -161.0,
+        0.0,
+        2.0
+       ],
+       [
+        -201.0,
+        0.0,
+        2.0
+       ]
+      ],
+      "variant": "qualisys_aruco"
+     },
+     "size_mm": [
+      105.0,
+      65.0,
+      12.0
+     ],
+     "status": "variant",
+     "title": "Qualisys + ArUco",
+     "triangles": 2538,
+     "url": "/hardware/mechanical/parts/mouth_marker/qualisys_aruco.stl",
+     "volume_mm3": 12853.1
+    }
+   ]
+  },
+  {
+   "id": "head_marker",
+   "material": "PLA",
+   "role": "Carries the head-piece tags (HP, ids 1/8) and the head IMU; strapped to the head (maxilla reference).",
+   "seat_on_scan": null,
+   "title": "Head marker",
+   "used": {
+    "icorr2027": "aruco_2026-08-18",
+    "jtsmm_validation": "qualisys_aruco"
+   },
+   "variants": [
+    {
+     "cad": "no",
+     "date": "",
+     "id": "jts",
+     "mass_printed_g": 15.7,
+     "mass_solid_g": 29.3,
+     "note": "",
+     "overlay": null,
+     "size_mm": [
+      178.66,
+      93.48,
+      25.0
+     ],
+     "status": "superseded",
+     "title": "JTS original",
+     "triangles": 9194,
+     "url": "/software/jaw_tracking/models/JTS_Head_Marker.stl",
+     "volume_mm3": 23663.8
+    },
+    {
+     "cad": "yes",
+     "date": "2026-08-18",
+     "id": "aruco_2026-08-18",
+     "mass_printed_g": 27.6,
+     "mass_solid_g": 55.1,
+     "note": "",
+     "overlay": null,
+     "size_mm": [
+      178.66,
+      104.48,
+      31.0
+     ],
+     "status": "printed",
+     "title": "ArUco + IMU (print 2026-08-18)",
+     "triangles": 6404,
+     "url": "/hardware/mechanical/parts/head_marker/aruco_2026-08-18.stl",
+     "volume_mm3": 44452.4
+    },
+    {
+     "cad": "yes",
+     "date": "2026-10-13",
+     "id": "qualisys_aruco",
+     "mass_printed_g": 29.5,
+     "mass_solid_g": 62.2,
+     "note": "With the reflective markers (systems study). CAD: the reflective-marker model (saved 2026-11-04), split to its own project.",
+     "overlay": {
+      "angles": [
+       0.0,
+       0.0
+      ],
+      "imu_seat": [
+       0.0,
+       -165.0,
+       5.0
+      ],
+      "imu_seat_size": [
+       25.399999618530273,
+       28.0
+      ],
+      "part": "head_marker",
+      "seat_side": [
+       40.0,
+       40.0
+      ],
+      "seats": [
+       [
+        40.5,
+        -170.0,
+        11.0
+       ],
+       [
+        -40.5,
+        -170.0,
+        11.0
+       ]
+      ],
+      "variant": "qualisys_aruco"
+     },
+     "size_mm": [
+      178.66,
+      134.48,
+      31.0
+     ],
+     "status": "variant",
+     "title": "Qualisys + ArUco",
+     "triangles": 8728,
+     "url": "/hardware/mechanical/parts/head_marker/qualisys_aruco.stl",
+     "volume_mm3": 50146.1
+    }
+   ]
+  },
+  {
+   "id": "calibration_tool",
+   "material": "PLA",
+   "role": "Pointer (CT, tags 20/22) for landmark digitisation; tip by pivot calibration.",
+   "seat_on_scan": null,
+   "title": "Calibration tool",
+   "used": {
+    "icorr2027": "aruco",
+    "jtsmm_validation": "qualisys_aruco"
+   },
+   "variants": [
+    {
+     "cad": "no",
+     "date": "",
+     "id": "jts",
+     "mass_printed_g": 19.7,
+     "mass_solid_g": 40.6,
+     "note": "",
+     "overlay": null,
+     "size_mm": [
+      79.0,
+      232.0,
+      10.0
+     ],
+     "status": "superseded",
+     "title": "JTS original",
+     "triangles": 5358,
+     "url": "/software/jaw_tracking/models/JTS_Calibration_Tool.stl",
+     "volume_mm3": 32751.0
+    },
+    {
+     "cad": "yes",
+     "date": "",
+     "id": "aruco",
+     "mass_printed_g": 31.1,
+     "mass_solid_g": 81.1,
+     "note": "",
+     "overlay": null,
+     "size_mm": [
+      136.75,
+      232.0,
+      10.01
+     ],
+     "status": "superseded",
+     "title": "ArUco (CAD state 2026-10-09)",
+     "triangles": 3262,
+     "url": "/hardware/mechanical/parts/calibration_tool/aruco.stl",
+     "volume_mm3": 65364.6
+    },
+    {
+     "cad": "yes",
+     "date": "2026-10-13",
+     "id": "qualisys_aruco",
+     "mass_printed_g": 31.2,
+     "mass_solid_g": 80.3,
+     "note": "With the reflective markers. CAD: the reflective-marker model (saved 2026-11-04), split to its own project.",
+     "overlay": {
+      "R": [
+       [
+        -1.0,
+        -0.0,
+        -0.0
+       ],
+       [
+        -0.0,
+        -1.0,
+        -0.0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ],
+      "angles": [
+       23.200000000000003,
+       66.8
+      ],
+      "origin": [
+       -300.0,
+       -185.00000072753903,
+       10.010000228881836
+      ],
+      "part": "calibration_tool",
+      "rod_axis_pt": [
+       -300.0,
+       18.166666666666668,
+       5.000000002086236
+      ],
+      "rod_dir": [
+       -0.02510249513754215,
+       0.9996848827194846,
+       0.0
+      ],
+      "rod_end": [
+       -305.0,
+       22.50000000000003,
+       5.000000002086236
+      ],
+      "seat_side": [
+       40.0,
+       40.0
+      ],
+      "seats": [
+       [
+        -342.11477661132807,
+        -176.62062072753903,
+        10.010000228881836
+       ],
+       [
+        -257.8852233886719,
+        -176.62062072753903,
+        10.010000228881836
+       ]
+      ],
+      "tip_cad": [
+       -301.2420491706982,
+       44.584457430903456,
+       4.50771194895781
+      ],
+      "variant": "qualisys_aruco"
+     },
+     "size_mm": [
+      136.75,
+      232.0,
+      10.01
+     ],
+     "status": "variant",
+     "title": "Qualisys + ArUco",
+     "triangles": 5530,
+     "url": "/hardware/mechanical/parts/calibration_tool/qualisys_aruco.stl",
+     "volume_mm3": 64769.1
+    }
+   ]
+  },
+  {
+   "id": "ct_calibrater",
+   "material": "PLA",
+   "role": "Pivot cup for the calibration-tool tip calibration (jtsmm ct-calibrate).",
+   "seat_on_scan": null,
+   "title": "CT calibrater",
+   "used": {
+    "icorr2027": null,
+    "jtsmm_validation": "v1"
+   },
+   "variants": [
+    {
+     "cad": "yes",
+     "date": "",
+     "id": "cad_2026-10-09",
+     "mass_printed_g": 2.0,
+     "mass_solid_g": 4.9,
+     "note": "",
+     "overlay": null,
+     "size_mm": [
+      20.0,
+      10.0,
+      20.0
+     ],
+     "status": "superseded",
+     "title": "CAD state 2026-10-09",
+     "triangles": 1022,
+     "url": "/hardware/mechanical/parts/ct_calibrater/cad_2026-10-09.stl",
+     "volume_mm3": 3980.4
+    },
+    {
+     "cad": "pending",
+     "date": "2026-10-19",
+     "id": "v1",
+     "mass_printed_g": 2.0,
+     "mass_solid_g": 4.9,
+     "note": "Exported after the saved CAD (same box, 1.3 mm different geometry).",
+     "overlay": null,
+     "size_mm": [
+      20.0,
+      10.0,
+      20.0
+     ],
+     "status": "variant",
+     "title": "Version 1",
+     "triangles": 810,
+     "url": "/hardware/mechanical/parts/ct_calibrater/v1.stl",
+     "volume_mm3": 3921.6
+    }
+   ]
+  },
+  {
+   "id": "teeth_protector",
+   "material": "PLA",
+   "role": "Small plate (16 x 10 x 2 mm).",
+   "seat_on_scan": null,
+   "title": "Teeth protector",
+   "used": {
+    "icorr2027": null,
+    "jtsmm_validation": null
+   },
+   "variants": [
+    {
+     "cad": "yes",
+     "date": "2026-09-23",
+     "id": "v1",
+     "mass_printed_g": 0.2,
+     "mass_solid_g": 0.2,
+     "note": "",
+     "overlay": null,
+     "size_mm": [
+      16.0,
+      10.0,
+      2.0
+     ],
+     "status": "variant",
+     "title": "Version 1",
+     "triangles": 44,
+     "url": "/hardware/mechanical/parts/teeth_protector/v1.stl",
+     "volume_mm3": 125.0
+    }
+   ]
+  },
+  {
+   "id": "trueness_ladder",
+   "material": "PLA",
+   "role": "3D-printed step ladder for the optical trueness test (cv05, 20 mm steps).",
+   "seat_on_scan": null,
+   "title": "Trueness ladder",
+   "used": {
+    "icorr2027": null,
+    "jtsmm_validation": "v1"
+   },
+   "variants": [
+    {
+     "cad": "pending",
+     "date": "2026-10-01",
+     "id": "v1",
+     "mass_printed_g": 53.6,
+     "mass_solid_g": 200.3,
+     "note": "",
+     "overlay": null,
+     "size_mm": [
+      230.0,
+      15.0,
+      50.0
+     ],
+     "status": "variant",
+     "title": "Version 1",
+     "triangles": 188,
+     "url": "/hardware/mechanical/parts/trueness_ladder/v1.stl",
+     "volume_mm3": 161500.0
+    }
+   ]
+  },
+  {
+   "id": "trueness_array",
+   "material": "PLA",
+   "role": "Two-tag array (ids 35/41) moved along the trueness ladder (cv05).",
+   "seat_on_scan": null,
+   "title": "Trueness array",
+   "used": {
+    "icorr2027": null,
+    "jtsmm_validation": "v1"
+   },
+   "variants": [
+    {
+     "cad": "pending",
+     "date": "2026-10-02",
+     "id": "v1",
+     "mass_printed_g": 17.4,
+     "mass_solid_g": 53.4,
+     "note": "",
+     "overlay": {
+      "angles": [
+       0.0,
+       0.0
+      ],
+      "part": "trueness_array",
+      "seat_side": [
+       40.9,
+       40.9
+      ],
+      "seats": [
+       [
+        208.0,
+        -4.139917373657227,
+        166.75999450683594
+       ],
+       [
+        268.0,
+        -4.139917373657227,
+        166.75999450683594
+       ]
+      ],
+      "variant": "v1"
+     },
+     "size_mm": [
+      100.0,
+      65.0,
+      9.76
+     ],
+     "status": "variant",
+     "title": "Version 1",
+     "triangles": 284,
+     "url": "/hardware/mechanical/parts/trueness_array/v1.stl",
+     "volume_mm3": 43089.7
+    }
+   ]
+  }
+ ],
+ "scan": {
+  "title": "Teeth scan (Teeth_02, lower arch)",
+  "url": "/hardware/mechanical/viewer/models/teeth_02.stl"
+ },
+ "studies": [
+  "icorr2027",
+  "jtsmm_validation"
+ ]
+}

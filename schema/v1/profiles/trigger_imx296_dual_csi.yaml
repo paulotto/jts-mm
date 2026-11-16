@@ -1,0 +1,19 @@
+# This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+# SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+# SPDX-License-Identifier: MIT
+
+# Dual IMX296 CSI trigger profile — 30 Hz, 12 ms exposure (IMX296 low time)
+# Resolved into mcu.trigger when profile: imx296_dual_csi
+# Same values as the firmware profile/default (trigger_config.c, config_defaults.c).
+
+profile: imx296_dual_csi
+enabled: true
+rate_hz: 30
+pulse:
+  width_us: 12000
+  polarity: imx296_fast
+outputs:
+  csi1: true
+  csi2: true
+  scope: true
+  sync_led: false

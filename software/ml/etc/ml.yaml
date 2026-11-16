@@ -1,0 +1,88 @@
+# This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+# SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+# SPDX-License-Identifier: MIT
+
+# ML operator config: defaults for `ml label | labels | dataset | train | eval`.
+# This packaged file is the default. To use another file pass --config explicitly;
+# ~/ml.yaml is NOT read implicitly. Every command prints the config it used.
+# Spec: docs/ml/ (ml01-ml08). Parsing is strict: unknown keys are errors.
+#
+# Data roots:
+#   ~/ml_data/{processed,ml_runs,ml_evals,sessions}  ML artifacts (ML_DATA_DIR)
+#   ~/jtsmm_data                                    recordings for `ml dataset` (JTSMM_DATA_DIR)
+
+schema_version: "2.0"
+seed: 42
+
+paths:
+  data_dir: ~/ml_data
+  processed_dir: processed          # relative to data_dir (or absolute)
+  runs_dir: ml_runs
+  evals_dir: ml_evals
+  sessions_dir: sessions
+  session_data_dir: ~/jtsmm_data    # default source for `ml dataset` without arguments
+
+# -- label: Dash trajectory labeling GUI (`ml label`) -------------------------------------
+label:
+  host: "0.0.0.0"
+  port: 8050
+  show_velocity: false
+  # invert_axis: [x]
+
+# -- dataset: windows + features (`ml dataset`); same core as the biomech ml_windows stage --
+dataset:
+  emg:
+    # Recorded file order (CH1..CH6); selection is by name, this is the feature order.
+    channels: [masseter_r, temporalis_r, digastric_l, digastric_r, masseter_l, temporalis_l]
+    line_hz: 50.0                   # nominal mains; measured per take, tracked by the canceller
+    normalization: mvc              # reference: mvc (p95 causal envelope of the MVC take) | rest | none
+    mvc_session: null               # MVC take; default: the label sidecar's mvc_session attr
+    mvc_percentile: 95.0
+    envelope_s: 0.15                # RMS envelope for the MVC reference only
+    quality:
+      use_leadoff: true             # lead-off bit of the channel's recorded CH index
+      rail_frac: 0.99               # |raw| >= 99 % ADC full scale -> masked
+      dilate_s: 0.1
+      flatline_window_s: 0.0        # > 0 also masks zero-variance stretches
+  imu: true                         # IMU block (raw accel incl. gravity -> gravity-free)
+  window:                           # ml.core.dataset.WindowConfig
+    window_s: 0.2
+    stride_s: 0.05
+    imu_hz: 200.0
+    warmup_s: 2.0                   # causal filter warm-up before each phase (discarded)
+    max_masked: 0.2                 # per-channel masked share above which a window is dropped
+    thr_sigma: 1.0                  # ZC/SSC/WAMP threshold = x SD of the rest-phase sample differences
+    gap_factor: 1.1                 # window spanning > 1.1 W (recording gap) -> dropped
+    label_at: end                   # end (label at the window end) | majority (legacy rule)
+    purity_min: 0.6                 # majority mode only
+    label_max_age_s: 0.1
+    seq_subframes: 10
+    emg_band_hz: [20.0, 450.0]
+    emg_features: [log_mav, log_rms, log_wl, zc, ssc, wamp,
+                   band_20_50, band_50_100, band_100_200, band_200_450, mnf]
+    seq_features: [log_mav, log_rms, log_wl, zc]
+    emg_norm: rest_relative         # D13: amplitude log - rest median, counts/spectra rest z | mvc
+
+# -- train: protocols + models (`ml train`) ------------------------------------------------
+train:
+  model: lda                        # lda | svm | mlp | gru | late_{mean,weighted,stack}:<model>
+  feature_set: emg                  # emg | imu | emg+imu | emg_nodig | seq | seq+seq_imu ...
+  protocol: loso_subject            # loso_subject | loso_session | blocked
+  inner_folds: 3                    # grouped inner CV (subjects / sessions / blocks)
+  search: true
+  max_train: null                   # random subsample of training windows per fold
+  blocked_k: 5
+  guard_s: 0.35
+  n_jobs: 1
+  probability: true                 # predict_proba for AUROC / AP (SVM: grouped calibration)
+  models:                           # per-model parameters and inner-search grids
+    svm:
+      params: {kernel: rbf, class_weight: balanced}
+      grid: {C: [0.01, 0.1, 1.0, 10.0], gamma_mult: [0.25, 1.0, 4.0]}   # gamma = mult x "scale"
+    mlp:
+      params: {hidden_layer_sizes: [64, 32], max_epochs: 300, patience: 10}
+      grid: {alpha: [0.0001, 0.01], learning_rate_init: [0.001]}
+    gru:
+      params: {hidden_size: 64, num_layers: 1, dropout: 0.2, readout: mean_pool,
+               max_epochs: 100, patience: 10, device: cpu}
+      grid: {hidden_size: [32, 64]}

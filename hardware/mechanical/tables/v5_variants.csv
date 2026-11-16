@@ -1,0 +1,6 @@
+title,max_mm,p95_mm,moved_area_pct
+"Version 5, 4 mm",1.13,0.93,46.0
+"Version 5, 4.5 mm",1.49,1.33,16.2
+"Version 5, 5 mm",0.75,0.7,14.9
+"Version 5, 6.5 mm",1.19,0.98,14.7
+"Version 5, 5 mm (print 2026-10-03)",3.59,2.92,77.6

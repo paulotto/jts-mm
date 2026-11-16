@@ -1,0 +1,58 @@
+# This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+# SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+# SPDX-License-Identifier: MIT
+
+# biomech study configuration: system validation of JTS-MM against Qualisys (motion) and
+# Delsys Trigno (EMG) -- the systems paper. A separate study from icorr2027 (plan D0):
+# own cohort, store, analysis plan and paper set; it runs only the `validation` stage group.
+# Relative paths resolve against this file. Parameter meanings: biomech/validation/stages.py.
+
+study: jtsmm_validation
+seed: 42
+
+pipeline:
+  groups: [validation]
+
+paths:
+  data_dir: ../../data/jtsmm_qualisys_delsys_eval   # comparison takes (git-ignored)
+  out_dir: ../../data/analysis/jtsmm_validation
+  cohort: cohort.yaml
+
+stages:
+  ref_sync:
+    reference: reference.yaml
+    exposure_s: 0.012          # JTS-MM exposure; t_S = cam0 trigger + 6 ms (exposure centre)
+    frame_s: 0.025
+    hint_range_s: 5.0          # edge vote searched in reference lag_hint_s ± 5 s
+    edge_tol_s: 0.05
+    xcorr_half_range_s: 0.3
+    sigma_pos_mm: 0.3          # residual scales of the joint fine fit
+    sigma_rot_deg: 0.15
+    huber_k: 2.5
+    sliding_win_s: 15.0        # sync note: 10-20 s windows
+    sliding_step_s: 5.0
+    speed_baseline_s: 0.1      # |ω| over a 100-ms quotient in both systems (JTS-MM rotation noise)
+    trim_s: 0.5                # D0b: first/last 0.5 s of each phase not evaluated
+    sync_pad_s: 0.5
+    fit_bodies: ct             # V1: clock and X from the CT alone (joint fit = sensitivity)
+    sliding_variant: both      # VD19: P2 V6 failure -- re-score with the sliding-window time model
+                               # (omega and pose lines) as a sensitivity; never chooses the clock
+  ref_kinematics:              # V2/V3: incisor agreement, Y leave-one-task-out
+    reference: reference.yaml
+    exposure_s: 0.012
+    trim_s: 0.5
+    sync_pad_s: 0.5
+  ref_camerafree:              # VD20 (exploratory): camera-free ladder (dataset X5) vs Qualisys
+    reference: reference.yaml  # hand-eye mounting per take by the VD14 rule (imu_mounting)
+    margin_open_deg: 0.5       # non-inferiority to F0 (H4.3)
+    margin_inc_mm: 1.0
+    primary_e3: E3b
+    calibration_task: free_motion
+  ref_budget:                  # VD22 (descriptive): error budget and the marking frame-error gap
+    adequacy_ratio: 3.0        # V9: reference adequate when sigma_obs / sigma_ref >= 3
+    swap_frac_min: 0.5         # a hold counts as label-swapped when >= 50 % of its CT frames were relabelled (EV1)
+    head_body: HP              # Qualisys head cluster whose geometry is reported
+  ref_emg_side:                # VD23 (descriptive): EMG side check of the JTS-MM montage against Delsys
+    pairs: [masseter, temporalis, digastric]
+    min_cycles: 2              # cycles per system and side for an ensemble mean (as the D5 comparison)
+    side_tasks: [left_right]   # tasks in which the two sides act differently (side-informative)

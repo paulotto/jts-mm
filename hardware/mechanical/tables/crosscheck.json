@@ -1,0 +1,250 @@
+{
+ "geometry": {
+  "CT": {
+   "R": [
+    [
+     -1.0,
+     -0.0,
+     -0.0
+    ],
+    [
+     -0.0,
+     -1.0,
+     -0.0
+    ],
+    [
+     0.0,
+     0.0,
+     1.0
+    ]
+   ],
+   "angles": [
+    23.200000000000003,
+    66.8
+   ],
+   "origin": [
+    -300.0,
+    -185.00000072753903,
+    10.010000228881836
+   ],
+   "part": "calibration_tool",
+   "rod_axis_pt": [
+    -300.0,
+    18.166666666666668,
+    5.000000002086236
+   ],
+   "rod_dir": [
+    -0.02510249513754215,
+    0.9996848827194846,
+    0.0
+   ],
+   "rod_end": [
+    -305.0,
+    22.50000000000003,
+    5.000000002086236
+   ],
+   "seat_side": [
+    40.0,
+    40.0
+   ],
+   "seats": [
+    [
+     -342.11477661132807,
+     -176.62062072753903,
+     10.010000228881836
+    ],
+    [
+     -257.8852233886719,
+     -176.62062072753903,
+     10.010000228881836
+    ]
+   ],
+   "tip_cad": [
+    -301.2420491706982,
+    44.584457430903456,
+    4.50771194895781
+   ],
+   "variant": "qualisys_aruco"
+  },
+  "HP": {
+   "angles": [
+    0.0,
+    0.0
+   ],
+   "imu_seat": [
+    0.0,
+    -165.0,
+    5.0
+   ],
+   "imu_seat_size": [
+    25.399999618530273,
+    28.0
+   ],
+   "part": "head_marker",
+   "seat_side": [
+    40.0,
+    40.0
+   ],
+   "seats": [
+    [
+     40.5,
+     -170.0,
+     11.0
+    ],
+    [
+     -40.5,
+     -170.0,
+     11.0
+    ]
+   ],
+   "variant": "qualisys_aruco"
+  },
+  "MP": {
+   "angles": [
+    0.0,
+    0.0
+   ],
+   "imu_seat": [
+    -181.0,
+    31.93000030517578,
+    2.0049999713897706
+   ],
+   "imu_seat_size": [
+    25.399993896484375,
+    23.860000610351562
+   ],
+   "part": "mouth_marker",
+   "seat_side": [
+    30.4,
+    29.8
+   ],
+   "seats": [
+    [
+     -161.0,
+     0.0,
+     2.0
+    ],
+    [
+     -201.0,
+     0.0,
+     2.0
+    ]
+   ],
+   "variant": "qualisys_aruco"
+  },
+  "eval_array": {
+   "angles": [
+    0.0,
+    0.0
+   ],
+   "part": "trueness_array",
+   "seat_side": [
+    40.9,
+    40.9
+   ],
+   "seats": [
+    [
+     208.0,
+     -4.139917373657227,
+     166.75999450683594
+    ],
+    [
+     268.0,
+     -4.139917373657227,
+     166.75999450683594
+    ]
+   ],
+   "variant": "v1"
+  }
+ },
+ "rows": [
+  {
+   "body": "HP",
+   "cad": 81.0,
+   "config": 81.0,
+   "diff": 0.0,
+   "part": "head_marker",
+   "quantity": "tag spacing / mm",
+   "variant": "qualisys_aruco"
+  },
+  {
+   "body": "MP",
+   "cad": 40.0,
+   "config": 40.0,
+   "diff": 0.0,
+   "part": "mouth_marker",
+   "quantity": "tag spacing / mm",
+   "variant": "qualisys_aruco"
+  },
+  {
+   "body": "CT",
+   "cad": 84.23,
+   "config": 84.23,
+   "diff": 0.0,
+   "part": "calibration_tool",
+   "quantity": "tag spacing / mm",
+   "variant": "qualisys_aruco"
+  },
+  {
+   "body": "CT",
+   "cad": 66.8,
+   "config": 66.8,
+   "part": "calibration_tool",
+   "quantity": "tag rotation in plane / deg",
+   "variant": "qualisys_aruco"
+  },
+  {
+   "body": "CT",
+   "cad": 22.0,
+   "config": null,
+   "note": "pivot-calibrated tip vs. CAD rod end (metal dart point)",
+   "part": "calibration_tool",
+   "quantity": "tip beyond printed rod end / mm",
+   "variant": "qualisys_aruco"
+  },
+  {
+   "body": "CT",
+   "cad": 0.58,
+   "config": null,
+   "part": "calibration_tool",
+   "quantity": "tip off the rod axis, in plane / mm",
+   "variant": "qualisys_aruco"
+  },
+  {
+   "body": "CT",
+   "cad": 5.01,
+   "config": 5.5,
+   "note": "config: pivot tip z in the body frame",
+   "part": "calibration_tool",
+   "quantity": "rod axis below tag plane / mm",
+   "variant": "qualisys_aruco"
+  },
+  {
+   "body": "eval_array",
+   "cad": 60.0,
+   "config": 59.9,
+   "diff": 0.1,
+   "part": "trueness_array",
+   "quantity": "tag spacing / mm",
+   "variant": "v1"
+  },
+  {
+   "body": "HP",
+   "cad": 5.0,
+   "config": null,
+   "note": "in plane; seat floor 6.0 mm below the tags",
+   "part": "head_marker",
+   "quantity": "IMU seat centre from tag midpoint / mm",
+   "variant": "qualisys_aruco"
+  },
+  {
+   "body": "MP",
+   "cad": 31.9,
+   "config": null,
+   "note": "in plane; seat floor 0.0 mm below the tags",
+   "part": "mouth_marker",
+   "quantity": "IMU seat centre from tag midpoint / mm",
+   "variant": "qualisys_aruco"
+  }
+ ]
+}

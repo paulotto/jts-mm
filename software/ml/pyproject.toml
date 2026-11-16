@@ -1,0 +1,59 @@
+# This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+# SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+# SPDX-License-Identifier: MIT
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "jtsmm-ml"
+version = "0.1.0"
+description = "Jaw motion intent decoding for JTS-MM: labels, causal EMG + IMU windows, protocols"
+readme = "README.md"
+requires-python = ">=3.10"
+# Also needs the in-repo `jtsmm` package (causal EMG chain, IMU quaternion helpers),
+# which is not on PyPI; `ml labels from-biomech` and the biomech stages need `biomech`:
+#   pip install -e software/jtsmm -e software/biomech -e 'software/ml[label,torch,dev]'
+dependencies = [
+    "numpy>=1.24",
+    "scipy>=1.10",
+    "h5py>=3.8",
+    "pyyaml>=6.0",
+    "click>=8.0",
+    "scikit-learn>=1.3",
+    "joblib>=1.3",
+    "matplotlib>=3.7",
+    "pandas>=2.0",
+]
+
+[project.optional-dependencies]
+label = ["dash>=2.14", "plotly>=5.18"]
+torch = ["torch>=2.0"]
+dev = ["pytest>=7.0", "ruff>=0.4"]
+all = ["jtsmm-ml[label,torch,dev]"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+markers = [
+    "slow: end-to-end runs on synthetic participants",
+    "ml: ML tests (slow; run at the end of a change set)",
+]
+# Fast by default; the full selection is `pytest -m "slow or ml or not slow"` (CI).
+addopts = "-m 'not slow and not ml'"
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[project.scripts]
+ml = "ml.cli.main:main"
+
+# Stages for the biomech pipeline (biomech.pipeline.registry loads this group).
+[project.entry-points."biomech.stages"]
+ml = "ml.biomech_stages"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["ml*"]

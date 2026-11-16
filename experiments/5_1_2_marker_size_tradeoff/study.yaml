@@ -1,0 +1,16 @@
+# This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+# SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+# SPDX-FileCopyrightText: 2026 David Stebich
+# SPDX-License-Identifier: MIT
+
+# Study config of the marker size trade-off (triangulation only; see 5_1_1_pnp_vs_triangulation for PnP)
+optical_config: null
+
+markers:
+  - { id: 6, size_mm: 60.1, label: "60mm" }
+  - { id: 5, size_mm: 49.91, label: "50mm" }
+  - { id: 4, size_mm: 39.82, label: "40mm" }
+  - { id: 3, size_mm: 29.9, label: "30mm" }
+  - { id: 2, size_mm: 19.81, label: "20mm" }
+
+conditions: [near, mid, far]

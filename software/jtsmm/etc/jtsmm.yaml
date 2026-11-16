@@ -1,0 +1,434 @@
+# This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+# SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+# SPDX-FileCopyrightText: 2026 David Stebich
+# SPDX-License-Identifier: MIT
+
+# Monolithic operator template — every tunable key explicit (optional keys
+# that change nothing by default are listed commented out).
+# Installed to ~/jtsmm.yaml by scripts/install_pi.sh / build_install.sh --config,
+# or `jtsmm config init`. Field reference: schema/v1/jtsmm.schema.yaml |
+# docs/software/s08_runtime_configuration.md. profile: keys are labels -- every
+# value below is sent to the MCU explicitly.
+
+schema_version: 1
+
+hat:
+  serial_port: /dev/jtsmm_hat
+  firmware_version: ">=1.0.0,<2.0.0"
+
+mcu:
+  platform:
+    profile: default
+    system:
+      cpu_mhz: 150
+      # xosc_hz: 12000000      # parsed by the firmware, not applied
+    spi0:
+      hz: 4000000
+      # cfg_hz: 500000         # register-access SPI clock (firmware default 500 kHz)
+    i2c:
+      hz: 400000
+    pio:
+      trigger:
+        clock_hz: 1000000
+    buffers:
+      emg_ring: 98304   # bytes: 2048 compact EMG slots ≈ 1.0 s at 2 kHz
+      imu_ring: 16384
+      event_ring: 8192
+    irq:
+      emg: 0
+      imu: 1
+      trigger: 2
+
+  emg:
+    profile: acquisition
+    sample_rate_sps: 4000
+    default_gain: 6
+    stream_channels: 6
+    # enabled: true            # false = no EMG stream (host skips ads_start, firmware refuses it)
+    # active_channels: [1, 2, 3, 4, 5, 6]   # CH1-CH6 kept powered (and feed the DRL
+    #                          # if bias.channels unset); the rest are powered down
+    bias:
+      enabled: true
+      # channels: [1, 2, 3, 4, 5, 6]   # CH1-CH6 feeding the DRL average (default:
+      #                          # active_channels, else all six)
+      # ch7_readback: false    # not implemented; true is rejected
+    leadoff:
+      # These govern the lead-off hardware DURING RECORDING, not the |Z|
+      # measurement: `jtsmm emg impedance` and `jtsmm emg check` force the
+      # 31.2 Hz AC tone themselves (check.py run_impedance), so they report a
+      # true AC impedance whatever is set here.
+      enabled: true
+      during_recording: true
+      # MUST stay false while during_recording is true: the AC tone sits at
+      # 31.2 Hz, inside the 20-450 Hz EMG band, and would contaminate every
+      # recorded sample. DC excitation only adds an offset the 20 Hz high-pass
+      # removes, while still railing disconnected inputs. Enabling both is
+      # flagged by config/validate.py and integrity/checker.py.
+      ac_tone: false
+      # 6 or 24 nA (higher ILEAD_OFF settings are uA and rail the PGA). 24 nA
+      # gives 4x the tone amplitude, so a better-conditioned |Z| reading on
+      # low-impedance electrodes; override per run with `--current-na 24`.
+      current_na: 6
+      # probe_drl: false       # DRL saturation probe; set by `jtsmm emg check` itself
+    test_signal:
+      enabled: false
+      # amplitude_mv: 0        # fixed; any other value is rejected
+
+  # kinematics_accel = fusion quaternion (390 Hz) + accelerometer (250 Hz, gravity
+  # included; remove gravity offline with the optical orientation, s05 §3.1).
+  # The reports map below is what the MCU runs: it wins over `profile`.
+  # kinematics_default = the same with linear_acceleration instead of accelerometer.
+  imu_mta:
+    enabled: true
+    profile: kinematics_accel
+    fusion:
+      primary: game_rotation_vector
+      rate_hz: 390
+    sync:
+      mode: int_driven
+      # decimation_factor: 5   # emg_drdy_divisor only: IMU read every Nth EMG DRDY
+    # BNO085 motion-engine dynamic calibration (cv02 §7.1). ON = the behaviour of every
+    # recording so far (dataset and validation, up to 2026-11-02); keep it on for additions
+    # to that dataset. New studies: calibrate + imu_savecal before the session, then set
+    # all three false so the saved calibration stays fixed during a take.
+    dynamic_calibration:
+      accel: true
+      gyro: true
+      mag: true
+    reports:
+      game_rotation_vector:
+        enabled: true
+        rate_hz: 390
+      accelerometer:
+        enabled: true
+        rate_hz: 250
+      linear_acceleration:
+        enabled: false
+        rate_hz: 250
+      gyroscope:
+        enabled: false
+        rate_hz: 400
+      magnetometer:
+        enabled: false
+        rate_hz: 100
+      rotation_vector:
+        enabled: false
+        rate_hz: 200
+      geomagnetic_rotation_vector:
+        enabled: false
+        rate_hz: 200
+      gyro_integrated_rotation_vector:
+        enabled: false
+        rate_hz: 1000
+      gravity:
+        enabled: false
+        rate_hz: 100
+      raw_accelerometer:
+        enabled: false
+        rate_hz: 400
+      arvr_stabilized_rotation_vector:
+        enabled: false
+        rate_hz: 200
+      arvr_stabilized_game_rotation_vector:
+        enabled: false
+        rate_hz: 400
+
+  imu_cra:
+    enabled: true
+    profile: kinematics_accel
+    fusion:
+      primary: game_rotation_vector
+      rate_hz: 390
+    sync:
+      mode: int_driven
+      # decimation_factor: 5   # emg_drdy_divisor only: IMU read every Nth EMG DRDY
+    # BNO085 motion-engine dynamic calibration (cv02 §7.1). ON = the behaviour of every
+    # recording so far (dataset and validation, up to 2026-11-02); keep it on for additions
+    # to that dataset. New studies: calibrate + imu_savecal before the session, then set
+    # all three false so the saved calibration stays fixed during a take.
+    dynamic_calibration:
+      accel: true
+      gyro: true
+      mag: true
+    reports:
+      game_rotation_vector:
+        enabled: true
+        rate_hz: 390
+      accelerometer:
+        enabled: true
+        rate_hz: 250
+      linear_acceleration:
+        enabled: false
+        rate_hz: 250
+      gyroscope:
+        enabled: false
+        rate_hz: 400
+      magnetometer:
+        enabled: false
+        rate_hz: 100
+      rotation_vector:
+        enabled: false
+        rate_hz: 200
+      geomagnetic_rotation_vector:
+        enabled: false
+        rate_hz: 200
+      gyro_integrated_rotation_vector:
+        enabled: false
+        rate_hz: 1000
+      gravity:
+        enabled: false
+        rate_hz: 100
+      raw_accelerometer:
+        enabled: false
+        rate_hz: 400
+      arvr_stabilized_rotation_vector:
+        enabled: false
+        rate_hz: 200
+      arvr_stabilized_game_rotation_vector:
+        enabled: false
+        rate_hz: 400
+
+  trigger:
+    enabled: true
+    profile: imx296_dual_csi
+    rate_hz: 40
+    pulse:
+      width_us: 12000
+      polarity: imx296_fast
+    outputs:
+      csi1: true
+      csi2: true
+      scope: true
+      sync_led: false
+    start_on: stream_start
+
+host:
+  cameras:
+    track: B
+    marker_detector: apriltag
+    list:
+      # Track B: MCU XTRIG sets exposure ≈ pulse.width_us + 14.26 µs.
+      # Keep ae_enable/awb_enable false so AGC does not fight the trigger pulse.
+      - id: cam0
+        device: csi0
+        resolution: [1456, 1088]
+        format: YUV420
+        buffer_count: 6
+        exposure_us: 12000
+        gain: 1.0
+        ae_enable: false
+        awb_enable: false
+        awb_gains: [2.3, 2.3]
+        sharpness: 1.0
+        brightness: 0.0
+        contrast: 1.0
+        saturation: 1.0
+        noise_reduction_mode: high_quality
+        trigger:
+          source: mcu
+          expect_rate_hz: 40
+      - id: cam1
+        device: csi1
+        resolution: [1456, 1088]
+        format: YUV420
+        buffer_count: 6
+        exposure_us: 12000
+        gain: 1.0
+        ae_enable: false
+        awb_enable: false
+        awb_gains: [2.3, 2.3]
+        sharpness: 1.0
+        brightness: 0.0
+        contrast: 1.0
+        saturation: 1.0
+        noise_reduction_mode: high_quality
+        trigger:
+          source: mcu
+          expect_rate_hz: 40
+
+  # Session HDF5 output. JTSMM_DATA_DIR overrides. (host.storage.base_dir is a
+  # deprecated alias, read only when this key is absent.)
+  paths:
+    data_dir: ~/jtsmm_data
+
+  capture:
+    settle_ms: 500
+    stream_restart: true
+    native_prefer: true
+    # Start the camera trigger only once picamera2 is streaming, so the
+    # frame<->trigger association starts at pulse 1. false = legacy order.
+    trigger_after_cameras: true
+    # Host<->MCU clock handshake (`pps`) samples at start and end of a take;
+    # feeds sync/report_json.pi_to_master and the camera assignment check. 0 = off.
+    pps_samples: 8
+    # Anchor each camera's first frame on the trigger nearest its PPS-mapped
+    # SensorTimestamp. The camera pipeline discards its first frames after the
+    # pulses start, so the old "oldest buffered trigger" rule labelled every
+    # frame ~31 pulses early at 60 Hz. false = that old behaviour.
+    camera_pps_anchor: true
+    # Advance each camera's trigger cursor by the frame periods that elapsed in
+    # its own SensorTimestamps. The cameras drop frames in bursts; advancing by
+    # one per delivered frame mislabels everything after each burst.
+    camera_delta_tracking: true
+
+  record:
+    # false (or `jtsmm record --no-abort`): quality gates -- the preflight, the
+    # pre-recording EMG contact check, and the integrity verdict -- report and
+    # let the run continue instead of stopping it. For a session that must not
+    # be interrupted. Operational failures still abort regardless: a failed MCU
+    # config restore, a malformed experiment plan, bad CLI usage, or an
+    # exception from the capture itself, none of which produce usable data.
+    abort_on_error: true
+    emg_check:
+      enabled: true
+      # Abort before recording when a channel's CONTACT is unusable
+      # (stuck at full scale, or |Z| > 50 kOhm; a comparator lead-off hit only
+      # warns) -- all fixable by re-prepping in ~2 min. Noise / line-hum / DRL findings only
+      # warn, since those are environmental. Override for one run with
+      # `jtsmm record --force-emg-check`.
+      block_on_contact_failure: true
+    preflight:
+      enabled: true
+    integrity:
+      enabled: true
+    mcu_apply:
+      enabled: true
+
+  # Post-session integrity gates. Read from the finished HDF5 after it is
+  # closed, so nothing here affects sampling -- only the verdict and the exit
+  # code of `jtsmm record` / `jtsmm integrity`. `host.record.integrity.enabled`
+  # above decides whether the check runs; these decide what it calls a failure.
+  # Defaults are in IntegrityThresholds (integrity/checker.py) and the values
+  # actually applied land in the report summary. Every *_err_* must be at or
+  # beyond its *_warn_* partner, or the pair falls back to the defaults.
+  integrity:
+    # true: integrity errors are reported as warnings, so no session is ever
+    # RESULT: FAIL and `jtsmm integrity` exits 0. Demotion is never silent --
+    # a banner, a `would-fail:` prefix per message, and the original errors in
+    # the report summary and integrity.json -- so a session passed this way
+    # stays distinguishable from one that passed on its merits.
+    errors_as_warnings: false
+    thresholds:
+      # EMG continuity, in multiples of the nominal sample period.
+      emg_gap_warn_periods: 2.5
+      emg_gap_err_periods: 4.0
+      # EMG samples missing anywhere in the take, single samples included
+      # (exact from /emg/seq when the firmware sends it), as a fraction.
+      emg_loss_warn_frac: 0.0005
+      emg_loss_err_frac: 0.005
+      # Conversions the ADC produced but the firmware never read.
+      emg_missed_drdy_warn_frac: 0.001
+      emg_missed_drdy_err_frac: 0.02
+      # IMU samples lost (ring overflow, USB tx drops, timestamp gaps).
+      imu_ring_drop_err_frac: 0.005
+      # IMU gap = step > this many x the stream's median step (tolerant: IMU
+      # stamps are poll time). Longest gap > stream_end_gap_err_s or loss >
+      # imu_ring_drop_err_frac is an error.
+      imu_gap_warn_periods: 4.0
+      # A stream that stops early or joins late leaves that span with no data
+      # for its modality, while its own rate check still passes.
+      stream_end_gap_err_s: 0.5
+      stream_start_lag_warn_s: 2.0
+      stream_start_lag_err_s: 10.0
+      camera_coverage_min_frac: 0.95
+      camera_trailing_gap_warn_s: 0.25
+      camera_trailing_gap_err_s: 0.5
+      sync_residual_warn_us: 1000.0
+      sync_residual_err_us: 50000.0
+      # Frame<->trigger association: 3 frames is 75 ms at the 40 fps template
+      # rate (100 ms at 30 fps), inside the 120 ms error in optical_imu_sync so
+      # the two defences agree.
+      assign_frames_warn: 1.5
+      assign_frames_err: 3.0
+      assign_spread_frames_warn: 1.0
+      assign_spread_frames_err: 3.0
+      assign_drift_warn_us_per_s: 50.0
+      assign_drift_err_us_per_s: 500.0
+      # Median residual minus the expected trigger-to-sensor latency (periods):
+      # a one-frame association error gives +-1, which the median gate above
+      # cannot see.
+      assign_offset_dev_frames_warn: 0.25
+      assign_offset_dev_frames_err: 0.5
+      # Frames written before a mid-take anchor correction keep the wrong
+      # label: warn for a few seconds' worth at the start, fail above this.
+      anchor_refined_frames_err: 300
+
+  emg_check:
+    line_hz: 50.0
+    settle_ms: 400
+    leadoff:
+      duration_s: 5.0
+    noise:
+      duration_s: 5.0
+    impedance:
+      enabled: true
+      duration_s: 2.0
+    drl_isolation:
+      duration_s: 2.0
+
+  emg_filter:
+    # (enabled: true / notch_hz / highpass_hz / lowpass_hz are rejected: no
+    # consumer. Only mains_mode is read.)
+    # How the viewer/plots remove mains: 'track' fits and subtracts the tone
+    # and locks to the real grid frequency (~1 Hz of band per harmonic);
+    # 'notch' is the older biquad bank (~5 Hz per harmonic, fixed at 50.000);
+    # 'off' leaves the band-pass only. See docs/software/s09_mains_removal.md.
+    mains_mode: track
+
+  viewer:
+    enabled: true
+    bind_host: 0.0.0.0
+    port: 8770
+
+  schema:
+    relaxed_unknown_keys: false
+
+session:
+  mode: acquisition
+  duration_s: null            # timed capture; with a plan, only an explicit value is a safety timeout
+  default_duration_s: 10.0    # timed-capture fallback — not used with an experiment plan
+  subject_id: null
+  protocol: null
+  meta: {}
+  # Removable CT tip: seat in cone, SPACE×N while pivoting → OLS tip offset.
+  ct_calibration: false
+  ct_calibration_n_poses: 20
+  # Stable tip JSON: updated when ct_calibration=true; loaded when false.
+  ct_tip_calibration: software/optical/etc/ct_tip_calibration.json
+  persist_ct_calibration: false
+  # Leaf run dirs: {experiment_slug}_{timestamp} under this base.
+  ct_calibration_recordings_dir: ~/experiments/5_2_1_pivot_calibration_repeatability/recordings
+  # IMU mounting calibrations are archived by default (the mounting is not part of the
+  # measurement sessions, so this archive is where analyses find it); --no-persist-... to skip.
+  persist_imu_calibration: true
+  # Stable IMU mounting (R_mount per IMU): updated by `jtsmm imu calibrate` when a fit is
+  # accepted, embedded into every recorded session as /calibration/imu_*/mounting_transform.
+  imu_mounting_calibration: software/jtsmm/etc/imu_mounting_calibration.json
+  imu_calibration_recordings_dir: ~/experiments/5_2_2_imu_optical_handeye/recordings
+  # Multimodal optical + experiment phases (CLI flags still override).
+  optical_track: true
+  # Live pose rate. null detects every stereo pair (the 40 Hz trigger rate).
+  # 20 Hz detects every 2nd pair, 10 Hz every 4th. /cameras timestamps stay at
+  # the trigger rate; /optical only stores the poses that were detected. CT tip calibration
+  # and IMU mounting calibration ignore this and track every pair.
+  optical_track_hz: null
+  optical_config: software/optical/etc/optical.yaml
+  # false → capture for duration_s / default_duration_s only (no SPACE phases).
+  # true  → walk session.experiment (or experiment_plan path) with SPACE;
+  #         duration does not stop the take unless --duration / duration_s is set.
+  use_experiment_plan: true
+  experiment:
+    name: s03_m_33
+    description: Jaw motion analysis experiment
+    phases:
+      # Motion battery. EMG MVC is a separate take: jtsmm record --mvc
+      - rest
+      - open_close
+      - protrusion_retrusion
+      - left_right
+      - chewing
+      - free_motion
+  experiment_plan: null   # optional path override (JSON / optical.yaml)
+  # Dedicated EMG MVC (mvc_opening + mvc_closing). Independent of experiment.
+  mvc: false
+  write_jts_config: true

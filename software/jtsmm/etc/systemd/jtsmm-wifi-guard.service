@@ -1,0 +1,16 @@
+# This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+# SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+# SPDX-License-Identifier: MIT
+
+[Unit]
+Description=JTS-MM Wi-Fi disable guard (boot + expiry)
+After=NetworkManager.service
+Wants=NetworkManager.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/pi_wifi --guard
+RemainAfterExit=no
+
+[Install]
+WantedBy=multi-user.target

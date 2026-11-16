@@ -1,0 +1,150 @@
+% This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+% SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+% SPDX-License-Identifier: CC-BY-4.0
+
+\section{The concepts in detail}\label{sec:concepts}
+Each concept is shown on the right side of the arch: an overall view, the first molar from the
+buccal and from the lingual side, and a section through the first molar. The section is an
+editable SVG in \texttt{figures/svg/}; the geometry is in \texttt{stl/} in the coordinate frame of
+\texttt{Teeth\_02}, so it drops onto the teeth when imported into the FreeCAD document. The STLs
+are concept geometry on a \SI{0.2}{mm} voxel grid, meant as a starting point for CAD, not as
+print files.
+
+\newcommand{\conceptfig}[2]{%
+\begin{figure}[H]\centering
+\begin{subfigure}[b]{0.54\textwidth}\includegraphics[width=\linewidth]{render_#1_obl}\caption{overview}\end{subfigure}\hfill
+\begin{subfigure}[b]{0.44\textwidth}\includegraphics[width=\linewidth]{section_#1}\caption{section through the first molar}\end{subfigure}\\[2mm]
+\begin{subfigure}[b]{0.49\textwidth}\includegraphics[width=\linewidth,height=45mm,keepaspectratio]{render_#1_molB}\caption{first molar, buccal side}\end{subfigure}\hfill
+\begin{subfigure}[b]{0.49\textwidth}\includegraphics[width=\linewidth,height=45mm,keepaspectratio]{render_#1_molL}\caption{first molar, lingual side}\end{subfigure}
+\caption{#2}\label{fig:#1}\end{figure}}
+
+% ---------------------------------------------------------------------------
+\subsection{Concept 1: snap shell}
+\conceptfig{c1}{Concept 1. One conforming shell: lingual flange on all teeth, buccal reciprocal arms on both molars, bridges over the embrasures, labial bar with the marker stem.}
+\textbf{Principle.} Like a partial clear aligner: the lingual flange snaps under the lingual height
+of contour of the molars; the wall itself is the spring.
+
+\textbf{Parameters.} Wall \SI{1.5}{mm} (PETG/PA12) or \SIrange{1.0}{1.2}{mm} (splint resin);
+flange from \SI{1.4}{mm} below the lingual cusp tips to \SIrange{1}{1.5}{mm} onto the lingual
+gingiva; buccal arms \SI{1.3}{mm}, above the buccal height of contour; embrasure bridges
+\SI{\ge1.5}{mm} wide, \SI{1.0}{mm} thick; labial bar \SI{1.6}{mm} on the cervical half of the
+incisors and canines.
+
+\textbf{Build.}
+\begin{enumerate}
+\item Survey and block out the molar lingual undercut to \SI{0.3}{mm} (PETG) or
+\SI{0.5}{mm} (flexible splint resin); relieve all other surfaces by \SI{0.1}{mm}.
+\item Offset the blocked-out model by the wall thickness (e.g.\ Meshmixer ``offset'', Blender
+``solidify'', or start from \texttt{stl/c1\_printed.stl}) and trim to the outline in \cref{fig:c1}.
+\item Print in splint resin (SLA/DLP). In FDM, orient the part so that the flange bends
+\emph{within} the layer plane, not across layers.
+\item Fit on the printed model, then reline the lingual flange with resin through retention holes.
+\end{enumerate}
+\textbf{Watch out.} Spring and reference are the same part: whenever the flange flexes, the marker
+moves. Preload depends directly on print accuracy.
+
+% ---------------------------------------------------------------------------
+\subsection{Concept 2: clothespin jaw}
+\conceptfig{c2}{Concept 2. Rigid frame (lingual bar, buccal jaw, bridge over the PM2/M1 embrasure, labial bar) and a compliant lingual jaw hung on a C-loop flexure, an intraoral version of a printed spring clamp.}
+\textbf{Principle.} The lingual jaw is carried by a C-shaped loop spring that sits next to the
+tongue, below the occlusal plane. It is printed over-closed; inserting the clamp opens it over the
+height of contour, and it springs back into the undercut.
+
+\textbf{Parameters.} Loop radius $R=\SI{3.0}{mm}$ to the wall centre, wall $t=\SI{0.8}{mm}$ (two
+\SI{0.4}{mm} extrusion lines), width $w=\SI{5.5}{mm}$ along the arch, \SI{270}{\degree} arc,
+loop centre at the contact height ($e=0$), over-closure \SI{0.2}{mm}; lingual jaw \SI{1.2}{mm} from
+$h=6.3$ to $9.3$; rigid buccal jaw \SI{1.4}{mm}. This gives \SI{\approx1.5}{N} preload and
+\SI{\approx3.7}{N} while passing a \SI{0.3}{mm} undercut, at \SI{\approx1.0}{\percent} peak strain
+(\cref{sec:loop}). Dimensioned drawings: \cref{fig:drw_c2}.
+
+\textbf{Build.}
+\begin{enumerate}
+\item Design the loop module (jaw + loop + foot) as a separate clip-in part with a dovetail on the
+lingual bar. It can then be printed flat with the loop in the layer plane, and swapped to change
+the force.
+\item Print the frame rigid (PETG, \SI{100}{\percent} infill, or splint resin).
+\item Measure the jaw force with a spring scale at \SI{0.2}{mm} opening and at \SI{0.5}{mm}. Adjust
+the width $w$ (force $\propto w$), not the wall thickness: $t$ sets the strain, $w$ sets the force.
+\item Add a small tab on the lingual jaw so it can be pulled open with a probe for removal.
+\end{enumerate}
+\textbf{Watch out.} Printed polymer flexures relax at \SI{37}{\celsius} under constant strain:
+measure the force again after \SI{30}{min} in warm water. A loop of $R=\SI{3}{mm}$ reaches about
+\SI{7}{mm} lingual of the tooth, into the tongue space; the two-loop variant in \cref{tab:loop}
+is more compact.
+
+% ---------------------------------------------------------------------------
+\subsection{Concept 3: wire clasps}
+\conceptfig{c3}{Concept 3. Rigid printed lingual plate with occlusal rests and an Adams clasp of \SI{0.7}{mm} spring-hard stainless steel around each first molar.}
+\textbf{Principle.} The classic removable-retainer solution. The two arrowheads of each Adams
+clasp engage the mesio- and disto-buccal undercuts below the contact points, which exist even where
+the buccal face itself has only \SI{0.1}{mm}. The spring is metal, so the preload does not creep.
+
+\textbf{Parameters.} \SI{0.7}{mm} hard stainless on molars (\SI{0.6}{mm} on premolars); arrowheads
+\SIrange{0.5}{1}{mm} into the undercut; bridge about \SI{1}{mm} off the buccal surface at mid-crown
+height; tags cross the embrasures resting on the marginal ridges and end in the plate with
+retention bends.
+
+\textbf{Build.}
+\begin{enumerate}
+\item On a printed or stone model, trim a small notch (about \SI{0.5}{mm}) at the two arrowhead
+sites just below the contact points; this is where the arrowheads will sit.
+\item Bend the clasp (a dental technician does this in minutes; any orthodontic lab textbook
+shows the sequence). Alternative without bending: prefabricated ball clasps in the buccal
+embrasures.
+\item Print the lingual plate with channels for the tags; fix the tags with cold-cure resin.
+\item Adjust retention with pliers at the arrowheads, never by heating the wire.
+\end{enumerate}
+\textbf{Watch out.} The wire crosses the occlusal embrasures in four places: check the bite.
+
+% ---------------------------------------------------------------------------
+\subsection{Concept 4: spring arch (inside push)}
+\conceptfig{c4}{Concept 4. A \SI{0.9}{mm} stainless arch behind the teeth (grey: mounted, orange: free shape, pre-spread \SI{0.7}{mm} per side) pushes resin-relined pads outward under the lingual heights of contour of both molars. Rigid anterior yoke and labial bar carry the marker.}
+\textbf{Principle.} The expander principle, turned into a clamp: one U-shaped arch, bent slightly
+too wide, pushes both molar pads outward into the deepest undercuts in the mouth. The pads seat
+themselves (\cref{fig:mech}b). The front of the arch is bridged by the rigid yoke; only the two
+legs (\SI{\approx18}{mm} from canine to first molar) act as springs.
+
+\textbf{Parameters.} \SI{0.9}{mm} spring-hard stainless; pre-spread \SI{0.7}{mm} per side; lingual
+undercut blocked out to \SI{0.4}{mm}; result \SI{\approx2.3}{N} preload per side, peak stress
+\SI{\approx0.9}{GPa} (\cref{sec:springs}). Optional omega loop in each leg for more margin and
+adjustability.
+
+\textbf{Build.}
+\begin{enumerate}
+\item Block out the molar lingual undercut to \SI{0.4}{mm} on the model.
+\item Bend the arch on the model, \SI{1}{mm} off the lingual gingiva, from the first-molar pad on
+one side to the other; finish the leg ends as small retention loops.
+\item Print the pads (splint resin or PETG) with a channel for the loop; fix with cold-cure resin;
+reline the tooth side.
+\item Activate: open each leg so the distance between the pad contact points is
+\SI{1.4}{mm} larger than on the model. Check with a spring scale: \SI{\approx2}{N} per side at
+\SI{0.7}{mm}.
+\item Remove by pinching the two legs toward each other.
+\end{enumerate}
+\textbf{Watch out.} Do not pre-spread more than about \SI{1}{mm} or leave deeper undercuts: the
+wire then yields (\cref{fig:springs}). Pull-off force is only \SI{\approx1}{N} per side; if that is
+not enough, combine with concept~3.
+
+% ---------------------------------------------------------------------------
+\subsection{Concept 5: rigid clamp with TPU liner}
+\conceptfig{c5}{Concept 5. Hard buccal jaw and hard rest over the PM2/M1 embrasure define the position; a \SIrange{1.5}{2}{mm} TPU liner on the rigid lingual jaw provides the preload.}
+\textbf{Principle.} Nothing rigid flexes. The TPU liner is compressed while the clamp passes the
+height of contour and expands back into the undercut. TPU is roughly 30--100$\times$ softer than
+PETG, so it must be loaded in compression, not used as a clasp arm.
+
+\textbf{Parameters.} Liner \SIrange{1.5}{2}{mm}, TPU 85A--95A, \textbf{ribbed} (e.g.\ four vertical
+ribs, about \SI{35}{\percent} solid); interference \SIrange{0.1}{0.2}{mm}; lingual undercut
+blocked out to \SI{0.3}{mm}. \Cref{tab:tpu} shows why solid liners are a bad idea: a solid pad
+gives tens of newtons for a tenth of a millimetre.
+
+\textbf{Build.}
+\begin{enumerate}
+\item Print the rigid frame (PETG or splint resin) with a dovetail slot in the lingual jaw.
+\item Print the TPU liner as a clip-in insert with the ribs running occluso-gingivally, so the
+tooth slides along them on insertion. Dual-material printing with an interlocking pattern also
+works.
+\item Reline the hard buccal jaw and the rest with resin; do not reline the TPU.
+\item Set the interference by the insert thickness; measure pull-off with a spring scale.
+\end{enumerate}
+\textbf{Watch out.} TPU relaxes under constant compression; re-check the force after a typical
+session length. A flexible splint resin is the certified alternative for participants.

@@ -1,0 +1,127 @@
+# This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+# SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+# SPDX-License-Identifier: MIT
+
+# Systems paper (JTS-MM vs Qualisys / Delsys): items exported by
+#   biomech export --config study.yaml --paper paper_systems.yaml [--compile --check-size --standalone]
+# Paths relative to this file. The validation study runs only the `validation` stage and view
+# groups (dataset views are never exported here). Rules behind every number: an14.
+# Item keys as in paper_dataset.yaml: part (core | supporting | supplement). Sections in
+# metrology order: bench, synchronisation, (I) point marking, (II) motion with the
+# error budget (VD22), fitness for purpose (VD21 hinge, VD20 camera-free opening and the
+# dataset bridges VD9 / VD10 / VD12), (III) EMG with the side check (VD23), supplement.
+# n = 2 and the reference limits are named upfront; per participant + mean everywhere (EV8).
+# Budget (IEEE Sensors Journal): about 9 core figures + 6 core tables --
+# figures: bench, setup, sync, marking accuracy, frames, time series, waveforms, agreement,
+# error budget, fusion (dropout) [10 with the error budget]; tables: ladder, methods, marking,
+# segments (own + aligned), features (own + aligned), EMG agreement. Everything else
+# supporting or supplement; nothing is removed (the forms are picked in the gallery).
+venue: ieee            # IEEE Sensors / TBME-type layout; switch to springer if needed
+snapshot: v15          # J36 (2026-11-16): the released code; every value equal to v14
+numbers: numbers_systems.yaml   # in-text numbers -> numbers.tex
+out_dir: ../../data/analysis/jtsmm_validation/paper_systems
+supplementary_videos:   # J2.7: JTS-MM against the references, per participant
+  - {layout: validation, pid: s10, phase: open_close, speed: 0.5, theme: light, label: videoValidationPOne}
+  - {layout: validation, pid: s14, phase: open_close, speed: 0.5, theme: light, label: videoValidationPTwo}
+items:
+  - {section: "Bench"}                                 # D6: the 20-mm ladder, both systems (trueness and precision)
+  - {id: val_bench, form: merged, part: core}           # F: trueness (near and far in one panel per orientation) and precision (2026-11-05)
+  - {id: val_bench, part: supplement}                   # the four-panel version with the residual lines along the ladder
+  - {id: val_table_ladder, part: core}                  # T: trueness, precision, accuracy side by side
+  - {id: val_trueness, part: supplement}                # step error against the nominal distance (in val_bench)
+  - {id: val_precision, part: supplement}               # static precision and drift (in val_bench)
+  - {section: "Synchronisation"}                       # two systems on one clock (D2/D3, VD19)
+  - {id: val_setup, pid: s10, part: core}               # F: hardware renders + clock link (forms signals | schematic); clock link also in valSyncCombined
+  - {id: val_table_methods, part: core}                 # T: sensors, achieved rates, frame timing, clock model, held-out residuals per body
+  - {id: val_table_integrity, part: core}               # T: recording integrity per take (dropped frames, assignment drift, valid poses; sEMG / IMU loss not stored)
+  - {id: val_sync_overview, part: core}                 # F: sync: CT visibility, phases, edges (pid s10); also in valSyncCombined
+  - {id: val_sync_combined, pid: s10, part: core}       # F (condensed): clock link lane, CT visibility + edges, start-window |ω|, residual lag (replaces valSetup's clock link + valSyncOverview in a short main text)
+  - {id: val_sync_lag, pid: s10, part: supporting}      # clock model holds over the take; clock variants
+  - {id: val_frame_intervals, part: supplement}         # J2.5: frame timing is hardware-exact; gaps are whole frames
+  - {id: val_assoc_faults, label: assocFaults, part: supporting}   # VD26 (J14): the frame-trigger association under injected faults
+  - {section: "(I) Point marking"}                     # VD4: JTS-MM digitization against Qualisys (EV1/EV2 applied)
+  - {id: val_marking_accuracy, part: core}              # F: error per landmark along the anatomical axes; |e| panel also in valMarkingCombined
+  - {id: val_marking_frames, part: core}                # F: frame errors from the marks vs from motion (VD3); also in valMarkingCombined
+  - {id: val_marking_combined, part: core}              # F (condensed): landmark |e|, point-marking budget, frame angle + origin from the marks vs from motion
+  - {id: val_table_marking, part: core}                 # T: marking accuracy, precision, rest offset
+  - {id: val_digitization, part: supplement}            # digitization symmetry of both systems
+  - {section: "(II) Motion (incl. fusion, IMU and the error budget)"}   # own frames (end-to-end) and frame-aligned (marking removed), equal value (VD5)
+  - {id: val_kin_planes, form: paper_grid, part: core}       # F (2026-11-05): main agreement picture, both takes, sagittal + frontal per movement task
+  - {id: val_kin_aligned_timeseries, pid: s10, part: supplement}   # frame-aligned jaw-in-head over the take (VD3), the example take; main text until 2026-11-05
+  - {id: val_kin_aligned_timeseries, pid: s14, part: supplement}   # 2026-11-05: the other take, as the caption points to it
+  - {id: val_kin_error_ecdf, part: supporting}          # gallery: per-frame error own vs aligned, both participants (forms ecdf | dumbbell); also in valMotionAgreement
+  - {id: val_kin_timeseries, pid: s10, part: supplement}     # both systems over the take, segments labelled
+  - {id: val_kin_timeseries, pid: s14, part: supplement}
+  - {id: val_kin_planes, pid: s10, part: supplement}    # incisor paths per segment, both systems
+  - {id: val_kin_waveforms, pid: s10, phase: open_close, part: core}         # F: cycles, SPM bars, equivalence
+  - {id: val_kin_waveforms, pid: s14, phase: open_close, part: supporting}
+  - {id: val_kin_waveforms_both, phase: open_close, form: overlay_all, part: core}   # 2026-11-05: P1 and P2 with equal weight on one axis per channel (vermillion / sky = take, solid / dashed = system), differences below; 2 rows
+  - {id: val_kin_waveforms_both, phase: open_close, part: supporting}   # the same, each take's cycles in its own column, differences overlaid (4 rows)
+  - {id: val_kin_waveforms, pid: s10, phase: open_close, frames: own, part: supplement}   # same, own frames (VD5)
+  - {id: val_kin_waveforms, pid: s14, phase: open_close, frames: own, part: supplement}
+  - {id: val_kin_agreement, part: core}                 # F: cycle-feature bias vs the bounds, frames aligned; also in valMotionAgreement
+  - {id: val_kin_agreement, frames: own, part: supporting}   # same, own frames (VD5)
+  - {id: val_table_segments_both, part: core}           # T: per-task agreement, own and aligned side by side
+  - {id: val_table_features_both, part: core}           # T: cycle features, own and aligned side by side
+  - {id: val_budget, part: core}                        # F (VD22): error budget per participant -- marking and motion split into reference and JTS-MM part, per participant; point and incisor panels also in valMarkingCombined / valMotionAgreement
+  - {id: val_motion_agreement, part: core}              # F (condensed): per-frame error own vs aligned (incisor, rotation), incisor budget, cycle-feature bias vs bounds
+  - {id: val_table_budget, part: supporting}            # VD22: the budget per participant + descriptive mean
+  - {id: val_table_marking_gap, part: supporting}       # VD22: P1-vs-P2 marking frame-error gap and its causes
+  - {id: val_error_budget, part: supporting}            # σ_obs vs σ_ref per segment, corrected σ_JTS, adequacy (V9)
+  - {id: val_fusion_dropout, part: core}                # F: fusion bridging optical dropouts incl. position (V4/VD6, secondary; VD8)
+  - {id: val_fusion_segments, part: supplement}         # fusion: per-task paired effect (secondary; VD8)
+  - {id: val_fusion_smoothing, pid: s10, phase: open_close, part: supporting}   # VD16/VD18: raw 40-Hz optics vs a 6-Hz low-pass (dataset cut-off) vs IMU fusion vs Qualisys
+  - {id: val_imu_accel, pid: s10, phase: open_close, part: supplement}   # VD17: accelerometer vs Qualisys at the IMU site
+  - {id: val_robustness, part: supporting}              # clock and tip variants
+  - {id: val_decomposition, part: supplement}           # end-to-end vs tracking-only
+  - {id: val_ref_quality, part: supplement}             # reference consistency (gate)
+  - {id: val_table_segments, part: supplement}          # own-frame agreement per segment (V5; in val_table_segments_both)
+  - {id: val_table_features, part: supplement}          # cycle features, aligned (in val_table_features_both)
+  - {id: val_table_features_own, part: supplement}      # cycle features, own frames (VD5; in val_table_features_both)
+  - {id: val_table_segments_aligned, part: supplement}  # frame-aligned agreement (VD3; in val_table_segments_both)
+  - {id: val_table_frame_offsets, part: supplement}     # constant frame offsets = digitization difference
+  - {id: val_paths3d_error, part: supplement}           # J2.4: 3-D paths coloured by error class
+  - {id: val_fusion_accuracy, part: supporting}         # J2.5: fusion is also more accurate
+  - {id: val_mounting, part: supplement}                # R8 VD24: hand-eye mounting, remount, excitation
+  - {id: val_label_swaps, part: supplement}             # J2.5: CT label swaps (EV1)
+  - {id: val_marking_causes, part: supplement}          # J2.5: what differs for P2
+  - {section: "Fitness for purpose"}                   # what the dataset's analyses can rely on (cited by the dataset paper)
+  - {id: val_errors_vs_effects, part: core}             # J2.5: each systems error next to the dataset effect it must resolve
+  - {id: val_table_fitness, part: core}                 # T: fitness for purpose in one table (hinge models, camera-free opening, sampling chain), P1 / P2 / mean
+  - {id: val_hinge, part: supporting}                   # VD21: the dataset's C1 hinge models on JTS-MM and Qualisys, same openings
+  - {id: val_table_hinge, part: supplement}             # VD21: hinge residuals per participant and task, JTS-MM minus Qualisys
+  - {id: val_camerafree, part: supporting}              # VD20: camera-free opening (and incisor) against Qualisys, next to the optics
+  - {id: val_table_camerafree, part: supporting}        # VD20: non-inferiority to F0 per participant
+  - {id: val_table_camerafree_drift, part: supporting}  # VD20: drift (split from the table above)
+  - {id: val_imu_alone, part: supporting}               # VD10 bridge (dataset C3a): IMU alone vs Qualisys, opening angle
+  - {id: val_sampling, part: supporting}                # VD9/EV7 bridge (dataset peak velocity, bandwidth): what 40 Hz optics miss
+  - {id: val_table_filtered, part: supporting}          # VD12 bridge: agreement after the dataset pose chain
+  - {section: "(III) EMG"}                             # D5: JTS-MM dataset take vs Delsys comparison take of the same subject (cross-session),
+  # each system normalized to max(MVC, task) (D11)
+  - {id: val_emg_profiles, pid: s10, phase: open_close, part: supporting}   # cycle profiles, SPM bars, r / CMC
+  - {id: val_emg_profiles, pid: s14, phase: open_close, part: supporting}
+  - {id: val_emg_profiles_both, phase: open_close, form: overlay_all, part: core}   # 2026-11-05: P1 and P2 on one axis per muscle (vermillion / sky = take, solid / dotted = system)
+  - {id: val_emg_profiles_both, phase: open_close, part: supporting}   # the same side by side: a row per muscle group, P1 R, P1 L, P2 R, P2 L on shared y
+  - {id: val_emg_timing, part: supporting}              # EMG-to-motion leads, both systems, difference of medians
+  - {id: val_table_emg_agreement, part: core}           # T: profile agreement, open-close and chewing
+  - {id: val_table_emg_bench, part: core}               # T: sEMG front end on the bench per channel (B1 impedance scale, B2 shorted-input noise)
+  - {id: val_emg_side, part: supporting}                # VD23: side check of the montage against Delsys (side index per task and muscle pair)
+  - {id: val_table_emg_side, part: supplement}          # VD23: the four shape correlations and the side index
+  - {section: "Supplement"}
+  - {id: val_table_related_work, part: supporting}      # J7: jaw-motion trackers in the literature (introduction / related work)
+  - {id: val_table_related_work_other, part: supporting}   # the non-optical trackers (one table ran off the page)
+  # marking precision and what explains the hold errors; alignment sensitivity (VD7);
+  # EMG levels and quality (val_emg_quality_mvc = val_emg_quality + val_emg_mvc)
+  - {id: val_marking_precision, part: supplement}
+  - {id: val_table_imu_lever, part: supplement}         # VD15: IMU lever arms from the hand-eye sessions
+  - {id: val_table_imu_accel, part: supplement}         # VD17: accelerometer vs Qualisys per participant and IMU
+  - {id: val_tip_holds, part: supplement}
+  - {id: val_table_segments_aligned_freemotion, part: supplement}
+  - {id: val_emg_mvc, part: supplement}
+  - {id: val_emg_quality, pid: s10, part: supplement}
+  - {id: val_emg_quality, pid: s14, part: supplement}
+  # 3D-printed parts (hardware/mechanical; versions from parts.yaml `usage`) and the print
+  # geometry against the optical configuration and the pivot-calibrated tip
+  - {id: val_hw_parts, form: used, label: suppParts, part: supplement}
+  - {id: val_hw_table, form: parts, label: suppPartsTable, part: supplement}
+  - {id: val_hw_table, form: crosscheck, label: suppPartsCheck, part: supplement}

@@ -1,0 +1,38 @@
+; This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+; SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+; SPDX-License-Identifier: MIT
+
+;
+; Sync LED flash — h05 §4.3 GPIO14
+; PIO clock default 1 MHz: period and pulse in microseconds.
+;
+.program led_flash
+.side_set 1 opt
+
+    pull noblock         side 0
+    mov x, osr           side 0   ; off-time ticks
+    mov y, osr           side 0   ; pulse width ticks
+loop:
+    nop                  side 1   ; rising edge (LED on)
+    irq set 0            rel
+pulse:
+    jmp y--, pulse
+    nop                  side 0   ; falling edge
+    mov y, x
+delay:
+    jmp y--, delay
+    jmp loop
+
+% c-sdk {
+#include "hardware/clocks.h"
+
+static inline void led_flash_program_init(PIO pio, uint sm, uint offset, uint pin, float clk_hz) {
+    pio_gpio_init(pio, pin);
+    pio_sm_set_consecutive_pindirs(pio, sm, pin, 1, true);
+    pio_sm_config c = led_flash_program_get_default_config(offset);
+    sm_config_set_sideset_pins(&c, pin);
+    float div = (float)clock_get_hz(clk_sys) / clk_hz;
+    sm_config_set_clkdiv(&c, div);
+    pio_sm_init(pio, sm, offset, &c);
+}
+%}

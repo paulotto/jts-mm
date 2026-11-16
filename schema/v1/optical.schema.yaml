@@ -1,0 +1,58 @@
+# This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+# SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+# SPDX-FileCopyrightText: 2026 David Stebich
+# SPDX-License-Identifier: MIT
+
+# Human-readable outline of software/optical/etc/optical.yaml (and configs/optical/optical.yaml).
+# Machine JSON Schema optional later; this mirrors jtsmm.schema.yaml style.
+
+schema_version: "1.0"
+rig_id: null
+
+paths:
+  calibration_bundle: null
+  tracking_dir: null
+  # Template; may include {experiment_folder} / {experiment_name}
+  recordings_dir: ~/experiments/{experiment_folder}/recordings
+  jts_config_template: null
+
+markers:
+  detector:
+    type: aruco
+    dictionary: DICT_4X4_50
+    tag_size_mm: 20.0
+  id_ranges:
+    HP: [0, 9]
+    MP: [10, 19]
+    CT: [20, 29]
+  rigid_bodies: {}
+  mounts_T_body_tag: {}
+
+calibration:
+  cameras: []
+  board: {}
+  expected_baseline_mm: null
+  capture: {}
+
+tracker:
+  pose_method: triangulation
+  cam_ids: []
+  use_reprojection_weights: false
+  pnp:
+    max_reprojection_rms_px: 8.0
+  triangulation:
+    min_views: 2
+    max_residual_mm: 5.0
+
+experiment:
+  name: null  # → recording leaf experiment_name
+  folder: null  # ~/experiments/{folder}/recordings/…
+  condition: null  # e.g. static|near|mid|far; CLI --condition overrides
+  use_experiment_plan: true  # false → free take, no landmark calib
+  no_landmark_calibration: false  # true → walk phases only, skip the 8 landmarks
+  description: null
+  # MVC is jtsmm record --mvc (not listed here)
+  phases: []
+
+eval: {}
+eval_quality: {}

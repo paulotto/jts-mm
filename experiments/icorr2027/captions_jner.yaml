@@ -1,0 +1,230 @@
+# This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+# SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+# SPDX-License-Identifier: MIT
+
+# Written captions of the JNER target (paper_dataset.yaml `captions: {journal: ...}`), 2026-11-10
+# compression round. Each text replaces the view's generated caption in captions.tex
+# verbatim (LaTeX). Rules: one clause per panel on what it shows, no result
+# and no interpretation (the text holds them), a mark explained only when neither legend
+# nor axis names it, abbreviations not expanded (the paper and Additional file 1 list them),
+# "n = 13" once, the evidence level in one or two words at the end, no sentence repeating
+# the bold title. Numbers: macros of numbers_dataset.yaml; method constants in $...$ or \SI.
+# `panels` pins the figure's panel count: a figure that changes its panels fails the export
+# until its caption here is rewritten. The main-text captions (part core) are the
+# short forms of the manuscript.
+# 2026-11-11 shortening round: Part B captions are a title (build_af4.py) and one line; the
+# items moved to the release (experiments/icorr2027/supplementary_results/) have no written
+# caption here: their release PDFs carry the view's full generated caption.
+_limits:   # words without panel letters; core: the short forms (85 to 140 by its count)
+  core: {figure: 160, table: 100}
+  supporting: {figure: 45, table: 35}   # 2026-11-11 shortening round: a title and one line
+  supplement: {figure: 45, table: 35}
+
+# -- main text ------------------------------------------------------------------------------
+setup:
+  panels: 6
+  text: >-
+    Participant P8. (a)~Protocol with the holds in which the landmarks were digitized, rest,
+    and the five movement tasks in session order. The vertical line marks the chewing excerpt
+    of the other panels, which share one time axis. (b)~Band-passed \acs{sEMG} of the right
+    masseter and (c)~its short-time power spectral density (PSD). (d)~Envelopes of the
+    openers (vermilion, mean of the two digastric channels) and of the closers (blue, mean of
+    the four masseter and temporalis channels), each channel in percent of its largest
+    recorded value (single channels as thin light lines). (e)~Opening angle from the optical
+    system (dark) and from the \acsp{IMU} (light blue). (f)~Intent label. Single excerpt,
+    descriptive.
+
+requirements:
+  panels: 6
+  text: >-
+    (a, b)~Incisal workspace in the sagittal and the frontal plane. Grey lines are the
+    outlines of each participant's incisal positions over the five movement tasks, relative
+    to the rest position (cross). The blue area is the cohort envelope, the union of these
+    outlines, the dashed box the \acs{P95} design workspace, and the vermilion area the part
+    of the envelope outside the box. (c)~Cumulative distribution of the participants' peak opening angular velocity.
+    (d)~Movement bandwidth $f_{95}$, the frequency below which $95\,\%$ of the power of the
+    angular velocity lies, per opening task and as the largest value per participant. Dark
+    triangles are participant-tasks limited by noise, which were not used. (e, f)~Every requirement of
+    \autoref{tab:requirements}, with each participant's value relative to the design value.
+    In (c) to (f), grey dots are participants, blue diamonds or ticks the \acs{P95}, and
+    blue lines or shading the range from its lower bound. $n=\numCohortN$. Descriptive, except the bandwidth, which is
+    exploratory.
+
+tabRequirements: >-
+  Design value: 95th percentile across the \numCohortN\ participants (Harrell--Davis
+  estimate). Lower bound: its exact one-sided lower $95\,\%$ confidence bound. Largest value:
+  the largest participant value. The workspace values can underestimate the maximal range,
+  because no maximal opening was recorded. Exploratory (planned): defined in the analysis
+  plan before its own values were computed. Exploratory (post hoc): defined after its own
+  results had been seen. DoF: degrees of freedom.
+
+tabCompatibility: >-
+  Misalignment at the incisor that each candidate structure would impose during opening, as
+  the median over the \numCohortN\ participants of the \acs{RMS} distance between the
+  incisor predicted by the structure and the measured incisor (\autoref{eq:hinge}), with
+  $95\,\%$ \acs{BCa} \acs{CI}. Ratio to the noise: a participant's misalignment divided by
+  the 99th percentile of the misalignment that their own rest noise alone produces
+  (\autoref{eq:noise-ratio}), as the median with its \acs{CI}. A misalignment is beyond the
+  noise when this ratio exceeds $1$. Generic coupling: \acs{RMS} deviation of the coupling
+  curve of the other participants from a participant's own curve.
+
+hinge:
+  panels: 4
+  text: >-
+    (a)~Sagittal incisal path of opening (participants grey, cohort median black) with the
+    arcs of a hinge at the joint (vermilion) and of the compromise axis (blue). (b)~Anterior
+    translation of the midpoint of the palpated condyle points over the opening angle
+    (participants grey, cohort median with $95\,\%$ \acs{CI}). The shaded range is a pure
+    rotation in the two-phase description \cite{Wen2015, Mueller2025b}. (c)~\acs{RMS} misalignment $m$ at the incisor
+    (\autoref{eq:hinge}) of the hinge at the joint (vermilion squares) and of the compromise
+    axis (blue dots) per participant, with $95\,\%$ \acs{CI}. Ticks mark the noise
+    threshold of each structure (P99, \autoref{eq:noise-ratio}). (d)~Largest
+    excursion of the condyle points in any direction (larger side) per participant, with the design value
+    (dashed line) and the range from its lower bound (band). $n=\numCohortN$, ordered in (c)
+    and (d) by the misalignment of the hinge at the joint. (c)~Confirmatory for the
+    compromise axis, exploratory (post hoc) for the hinge at the joint. (a, b, d)~Descriptive.
+
+imu:
+  panels: 2
+  text: >-
+    Bland--Altman agreement of the incisal opening from the two \acsp{IMU} with the optical
+    measurement, (a)~with the generic model, whose coefficients come from the other
+    participants, and (b)~with the participant's own model. Grey dots are open--close cycles,
+    black dots participant means, dashed lines the bias and the $95\,\%$ limits of agreement
+    (LoA, \autoref{eq:loa}) with their \acsp{CI} (bands), and the dark line is the
+    proportional bias, whose slope is given with its \acs{CI}. $n=\numCohortN$, \numImuOpeningCycles\ cycles.
+    Confirmatory (estimate).
+
+timingOverview:
+  panels: 2
+  text: >-
+    (a)~Activity of the opener (vermilion, mean of the two digastric channels) and of the
+    closers (blue, mean of the four masseter and temporalis channels) around the mechanical
+    opening onset $t_{\text{mech}}$ (dashed line, \autoref{eq:lead}) in open--close. Curves
+    are the envelopes relative to their level before the movement, as the cohort median over
+    the participants with the interquartile range (bands). Triangles mark the median release
+    of the closers and the median rise of the digastric envelope. (b)~Opening lead $L$ of the digastric in open--close per participant (grey dots)
+    under the pre-specified first-onset rule and under the post hoc driving-burst rule. Grey
+    lines join a participant's two values, and light squares are participants with a
+    lead under one rule only. Vermilion diamonds are the cohort medians with $95\,\%$
+    \acs{BCa} \acs{CI}, and the dashed line over each rule is its shift null, the lead that
+    the search window alone produces. Excl.: participants with fewer than three usable
+    channel-cycles. (a)~Descriptive. (b)~Confirmatory, not confirmed.
+
+tabDecoding: >-
+  Seven-class decoding (\acs{SVM}, chance level $1/7$), offline. Balanced accuracy: median over the
+  \numCohortN\ participants with $95\,\%$ \acs{BCa} \acs{CI}, or with the interquartile range
+  (IQR) where no \acs{CI} is stored. Recall: range over the seven classes of the median recall.
+  Lat.: median time from the label onset to the first correct decision. FA: false activations
+  per minute at rest. $>$~\acs{IMU}: participants whose balanced accuracy is higher than with
+  \acs{IMU} features alone. Holm $p$: \acs{EMG} and \acs{IMU} against \acs{IMU} alone,
+  Wilcoxon signed-rank test.
+
+# -- Additional file 1, Part B: tables (2026-11-11 shortening round: a title and one line) --
+tabMethods: >-
+  Recorded modalities with achieved rate, timing quality, and processing; median (range) over
+  the participants. Timing: interval 99th percentile and share of long intervals (IMU), share
+  of frames with a valid pose (optics). Descriptive.
+
+suppTabCompleteness: >-
+  Per participant what was recorded, its quality flags, and the outcomes the participant
+  enters; flagged data stay in. Descriptive.
+
+tabReference: >-
+  Range of motion and opening speed: mean, SD, and 95\,\% BCa CI, by sex with Hedges' $g$,
+  and within-session ICC(3,1) and MDC. Descriptive.
+
+tabReferenceLiterature: >-
+  Values of this data set next to published values of the same quantity, with population,
+  method, and source. Descriptive.
+
+tabActivation: >-
+  Per muscle the task activity in \% of the largest recorded activity (participants active),
+  the SNR of the reference contraction, and its ratio to the task activity. Descriptive.
+
+tabGeometry: >-
+  Jaw geometry from the digitized landmarks and the recorded openings; median, IQR, and range
+  over the participants. Descriptive.
+
+tabRobustness: >-
+  Key outcomes under the primary analysis and each sensitivity run; cohort medians
+  (participants with a value). Asterisk: the conclusion differs from the primary analysis.
+
+# -- Additional file 1, Part B: figures -------------------------------------------------------
+envelope:
+  panels: 3
+  text: >-
+    (a)~Largest opening and closing angular velocity and (b)~largest angular acceleration per
+    participant; (c)~chance that the largest of $n$ participants exceeds a population
+    percentile. $n=\numCohortN$. Descriptive (post hoc).
+
+suppAxisLocation:
+  panels: 1
+  text: >-
+    Where each participant's best-fit opening axis pierces the sagittal plane, relative to the
+    palpated condyle midpoint (cross); squares: implausible condyle points. $n=\numCohortN$.
+    Descriptive (post hoc).
+
+suppCoupling:
+  panels: 3
+  text: >-
+    (a)~Anterior translation of the condyle midpoint over the opening angle, (b)~its
+    Theil--Sen slope, and (c)~each participant's RMS distance from the others' median curve.
+    Triangles: flagged condyle points. $n=\numCohortN$. Descriptive (post hoc).
+
+suppImuAgreement:
+  panels: 3
+  text: >-
+    RMSE of the IMU opening angle against the optics per task for the (a)~quaternion,
+    (b)~complementary, and (c)~accelerometer-tilt estimator. $n=\numCohortN$. Descriptive.
+
+activation:
+  panels: 3
+  text: >-
+    (a)~Activation per muscle and task (number: participants active), (b)~SNR of the reference
+    contraction against rest, and (c)~reference contraction over the largest task activity.
+    $n=\numCohortN$. Descriptive.
+
+suppSpm:
+  panels: 2
+  text: >-
+    Paired SPM$\{t\}$ on the participant means, bars over supra-threshold clusters (Holm):
+    (a)~openers against closers in open--close, (b)~left against right masseter in chewing.
+    $n=\numCohortN$. Pre-specified.
+
+timing:
+  panels: 4
+  text: >-
+    Open--close: (a)~EMG envelopes around the opening onset, (b)~digastric lead per participant
+    under both onset rules, and (c)~the lead under every detector, mechanical onset, and rule.
+    $n=\numCohortN$. (b)~Pre-specified, otherwise exploratory.
+
+suppWindowNull:
+  panels: 2
+  text: >-
+    Digastric lead per participant, (a)~observed and under the shift null (EMG shifted against
+    the motion in the same window) and (b)~their difference, with Holm $p$. Pre-specified
+    (first onset), otherwise post hoc.
+
+decoding:
+  panels: 4
+  text: >-
+    Seven-class SVM: (a)~EMG and IMU minus IMU alone for an unseen participant, without and
+    with calibration, (b)~accuracy over the calibration amount, (c)~recall per class,
+    (d)~accuracy drop when one feature block is permuted. $n=\numCohortN$. (a)~Confirmatory
+    without calibration, otherwise exploratory.
+
+suppPermutation:
+  panels: 2
+  text: >-
+    (a)~Cohort balanced accuracy (LDA, EMG and IMU) against its null: labels shifted
+    circularly per participant by $1/4$ to $3/4$ of their length, \numDecPermN\ times; $p=(N^{\geq}+1)/(N+1)$. This range lets the null exceed $1/7$.
+    (b)~Accuracy drop per participant with one feature block permuted. $n=\numCohortN$.
+    Pre-specified.
+
+robustness:
+  panels: 6
+  text: >-
+    Mean paired change of each processing variant from the primary analysis in
+    between-participant SD, with 95\,\% $t$ interval: (a)~opening lead, (b to d)~opening and
+    activations, (e)~hinge residuals and condyle excursion. $n=\numCohortN$. Descriptive.

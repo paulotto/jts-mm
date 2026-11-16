@@ -1,0 +1,115 @@
+{
+  "emg": {
+    "bias": {
+      "enabled": true
+    },
+    "default_gain": 6,
+    "leadoff": {
+      "ac_tone": false,
+      "current_na": 6,
+      "during_recording": true,
+      "enabled": true
+    },
+    "profile": "acquisition",
+    "sample_rate_sps": 4000,
+    "stream_channels": 6,
+    "test_signal": {
+      "enabled": false
+    }
+  },
+  "imu_cra": {
+    "dynamic_calibration": {
+      "accel": true,
+      "gyro": true,
+      "mag": true
+    },
+    "enabled": true,
+    "fusion": {
+      "primary": "game_rotation_vector",
+      "rate_hz": 390
+    },
+    "profile": "kinematics_accel",
+    "reports": {
+      "accelerometer": {
+        "enabled": true,
+        "rate_hz": 250
+      },
+      "game_rotation_vector": {
+        "enabled": true,
+        "rate_hz": 390
+      }
+    },
+    "sync": {
+      "mode": "int_driven"
+    }
+  },
+  "imu_mta": {
+    "dynamic_calibration": {
+      "accel": true,
+      "gyro": true,
+      "mag": true
+    },
+    "enabled": true,
+    "fusion": {
+      "primary": "game_rotation_vector",
+      "rate_hz": 390
+    },
+    "profile": "kinematics_accel",
+    "reports": {
+      "accelerometer": {
+        "enabled": true,
+        "rate_hz": 250
+      },
+      "game_rotation_vector": {
+        "enabled": true,
+        "rate_hz": 390
+      }
+    },
+    "sync": {
+      "mode": "int_driven"
+    }
+  },
+  "platform": {
+    "buffers": {
+      "emg_ring": 98304,
+      "event_ring": 8192,
+      "imu_ring": 16384
+    },
+    "i2c": {
+      "hz": 400000
+    },
+    "irq": {
+      "emg": 0,
+      "imu": 1,
+      "trigger": 2
+    },
+    "pio": {
+      "trigger": {
+        "clock_hz": 1000000
+      }
+    },
+    "profile": "default",
+    "spi0": {
+      "hz": 4000000
+    },
+    "system": {
+      "cpu_mhz": 150
+    }
+  },
+  "schema_version": 1,
+  "trigger": {
+    "enabled": true,
+    "outputs": {
+      "csi1": true,
+      "csi2": true,
+      "scope": true,
+      "sync_led": false
+    },
+    "profile": "imx296_dual_csi",
+    "pulse": {
+      "polarity": "imx296_fast",
+      "width_us": 12000
+    },
+    "rate_hz": 40
+  }
+}

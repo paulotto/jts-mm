@@ -1,0 +1,28 @@
+% This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+% SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+% SPDX-License-Identifier: CC-BY-4.0
+
+\begin{keybox}[title={Summary}]
+The current incisor attachment slips because a lower incisor has \emph{no} lingual undercut: any
+jaw pressing on it sits on a face that converges toward the incisal edge, so the clamping force
+pushes the part off (\cref{sec:mechanics}). Lower molars behave differently. Measured on
+\texttt{Teeth\_02}, they offer \SIrange{0.3}{1.2}{\milli\metre} of undercut on the
+\textbf{lingual} side and almost none (\SI{\approx0.1}{\milli\metre}) buccally. A spring-loaded
+jaw that presses on the lingual face \emph{below} its height of contour therefore pulls the part
+onto the teeth.
+
+This document describes five clamp concepts that apply this rule, sorted by where the spring
+sits (\cref{sec:overview}); shows the parts on their own (\cref{sec:parts}); gives dimensioned
+drawings and a FreeCAD recipe with ready-placed reference geometry (\cref{sec:drawings}); derives
+the spring mathematics (\cref{sec:springs}); and gives build instructions
+(\cref{sec:concepts,sec:workflow}) and sources (\cref{sec:procurement}).
+
+\textbf{Recommendation.} Build concept~5 (rigid clamp + ribbed TPU liner) first: it is the
+simplest, and the hard contacts keep the marker still. If the preload fades within a session,
+switch the preload element to a stainless steel spring, either concept~4 with a
+\SI{0.9}{\milli\metre} arch pre-spread \SI{0.7}{\milli\metre} per side, or concept~3 with
+\SI{0.7}{\milli\metre} Adams clasps. Reline every tooth-contacting surface with resin.
+
+\textbf{Status.} All numbers are measurements on one digital model or hand calculations. Nothing
+here has been printed, force-tested or tried in a mouth.
+\end{keybox}

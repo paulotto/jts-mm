@@ -1,0 +1,32 @@
+% This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+% SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+% SPDX-License-Identifier: CC-BY-4.0
+
+\section{Overview of the five concepts}\label{sec:overview}
+\begin{figure}[H]
+\centering
+\newcommand{\ov}[2]{\begin{subfigure}[t]{0.19\textwidth}\centering\includegraphics[width=\linewidth]{render_#1_obl}\caption*{\small #2}\end{subfigure}}
+\ov{c1}{1 Snap shell}\hfill\ov{c2}{2 Clothespin jaw}\hfill\ov{c3}{3 Wire clasps}\hfill\ov{c4}{4 Spring arch}\hfill\ov{c5}{5 Rigid + TPU}
+\caption{All five concepts on \texttt{Teeth\_02}. Colours: \swatch{cprinted}~printed, conforming;
+\swatch{crigid}~rigid frame (reference); \swatch{cspring}~printed spring;
+\swatch{ctpu}~TPU; \swatch{cwire}~stainless wire. The black plate stands for the marker.}
+\label{fig:overview}
+\end{figure}
+
+\begin{table}[H]
+\centering\small
+\caption{Comparison. Green = favourable, red = the main weakness.}\label{tab:compare}
+\begin{tabularx}{\textwidth}{l*{5}{>{\centering\arraybackslash}X}}
+\toprule
+& 1 Snap shell & 2 Clothespin & 3 Wire clasps & 4 Spring arch & 5 Rigid + TPU\\
+\midrule
+spring & shell wall & printed C-loop & \SI{0.7}{mm} steel & \SI{0.9}{mm} steel arch & TPU liner\\
+parts & \good{1 print} & \good{1 print} & print + wire & print + wire & 2 materials\\
+grips & \good{lingual} & \good{lingual} & buccal embrasures & \good{lingual} & \good{lingual}\\
+reference rigid? & \bad{no} & \good{yes} & \good{yes} & mostly & \good{yes}\\
+preload in session & \bad{creeps} & \bad{creeps} & \good{stable} & \good{stable} & relaxes\\
+crosses the bite & 4 embrasures & 2 embrasures & \bad{4 wire crossings} & \good{C/PM1 only} & 2 embrasures\\
+effort to first test & \good{lowest} & medium & \bad{wire bending} & medium & \good{low}\\
+\bottomrule
+\end{tabularx}
+\end{table}

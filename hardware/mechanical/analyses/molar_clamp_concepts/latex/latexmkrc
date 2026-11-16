@@ -1,0 +1,7 @@
+# This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+# SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+# SPDX-License-Identifier: CC-BY-4.0
+
+$pdf_mode = 1;
+$pdflatex = 'pdflatex -interaction=nonstopmode -halt-on-error %O %S';
+@default_files = ('molar_clamp_concepts.tex');

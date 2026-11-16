@@ -1,0 +1,163 @@
+# This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+# SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+# SPDX-License-Identifier: MIT
+
+# Literature reference values (J7).
+# Unhashed: read by table_reference / the literature view, so editing it needs no re-run.
+#
+# Only verified values: each reference is checked against two indexes (Crossref + PubMed or
+# Semantic Scholar, see docs/analysis/references.bib), and each value is quoted from the
+# abstract or the open full text named in `note`. Nothing here is estimated or converted
+# except where `note` says so.
+#
+# Fields:
+#   quantity    the dataset column name where one matches (stats/cohort_kinematics.py METRICS,
+#               validation/sampling.py); other quantities get a descriptive name
+#   mean, sd    as reported; null when not reported (never filled in)
+#   lo, hi      a reported range or interval; its kind is stated in `note`
+#   n           participants behind the value (the subgroup, if `sex` is set); null if not reported
+#   sex         f | m | all
+#   population, method, key (BibTeX key in references.bib), note
+#
+# Comparability: the definitions differ between sources (maximal vs self-paced, straight-line
+# vs vertical component vs curvilinear path, interincisal vs incisor-point excursion). The
+# `method` and `note` fields say which; compare a dataset value only with a matching definition.
+# The dataset's workspace values are task-based lower bounds, not maximal-effort ROM (D1).
+
+entries:
+  # ---------------------------------------------------------------- maximal mouth opening
+  - {quantity: max_observed_opening_mm, sex: m, mean: 51.3, sd: 8.3, lo: 39, hi: 70, n: 463,
+     population: "Indian adults, 21-70 years", method: "maximal interincisal distance, calibrated ruler",
+     key: khare2012normal, note: "abstract; lo/hi = observed range"}
+  - {quantity: max_observed_opening_mm, sex: f, mean: 44.3, sd: 6.7, lo: 36, hi: 56, n: 431,
+     population: "Indian adults, 21-70 years", method: "maximal interincisal distance, calibrated ruler",
+     key: khare2012normal, note: "abstract; lo/hi = observed range"}
+  - {quantity: max_observed_opening_mm, sex: m, mean: 43, sd: null, lo: null, hi: null, n: null,
+     population: "Irish adults, 16-99 years (national survey)", method: "maximal mouth opening, clinical survey measurement",
+     key: gallagher2004normal, note: "abstract gives 43 mm (males), 41 mm (females) for 1513 adults in total; per-sex n not in the abstract; opening falls with age"}
+  - {quantity: max_observed_opening_mm, sex: f, mean: 41, sd: null, lo: null, hi: null, n: null,
+     population: "Irish adults, 16-99 years (national survey)", method: "maximal mouth opening, clinical survey measurement",
+     key: gallagher2004normal, note: "see the male row; 1513 adults in total"}
+  - {quantity: max_observed_opening_mm, sex: m, mean: 52.1, sd: null, lo: null, hi: null, n: 29,
+     population: "men 23-39 years, class I occlusion, normal TMJ function", method: "optoelectronic jaw tracker, incisor straight-line distance, maximal opening",
+     key: lewis2001sex, note: "abstract; curvilinear path 54.8 mm; straight-line incisor-point distance, not interincisal distance"}
+  - {quantity: max_observed_opening_mm, sex: f, mean: 46.0, sd: null, lo: null, hi: null, n: 27,
+     population: "women 23-35 years, class I occlusion, normal TMJ function", method: "optoelectronic jaw tracker, incisor straight-line distance, maximal opening",
+     key: lewis2001sex, note: "abstract; curvilinear path 48.1 mm. Same laboratory and age range as travers2000associations (27 women): samples may overlap"}
+  - {quantity: max_observed_opening_mm, sex: f, mean: 46.6, sd: null, lo: null, hi: null, n: 27,
+     population: "women 23-35 years, normal TMJ function, occlusion, and skeletal pattern", method: "Optotrak, incisor straight-line distance, repeated maximal opening",
+     key: travers2000associations, note: "abstract; closing 45.9 mm; curvilinear 48.6 mm"}
+  - {quantity: max_observed_opening_mm, sex: all, mean: 43.1, sd: 2.49, lo: null, hi: null, n: 1348,
+     population: "Albanian adults, 20-78 years", method: "maximal mouth opening, Vernier calipers",
+     key: beraj2021normal, note: "abstract; males 43.6 +- 3.63, females 40.8 +- 1.38 (per-sex n not given). The SDs are small for this quantity: check the full text before using z-scores"}
+  - {quantity: max_observed_opening_mm, sex: all, mean: null, sd: null, lo: null, hi: null, n: 87,
+     population: "adults, Dunedin (New Zealand)", method: "maximal jaw opening during a force test, extra-oral device with load cell",
+     key: xu2020estimation, note: "abstract: median 48 mm, IQR 8 mm (skewed, so no mean)"}
+  - {quantity: max_observed_opening_mm, sex: all, mean: 37.38, sd: null, lo: null, hi: null, n: 40,
+     population: "young adults 20-30 years with theoretically ideal occlusion (20 m, 20 f)", method: "kinesiograph K6-I (Myotronics), maximum vertical opening",
+     key: campillo2017electromyographic, note: "abstract + open full text (PMC5432089); the vertical component, hence lower than straight-line or interincisal values; no sex difference"}
+  - {quantity: max_assisted_opening_threshold_mm, sex: all, mean: null, sd: null, lo: null, hi: 40, n: null,
+     population: "clinical diagnostic criterion", method: "DC/TMD examination E4c, passive stretch (maximum assisted opening) including vertical incisal overlap",
+     key: schiffman2014diagnostic, note: "below 40 mm = limited opening for disc displacement without reduction with limited opening; checked in the consortium criteria sheet (2014-01-21) and the paper's table 6"}
+
+  # ---------------------------------------------------------------- protrusion, laterotrusion
+  - {quantity: protrusion_mm, sex: all, mean: 8.44, sd: null, lo: null, hi: null, n: 40,
+     population: "young adults 20-30 years with theoretically ideal occlusion", method: "kinesiograph K6-I, maximal protrusion",
+     key: campillo2017electromyographic, note: "abstract; the source of the existing norms/norms.yaml entry"}
+  - {quantity: protrusion_mm, sex: f, mean: 9.3, sd: null, lo: null, hi: null, n: 27,
+     population: "women 23-35 years, normal TMJ function", method: "Optotrak, incisor linear distance, maximal protrusion",
+     key: buschang2001incisor, note: "abstract; curvilinear path 12.0 mm"}
+  - {quantity: laterotrusion_left_mm, sex: all, mean: 7.54, sd: null, lo: null, hi: null, n: 40,
+     population: "young adults 20-30 years with theoretically ideal occlusion", method: "kinesiograph K6-I, maximal lateral excursion",
+     key: campillo2017electromyographic, note: "abstract reports one lateral-excursion value; the full text says right and left were similar"}
+  - {quantity: laterotrusion_right_mm, sex: all, mean: 7.54, sd: null, lo: null, hi: null, n: 40,
+     population: "young adults 20-30 years with theoretically ideal occlusion", method: "kinesiograph K6-I, maximal lateral excursion",
+     key: campillo2017electromyographic, note: "see the left row"}
+  - {quantity: laterotrusion_left_mm, sex: f, mean: 11.0, sd: null, lo: null, hi: null, n: 27,
+     population: "women 23-35 years, normal TMJ function", method: "Optotrak, incisor linear distance, maximal excursion to the left",
+     key: buschang2001incisor, note: "abstract; curvilinear path 12.3 mm"}
+  - {quantity: laterotrusion_right_mm, sex: f, mean: 11.5, sd: null, lo: null, hi: null, n: 27,
+     population: "women 23-35 years, normal TMJ function", method: "Optotrak, incisor linear distance, maximal excursion to the right",
+     key: buschang2001incisor, note: "abstract; curvilinear path 13.0 mm"}
+  - {quantity: opening_to_lateral_rom_ratio, sex: all, mean: null, sd: null, lo: 6.0, hi: 6.6, n: 91,
+     population: "healthy adults, mean age 27.2 years (59 f, 32 m)", method: "vernier calipers, vertical vs horizontal ROM",
+     key: dijkstra1998ratio, note: "abstract; lo/hi = range of the mean ratios; individual ratios 3.6-15.5; poor predictive value"}
+
+  # ---------------------------------------------------------------- rotation, condylar translation, axis
+  - {quantity: opening_angle_deg, sex: all, mean: 24.3, sd: 4.2, lo: null, hi: null, n: 30,
+     population: "adults 18-34 years without masticatory myoarthropathy (13 f, 17 m)", method: "Jaws-3D optoelectronic, finite-helical-axis rotation, habitual open-close at 1 Hz",
+     key: gallo1997description, note: "abstract; habitual (paced) opening, the closest match to the dataset's self-paced opening angle"}
+  - {quantity: max_opening_angle_deg, sex: m, mean: 39.1, sd: 5.9, lo: null, hi: null, n: 29,
+     population: "dental students without masticatory dysfunction", method: "lateral cephalograms closed vs maximally open, rotation of the ramus",
+     key: muto1996linear, note: "abstract; maximal opening, not comparable with the self-paced angle"}
+  - {quantity: max_opening_angle_deg, sex: f, mean: 36.3, sd: 4.3, lo: null, hi: null, n: 31,
+     population: "dental students without masticatory dysfunction", method: "lateral cephalograms closed vs maximally open, rotation of the ramus",
+     key: muto1996linear, note: "abstract; sex difference p < .01"}
+  - {quantity: condyle_disp_max_opening_mm, sex: m, mean: 20.5, sd: 4.0, lo: null, hi: null, n: 29,
+     population: "dental students without masticatory dysfunction", method: "lateral cephalograms, linear condylar movement at maximal opening",
+     key: muto1996linear, note: "abstract"}
+  - {quantity: condyle_disp_max_opening_mm, sex: f, mean: 18.1, sd: 2.5, lo: null, hi: null, n: 31,
+     population: "dental students without masticatory dysfunction", method: "lateral cephalograms, linear condylar movement at maximal opening",
+     key: muto1996linear, note: "abstract"}
+  - {quantity: condyle_disp_max_opening_mm, sex: m, mean: null, sd: null, lo: 15.4, hi: 17.6, n: 29,
+     population: "men 23-39 years, class I occlusion", method: "optoelectronic jaw tracker, hinge-axis point, straight-line translation, maximal opening and closing",
+     key: lewis2001sex, note: "abstract; lo/hi = range over the reported condyle values; curvilinear 20.5-20.7 mm"}
+  - {quantity: condyle_disp_max_opening_mm, sex: f, mean: null, sd: null, lo: 12.4, hi: 12.7, n: 27,
+     population: "women 23-35 years, class I occlusion", method: "optoelectronic jaw tracker, hinge-axis point, straight-line translation, maximal opening and closing",
+     key: lewis2001sex, note: "abstract; curvilinear 16.2-17.9 mm"}
+  - {quantity: condyle_disp_max_opening_mm, sex: f, mean: 11.9, sd: null, lo: null, hi: null, n: 27,
+     population: "women 23-35 years, normal TMJ function", method: "Optotrak, hinge-axis point, straight-line translation, maximal opening",
+     key: travers2000associations, note: "abstract; closing 12.2 mm; wide between-person range; not correlated with incisor opening"}
+  - {quantity: fha_condyle_distance_mm, sex: all, mean: 48.9, sd: 9.9, lo: null, hi: null, n: 30,
+     population: "adults 18-34 years without masticatory myoarthropathy", method: "Jaws-3D, distance of the finite helical axis from an intracondylar point, habitual open-close",
+     key: gallo1997description, note: "abstract; the axes were never inside the condyle. Compare with the dataset's best-fit axis offset (\\numGeoAxisOffset), different definition (fixed axis vs FHA)"}
+  - {quantity: fha_translation_mm, sex: all, mean: 0.9, sd: 0.7, lo: null, hi: null, n: 30,
+     population: "adults 18-34 years without masticatory myoarthropathy", method: "Jaws-3D, maximal total translation along the finite helical axis",
+     key: gallo1997description, note: "abstract"}
+
+  # ---------------------------------------------------------------- speed, chewing rhythm
+  - {quantity: peak_incisal_speed_mm_s, sex: f, mean: 394, sd: 102, lo: null, hi: null, n: null,
+     population: "women with clinically normal masticatory function", method: "kinesiograph (K7), maximal voluntary opening velocity at the incisor",
+     key: gawriolek2015kinematic, note: "abstract; 36 opening diagrams (participant count not in the abstract); closing 409 +- 94 mm/s; mean opening 222 +- 61 mm/s; peak at 12.8-13.5 mm incisal separation. Linear speed, not deg/s: no verified angular peak velocity was found"}
+  - {quantity: chewing_freq_hz, sex: all, mean: 1.57, sd: null, lo: 1.45, hi: 1.68, n: 21,
+     population: "adults, natural environment (3 h on 3 days)", method: "portable unilateral masseter EMG, time-frequency analysis",
+     key: po2011timefrequency, note: "abstract; lo/hi = 95% CI of the mean; median 1.58 Hz; chewing activity between 0.94 Hz (P5) and 2.17 Hz (P95); real food, whereas the dataset's chewing is mimed"}
+
+  # ---------------------------------------------------------------- force, timing (for the requirement notes)
+  - {quantity: max_jaw_opening_force_n, sex: all, mean: null, sd: null, lo: null, hi: null, n: 87,
+     population: "adults, Dunedin (New Zealand)", method: "adjustable rigid extra-oral device, 1000 N load cell",
+     key: xu2020estimation, note: "abstract: median 40.0 N overall; medians 54.8 N (males) and 33.5 N (females); force at maximal opening 35.2 N; work median 1.30 J"}
+  - {quantity: electromechanical_delay_ms, sex: all, mean: null, sd: null, lo: 49.5, hi: 55.5, n: 14,
+     population: "adults, elbow flexors (not masticatory muscles)", method: "surface EMG onset to force onset, maximal voluntary contraction",
+     key: cavanagh1979electromechanical, note: "abstract; eccentric 49.5, isometric 53.9, concentric 55.5 ms. No masseter-specific value was found"}
+  - {quantity: electromechanical_delay_ms, sex: all, mean: 11.63, sd: 1.51, lo: null, hi: null, n: 9,
+     population: "adults, gastrocnemius medialis, electrically evoked", method: "very high frame rate ultrasound (4 kHz)",
+     key: nordez2009electromechanical, note: "abstract; evoked contractions, a lower bound for the voluntary delay"}
+  - {quantity: optimal_controller_delay_ms, sex: all, mean: null, sd: null, lo: 100, hi: 125, n: 20,
+     population: "able-bodied adults, prosthetic hand simulator", method: "Box and Block test over controller delays of 0-300 ms",
+     key: farrell2007optimal, note: "abstract; about 100 ms for fast and 125 ms for slower prehensors; for the latency budget, not a jaw value"}
+
+  # ---------------------------------------------------------------- epidemiology (introduction)
+  - {quantity: tmd_prevalence_pct, sex: all, mean: 31.1, sd: null, lo: null, hi: null, n: null,
+     population: "adults/elderly, 21 studies (RDC/TMD or DC/TMD)", method: "meta-analysis of TMJ disorders",
+     key: valesan2021prevalence, note: "abstract; children/adolescents 11.3%; TMJ disorders only (arthralgia, disc displacement, DJD)"}
+  - {quantity: tmd_prevalence_pct, sex: all, mean: 34, sd: null, lo: null, hi: null, n: 172239,
+     population: "74 studies worldwide", method: "meta-analysis",
+     key: zielinski2024metaanalysis, note: "abstract; Europe 29%; 18-60 years most affected"}
+  - {quantity: tmd_prevalence_pct, sex: all, mean: 29.5, sd: null, lo: null, hi: null, n: 20971,
+     population: "27 studies (RDC/TMD or DC/TMD)", method: "meta-analysis",
+     key: alqutaibi2025global, note: "abstract; females 36.7% vs males 26.7%; limited opening/locking 8.1%"}
+
+# Jaw geometry (references R1-R6 there, verified 2026-10-31); read by the view
+# kin_geometry_lit: metric -> list of {value | low/high, ref, label}. The Balkwill angle
+# depends on the condylar reference point (top vs centre) and on the molar of the occlusal plane
+# (Balkwill and Shan et al.: second molars, as our landmarks; Ricketts: first): compare, never
+# "agree with" one.
+geometry:
+  bonwill_side_mm:
+    - {value: 101.6, ref: "Bonwill 1899", label: "equilateral triangle, 4 in"}
+  balkwill_deg:
+    - {value: 26.0, ref: "Balkwill 1866", label: "condylar top; occlusal plane through the second molars"}
+    - {value: 18.0, low: 12.0, high: 24.0, ref: "Bergström 1950", label: "condylar centre"}
+    - {low: 20.3, high: 21.6, ref: "Ohm and Silness 1982", label: "condylar centre, women / men"}
+    - {low: 21.3, high: 23.1, ref: "Shan et al. 2025", label: "cephalometric, condylar centre, second molars; class I / II div. 2"}

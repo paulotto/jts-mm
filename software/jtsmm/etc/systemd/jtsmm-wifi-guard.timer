@@ -1,0 +1,15 @@
+# This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+# SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+# SPDX-License-Identifier: MIT
+
+[Unit]
+Description=JTS-MM Wi-Fi disable expiry check
+
+[Timer]
+OnBootSec=30s
+OnUnitActiveSec=60s
+AccuracySec=10s
+Unit=jtsmm-wifi-guard.service
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,11 @@
+# table_requirements_intent--form-notes; source r16a, run 20261106T121008Z_71b75e, exported 2026-11-12T08:49:06Z
+Outcome,Value [95 % CI],Shift null,Evidence
+Intent detection,,,
+"EMG-to-motion lead, opening (first onset)ᵃ","108 ms [74, 248]",327 ms,not confirmed
+"EMG-to-motion lead, opening (driving burst)ᵇ","49 ms [−38, 67]",221 ms,not confirmed (post hoc onset rule)
+"Closer release before opening, average envelopeᶜ","70 ms [10, 150]",,exploratory (post hoc)
+Causal closer-release detectionᵈ,"103 ms [57, 141]",,exploratory (post hoc)
+Closer activation before closingᵉ,"−26 ms [−52, 167]",,exploratory (planned)
+"Closer release before opening, per cycle against the shift nullᶠ","118 ms [48, 142]",,exploratory (planned)
+"Intent decoding, unseen userᵍ","BA 0.61 [0.53, 0.69]",,confirmatory
+"Intent decoding, after calibrationʰ",BA 0.73 (IQR 0.70–0.78),,exploratory (post hoc)

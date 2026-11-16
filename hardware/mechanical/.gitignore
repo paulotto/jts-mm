@@ -1,0 +1,13 @@
+# This file is part of JTS-MM (https://github.com/paulotto/jts-mm).
+# SPDX-FileCopyrightText: 2026 Paul-Otto Müller
+# SPDX-License-Identifier: MIT
+
+.venv/
+build/
+__pycache__/
+*.FCBak
+*.FCStd1
+.ruff_cache/
+# the original combined FreeCAD file (split into parts/ by make split); kept outside git,
+# its master copy is kept outside the repository
+source/
