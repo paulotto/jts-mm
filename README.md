@@ -6,6 +6,8 @@ SPDX-License-Identifier: CC-BY-4.0
 
 # JTS-MM: open-source multimodal jaw tracking system
 
+[![DOI](https://zenodo.org/badge/1415493323.svg)](https://doi.org/10.5281/zenodo.24275718)
+
 JTS-MM records jaw motion, masticatory muscle activity, and inertial signals on one hardware
 clock. Two low-cost global-shutter cameras track fiducial markers on the lower teeth and the
 head (six degrees of freedom), a custom Raspberry Pi 5 HAT samples six channels of surface
@@ -57,7 +59,7 @@ data with its checksum.
 **Versions.** This repository has one commit per release and no development history. The
 papers and the items in `supplementary_results/` name the commit of the working repository
 from which they were exported: `6960d36b`. This release was built from commit
-`63833f5b` of the working repository, and the build checks that the analysis code
+`2a64e8f8` of the working repository, and the build checks that the analysis code
 is identical in both.
 
 **Hash of the analysis code:** `555904d8898fc557`. Every result carries the hash of the analysis
@@ -154,7 +156,10 @@ IMUs alone.
 ## How to cite
 
 Please cite the article that describes what you use, and this repository for the system and
-the code (see [`CITATION.cff`](CITATION.cff)). The archived versions have a DOI on Zenodo.
+the code (see [`CITATION.cff`](CITATION.cff)). Every release is archived on Zenodo:
+[10.5281/zenodo.24275718](https://doi.org/10.5281/zenodo.24275718) resolves to the latest
+version, and each version has its own DOI (version 1.0.0:
+[10.5281/zenodo.24275719](https://doi.org/10.5281/zenodo.24275719)). Cite the version you used.
 
 ## Licence
 

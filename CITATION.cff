@@ -19,6 +19,14 @@ authors:
   - family-names: Stryk
     name-particle: von
     given-names: Oskar
+doi: 10.5281/zenodo.24275718
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.24275718
+    description: "All versions (resolves to the latest)"
+  - type: doi
+    value: 10.5281/zenodo.24275719
+    description: "Version 1.0.0"
 repository-code: "https://github.com/paulotto/jts-mm"
 keywords:
   - jaw tracking
