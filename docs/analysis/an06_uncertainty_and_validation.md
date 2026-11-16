@@ -163,8 +163,11 @@ model's prediction from the opening's start pose.
 | `bench_tmj` | through the two condyle points | bench, as `bench` | `obs_hinge_tmj_mm` | D33, post hoc (`tmj_null: true`) |
 | `invivo_tmj` | through the two condyle points | in vivo, as `invivo` | `obs_hinge_tmj_mm` | D33, post hoc |
 
-- Bench values (`BENCH_T_MM` = 0.182 mm, `BENCH_R_DEG` = 0.126°) are the 3-D precisions from
-  the bench (IEEE SENSORS 2025), split evenly over the three axes ($\sigma_{\text{axis}} = \sigma_{3D}/\sqrt3$, so that $\mathbb E\lVert\boldsymbol\epsilon\rVert^2 = \sigma_{3D}^2$).
+- "Bench" values (`BENCH_T_MM` = 0.182 mm, `BENCH_R_DEG` = 0.126°) are the 3-D precisions
+  reported for the optical predecessor system (IEEE SENSORS 2025). Despite the historical name,
+  they are not a bench test of JTS-MM: that paper derived them from the residuals of in-vivo jaw
+  movements of four participants recorded with a Qualisys system (corrected 2026-11-16, the
+  papers call it "white noise at the precision of the predecessor system"). Split evenly over the three axes ($\sigma_{\text{axis}} = \sigma_{3D}/\sqrt3$, so that $\mathbb E\lVert\boldsymbol\epsilon\rVert^2 = \sigma_{3D}^2$).
 - **In-vivo residuals** (E28; `kinematics/clinical.py:rest_residuals`) from the **unsmoothed**
   rest poses $T^{\text{raw}}_k$ (valid frames of the rest phase), in the same
   left-multiplied parametrization as the injected noise: with $\bar R$ the rotation mean and

@@ -78,8 +78,8 @@ hinge:
     rotation in the two-phase description \cite{Wen2015, Mueller2025b}. (c)~\acs{RMS} misalignment $m$ at the incisor
     (\autoref{eq:hinge}) of the hinge at the joint (vermilion squares) and of the compromise
     axis (blue dots) per participant, with $95\,\%$ \acs{CI}. Ticks mark the noise
-    threshold of each structure (P99, \autoref{eq:noise-ratio}). (d)~Largest
-    excursion of the condyle points in any direction (larger side) per participant, with the design value
+    threshold of each structure (P99, \autoref{eq:noise-ratio}). (d)~Excursion
+    of the condyle points (larger side, median over the open--close cycles) per participant, with the design value
     (dashed line) and the range from its lower bound (band). $n=\numCohortN$, ordered in (c)
     and (d) by the misalignment of the hinge at the joint. (c)~Confirmatory for the
     compromise axis, exploratory (post hoc) for the hinge at the joint. (a, b, d)~Descriptive.

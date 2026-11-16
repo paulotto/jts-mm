@@ -800,10 +800,12 @@ REQ_NOTE_SHORT = {
     "opening_mm": "Largest opening in any task (no maximal interincisal opening recorded)",
     "protrusion_mm": "Peak anterior incisal displacement in the protrusion task",
     "laterotrusion_mm": "Peak lateral incisal displacement in the left-right task",
-    "opening_angle_deg": "Peak angle in self-paced open-close",
+    "opening_angle_deg": "Peak angle in self-paced open-close, median over the "
+                         "participant's cycles",
     "posterior_excursion_mm": "99th percentile of the incisal displacement behind the rest "
                               "position over the five movement tasks",
-    "translation_mm": "Condyle-point excursion in opening, larger side",
+    "translation_mm": "Condyle-point excursion in opening, larger side, median over the "
+                      "participant's cycles",
     "peak_vel_dps": "Largest cycle peak in self-paced opening",
     "close_vel_dps": "Largest cycle peak in self-paced closing",
     "free_peak_open_vel_dps": "Largest opening velocity in free motion",
@@ -811,7 +813,8 @@ REQ_NOTE_SHORT = {
     "bandwidth_hz": "F95 of the IMU angular-velocity power confirmed by the optical "
                     "measurement (coherence), largest over the opening tasks",
 }
-REQ_NOTE_TAIL = ("Each note states the value of one participant. The velocities and the "
+REQ_NOTE_TAIL = ("Each note states the value that one participant contributes. The velocities "
+                 "and the "
                  "acceleration underestimate the true peaks (40-Hz optics, 6-Hz low-pass).")
 
 

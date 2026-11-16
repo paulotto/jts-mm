@@ -85,8 +85,8 @@ entries:
 
   # ---------------------------------------------------------------- rotation, condylar translation, axis
   - {quantity: opening_angle_deg, sex: all, mean: 24.3, sd: 4.2, lo: null, hi: null, n: 30,
-     population: "adults 18-34 years without masticatory myoarthropathy (13 f, 17 m)", method: "Jaws-3D optoelectronic, finite-helical-axis rotation, habitual open-close at 1 Hz",
-     key: gallo1997description, note: "abstract; habitual (paced) opening, the closest match to the dataset's self-paced opening angle"}
+     population: "adults 18-34 years without masticatory myoarthropathy (13 f, 17 m)", method: "Jaws-3D optoelectronic, finite-helical-axis rotation, maximal open-close paced at 1 Hz",
+     key: gallo1997description, note: "full text (methods): three consecutive maximum open/close cycles paced at 1 Hz, so a maximal, not a self-paced, value; the abstract says habitual movements (corrected 2026-11-16)"}
   - {quantity: max_opening_angle_deg, sex: m, mean: 39.1, sd: 5.9, lo: null, hi: null, n: 29,
      population: "dental students without masticatory dysfunction", method: "lateral cephalograms closed vs maximally open, rotation of the ramus",
      key: muto1996linear, note: "abstract; maximal opening, not comparable with the self-paced angle"}
@@ -119,9 +119,9 @@ entries:
   - {quantity: peak_incisal_speed_mm_s, sex: f, mean: 394, sd: 102, lo: null, hi: null, n: null,
      population: "women with clinically normal masticatory function", method: "kinesiograph (K7), maximal voluntary opening velocity at the incisor",
      key: gawriolek2015kinematic, note: "abstract; 36 opening diagrams (participant count not in the abstract); closing 409 +- 94 mm/s; mean opening 222 +- 61 mm/s; peak at 12.8-13.5 mm incisal separation. Linear speed, not deg/s: no verified angular peak velocity was found"}
-  - {quantity: chewing_freq_hz, sex: all, mean: 1.57, sd: null, lo: 1.45, hi: 1.68, n: 21,
-     population: "adults, natural environment (3 h on 3 days)", method: "portable unilateral masseter EMG, time-frequency analysis",
-     key: po2011timefrequency, note: "abstract; lo/hi = 95% CI of the mean; median 1.58 Hz; chewing activity between 0.94 Hz (P5) and 2.17 Hz (P95); real food, whereas the dataset's chewing is mimed"}
+  - {quantity: chewing_freq_hz, sex: all, mean: 1.57, sd: null, lo: null, hi: null, n: 21,
+     population: "adults, natural environment (3 h on 3 days)", method: "portable unilateral masseter EMG, time-frequency analysis; mean with 95 % CI 1.45-1.68 Hz",
+     key: po2011timefrequency, note: "full text checked 2026-11-16; the 95% CI of the mean (1.45-1.68) moved from lo/hi into the method text, because the table column reads (range); median 1.58 Hz; chewing activity between 0.94 Hz (P5) and 2.17 Hz (P95); real food, whereas the dataset's chewing is mimed"}
 
   # ---------------------------------------------------------------- force, timing (for the requirement notes)
   - {quantity: max_jaw_opening_force_n, sex: all, mean: null, sd: null, lo: null, hi: null, n: 87,

@@ -1008,6 +1008,41 @@ def robustness_counts(ctx: Any) -> pd.DataFrame:
                           "n_any_changed": sum(marked(r, allk) for r in runs)}])
 
 
+@_table("robustness_null_counts")
+def robustness_null_counts(ctx: Any) -> pd.DataFrame:
+    """C2 against the shift null over the sensitivity runs of the robustness table (final
+    check, 2026-11-16): per run, the cohort median of the participants' observed-minus-null
+    lead (``stats_timing:timing_null``, column ``lead_minus_null_ms``; opening, TKEO) for each
+    task and onset rule of the C2 family. ``n_runs`` = runs with these values,
+    ``n_runs_null_exceeded`` = runs in which at least one of the four medians lies above zero,
+    ``max_median_minus_null_ms`` = the largest of all these medians. One row."""
+    from biomech.viz.views import paper_journal as PJ
+
+    n_runs, n_pos, worst = 0, 0, -np.inf
+    for name in PJ._variants(ctx):
+        if name == getattr(ctx.config, "variant", None):
+            continue
+        c = PJ._comparison(ctx, name)
+        if c.empty:
+            continue
+        q = c[(c.table == "timing_null") & (c.column == "lead_minus_null_ms")]
+        if q.empty:
+            continue
+        n_runs += 1
+        any_pos = False
+        for task, rule in PJ.C2_KEYS:
+            v = np.array([PJ._f(x) for x, k in zip(q.variant, q._k)
+                          if k.get("task") == task and k.get("direction") == "opening"
+                          and k.get("detector") == "tkeo" and k.get("rule") == rule], float)
+            if np.isfinite(v).any():
+                med = float(np.nanmedian(v))
+                worst = max(worst, med)
+                any_pos |= med > 0
+        n_pos += int(any_pos)
+    return pd.DataFrame([{"n_runs": n_runs, "n_runs_null_exceeded": n_pos,
+                          "max_median_minus_null_ms": worst if n_runs else np.nan}])
+
+
 def _j29_file(ctx: Any) -> pd.DataFrame:
     """``<store>/audit/j29_hinge_small_<snap>.parquet`` (J29), with its sha256."""
     import hashlib

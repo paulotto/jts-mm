@@ -2192,14 +2192,20 @@ def _robustness_matrix(matrix: list[tuple[str, bool, list[dict[str, Any]]]], n_p
         Column(k, _matrix_head(o), align="r") for k, o in zip(keys, outs)]
     # 2026-11-13: without what the caption says (cohort medians, participants with a value,
     # the meaning of the asterisk)
-    notes = ["Lead and release: ms before the mechanical onset. Release detection: detected "
-             "vs chance (%). Activation: each participant's median envelope in the task, % of "
+    # 2026-11-16 (final check): the hinge count is descriptive here (the C1 decision is the
+    # cohort test of the main text, not "at most one participant below its noise"), and the
+    # release detection is named only when its column is in the table
+    has_det = "Causal release detection" in outs
+    notes = ["Lead and release: ms before the mechanical onset. "
+             + ("Release detection: detected vs chance (%). " if has_det else "")
+             + "Activation: each participant's median envelope in the task, % of "
              "the largest recorded activity (the activation table gives the 95th "
              "percentile). Decoding: "
              "balanced accuracy for an unseen participant. Hinge: participants whose residual "
-             "is above their in-vivo noise. Conclusion: the decision at p < 0.05 (detection: "
-             "above chance; noise comparison: at most one participant below its noise). The "
-             "CIs and p values are given in the robustness figure."]
+             "is above their in-vivo noise (descriptive; the hinge is decided by the cohort "
+             "test of the main text). Conclusion: the decision at p < 0.05"
+             + (" (detection: above chance)" if has_det else "")
+             + ". The CIs and p values are given in the robustness figure."]
     if no_dec_txt:
         notes.append(no_dec_txt.replace("was not re-run", "was not re-run (–)"))
     if (not lab_agree.empty and "changed_frac" in lab_agree
@@ -2237,12 +2243,12 @@ def _decide(kind: str, prim: dict[str, float], var: dict[str, float]) -> str:
         if kind == "above_chance":
             v = d.get("detected_minus_chance_median", np.nan)
             return None if not np.isfinite(v) else bool(v > 0)
-        if kind == "count":
-            return None if not np.isfinite(d.get("v", np.nan)) else bool(d["v"] >= d["n"] - 1)
+        if kind == "count":   # descriptive count (2026-11-16): no decision of its own
+            return None
         return None if not np.isfinite(p) else bool(p < 0.05)
 
     a, b = sig(prim), sig(var)
-    if kind == "descriptive":
+    if kind in ("descriptive", "count"):
         return "descriptive"
     if a is None or b is None:
         return "--"
