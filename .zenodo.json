@@ -1,0 +1,31 @@
+{
+  "upload_type": "software",
+  "title": "JTS-MM: An open-source multimodal jaw tracking measurement system",
+  "description": "<p>Hardware, firmware, recording software, and analysis code of JTS-MM, a low-cost system that records six-degree-of-freedom jaw kinematics, surface electromyography of the masticatory muscles, and inertial signals on one hardware clock. The repository also holds, for each study, the analysis plan as frozen, a change log of every later change, the declarations of all figures, tables, and numbers of the papers, and the supplementary results with the data behind them.</p>",
+  "creators": [
+    {
+      "name": "Müller, Paul-Otto",
+      "affiliation": "Technical University of Darmstadt",
+      "orcid": "0009-0006-2418-458X"
+    },
+    {
+      "name": "Stebich, David",
+      "affiliation": "Technical University of Darmstadt"
+    },
+    {
+      "name": "von Stryk, Oskar",
+      "affiliation": "Technical University of Darmstadt"
+    }
+  ],
+  "keywords": [
+    "jaw tracking",
+    "mandibular kinematics",
+    "surface electromyography",
+    "inertial measurement unit",
+    "sensor synchronization",
+    "open-source hardware"
+  ],
+  "license": "mit",
+  "notes": "Licences by part: MIT (software, firmware, scripts, tests, configuration), CERN-OHL-P-2.0 (hardware design files), CC-BY-4.0 (documentation, figures, result tables). The included first-generation jaw-tracking package keeps CC-BY-NC-SA-4.0. Every file states its licence in an SPDX header or in REUSE.toml.",
+  "access_right": "open"
+}

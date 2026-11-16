@@ -57,7 +57,7 @@ data with its checksum.
 **Versions.** This repository has one commit per release and no development history. The
 papers and the items in `supplementary_results/` name the commit of the working repository
 from which they were exported: `6960d36b`. This release was built from commit
-`56f24d33` of the working repository, and the build checks that the analysis code
+`63833f5b` of the working repository, and the build checks that the analysis code
 is identical in both.
 
 **Hash of the analysis code:** `555904d8898fc557`. Every result carries the hash of the analysis
